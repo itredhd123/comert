@@ -1,0 +1,975 @@
+<title>Contraofensiva Organică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Sinteză</a></li>
+      <li><a href="#s1"><span>01</span> Terenul de joc</a></li>
+      <li><a href="#s2"><span>02</span> Cum fac cei mari</a></li>
+      <li><a href="#s3"><span>03</span> Cele 7 tipare</a></li>
+      <li><a href="#s4"><span>04</span> Asimetria ta</a></li>
+      <li><a href="#s5"><span>05</span> Alegerea produsului</a></li>
+      <li><a href="#s6"><span>06</span> Playbook 0→12 luni</a></li>
+      <li><a href="#s7"><span>07</span> Motorul de conținut</a></li>
+      <li><a href="#s8"><span>08</span> SEO în epoca AI</a></li>
+      <li><a href="#s9"><span>09</span> Retenție</a></li>
+      <li><a href="#s10"><span>10</span> Canale gratuite RO</a></li>
+      <li><a href="#s11"><span>11</span> Măsurare</a></li>
+      <li><a href="#s12"><span>12</span> Capcane</a></li>
+      <li><a href="#s13"><span>13</span> Planul de 90 zile</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Research de marketing · eCommerce România · august 2026</div>
+    <h1>Contraofensiva organică</h1>
+    <p class="lede">Cum își împing produsele cei mai mari jucători din comerțul online — românesc și internațional — și ce anume din mecanica lor poate fi executat de un singur om, fără buget de media.</p>
+    <div class="byline">
+      <span>Piață: 8,5 mld € în 2026</span>
+      <span>13 companii decodate</span>
+      <span>Plan de 90 de zile</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Sinteză</a></li>
+        <li><a href="#s1">Terenul de joc</a></li>
+        <li><a href="#s2">Cum fac marketing cei mari</a></li>
+        <li><a href="#s3">Cele 7 tipare comune</a></li>
+        <li><a href="#s4">Asimetria ta</a></li>
+        <li><a href="#s5">Alegerea produsului</a></li>
+        <li><a href="#s6">Playbook 0→12 luni</a></li>
+        <li><a href="#s7">Motorul de conținut</a></li>
+        <li><a href="#s8">SEO în epoca AI</a></li>
+        <li><a href="#s9">Retenție</a></li>
+        <li><a href="#s10">Canale gratuite RO</a></li>
+        <li><a href="#s11">Măsurare</a></li>
+        <li><a href="#s12">Capcane</a></li>
+        <li><a href="#s13">Planul de 90 de zile</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Sinteză</h2>
+      <p>Ce trebuie să reții dacă citești doar o pagină.</p>
+    </div>
+    <ul class="check">
+      <li><strong>Piața nu mai crește prin oameni noi, ci prin coșuri mai mari.</strong> În 2025 valoarea comenzilor a urcat cu 6,3%, dar numărul de tranzacții cu 0,8%. Traducere: nu mai există „val” pe care să urci pasiv. Creșterea vine din marjă, frecvență și valoare pe client.</li>
+      <li><strong>Peste 60% din vânzările online trec prin marketplace-uri</strong>, iar eMAG singur are peste 30% din piață. Dacă vinzi generalist și ieftin, joci pe terenul lor, cu regulile lor.</li>
+      <li><strong>Cei mari nu fac „marketing” — construiesc infrastructură și obișnuință.</strong> eMAG are lockere, Genius și Black Friday. Dedeman are 30 de ani de memorie de brand. Tu nu poți copia asta și nici nu ar trebui să încerci.</li>
+      <li><strong>Ce se poate copia e mecanica organică:</strong> un unghi repetat obsesiv, conținut nativ pe platformă, o comunitate tratată ca infrastructură și un sistem de dovezi. Gymshark a pornit trimițând haine gratis unor YouTuberi de fitness. Duolingo conduce cea mai eficientă operațiune organică din lume cu doi oameni full-time.</li>
+      <li><strong>Alegerea produsului decide 70% din rezultat înainte să scrii primul post.</strong> Marketingul organic e lent, deci are nevoie de marjă mare, de repetabilitate și de un produs care se poate filma.</li>
+      <li><strong>Nu concura cu Temu pe preț.</strong> Prețul mediu al unui produs Shein e ~14 $ față de 26 $ la H&M. Singurele terenuri pe care platformele non-UE nu te pot urma: proximitate, perisabilitate, personalizare, expertiză, comunitate și serviciu.</li>
+      <li><strong>Distribuția deținută bate distribuția închiriată.</strong> Fluxurile automate de email generează ~41% din veniturile pe email din doar 5,3% din trimiteri. O listă de 2.000 de oameni valorează mai mult decât 50.000 de urmăritori.</li>
+      <li><strong>Fereastra de oportunitate din 2026 e TikTok Shop în România</strong>, plus vizibilitatea în răspunsurile AI. Ambele sunt încă nesaturate local.</li>
+    </ul>
+    <div class="callout">
+      <h4>Ce faci luni dimineață</h4>
+      <p>Nu alege încă produsul. Alege întâi <strong>omul</strong> pe care vrei să-l servești și <strong>problema</strong> lui recurentă. Produsul e o consecință a acestei alegeri, nu invers — și e singura decizie care face conținutul organic posibil, pentru că nu poți produce 150 de videoclipuri despre un obiect care nu te interesează.</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Terenul de joc</h2>
+      <p>Cifrele care schimbă decizii, nu cele care umplu slide-uri.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>8,5 mld €</b><span>piața eCommerce RO estimată 2026 (de la ~8,1 mld € în 2025)</span></div>
+      <div class="stat"><b>+5%</b><span>creștere estimată 2026, sub cea din 2025 (~6%)</span></div>
+      <div class="stat"><b>+0,8%</b><span>creșterea numărului de tranzacții în 2025 — practic stagnare</span></div>
+      <div class="stat"><b>57 €</b><span>valoarea medie a unei comenzi online, S1 2026</span></div>
+      <div class="stat"><b>80%</b><span>din trafic vine de pe mobil</span></div>
+      <div class="stat"><b>&gt;60%</b><span>din vânzările online trec prin marketplace-uri</span></div>
+    </div>
+
+    <h3>Cine câștigă și cine pierde, pe categorii</h3>
+    <p>Datele MerchantPro pentru 2025 arată o piață cu două viteze. Nu media contează, ci verticala în care intri.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Categorie</th><th>Dinamică 2025</th><th>Ce înseamnă pentru un intrat nou</th></tr></thead>
+        <tbody>
+          <tr><td>Farma &amp; sănătate</td><td class="num" style="color:var(--ok)">+65%</td><td>Cea mai mare creștere. Barieră de reglementare = protecție reală față de Temu.</td></tr>
+          <tr><td>Electro &amp; IT</td><td class="num" style="color:var(--ok)">+21%</td><td>Crește, dar e teritoriul eMAG/Altex. Marjă mică, capital mare. Evită.</td></tr>
+          <tr><td>Fashion</td><td class="num" style="color:var(--danger)">−10,3%</td><td>Sub asaltul Shein/Temu/Trendyol. Viabil doar hiper-nișat.</td></tr>
+          <tr><td>Articole pentru copii</td><td class="num" style="color:var(--danger)">−12%</td><td>Aceeași presiune de preț. Funcționează doar pe siguranță/premium/local.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Cum cumpără românul în 2026</h3>
+    <ul class="check">
+      <li><strong>Lockerul a depășit ușa.</strong> 65% dintre cumpărători preferă livrarea la easybox; returul prin locker a urcat la 42%, de la 25% în 2022. Peste 10.000 de lockere în țară. <em>Consecință directă: dacă produsul tău nu încape în locker, ai un dezavantaj structural de conversie.</em></li>
+      <li><strong>Ramburs-ul moare încet.</strong> Plata cu cardul a ajuns între 29% și 46% din tranzacții, în funcție de sursă și verticală. Rambursul rămâne un cost real (retururi, refuzuri) pentru un magazin mic.</li>
+      <li><strong>Cumpărătorul se documentează și caută promoții.</strong> Coșul se golește întâi de cosmetice, jucării și cumpărături impulsive; rămân electronicele, medicamentele și necesarul.</li>
+      <li><strong>Descoperirea s-a mutat în feed.</strong> 68% dintre utilizatorii români de social media spun că au cumpărat cel puțin un produs văzut pe TikTok sau Instagram în ultimele 12 luni.</li>
+    </ul>
+
+    <h3>Unde e atenția</h3>
+    <div class="stats">
+      <div class="stat"><b>8,71 mil</b><span>utilizatori TikTok 18+ în România</span></div>
+      <div class="stat"><b>32,5 h</b><span>pe lună petrecute pe TikTok — primul loc</span></div>
+      <div class="stat"><b>30 h</b><span>pe lună pe YouTube — al doilea</span></div>
+      <div class="stat"><b>13 h</b><span>pe lună pe Facebook — al treilea</span></div>
+      <div class="stat"><b>90%</b><span>utilizare zilnică TikTok la 18–24 ani</span></div>
+      <div class="stat"><b>75,9%</b><span>din baza de creatori RO sunt nano și micro</span></div>
+    </div>
+    <p>Facebook rămâne dominant ca acoperire la 45+ (92,3% utilizare zilnică la 55–64 ani), dar timpul e pe TikTok și YouTube. Alegerea platformei nu se face după unde ești tu comod, ci după unde stă cumpărătorul tău ore întregi.</p>
+
+    <div class="callout warn">
+      <h4>Presiunea non-UE</h4>
+      <p>Comenzile românilor către Temu, Shein și Trendyol au crescut cu încă 20% în 2026. Un studiu ASE estimează o pierdere potențială de ~1,78 mld lei și peste 4.600 de locuri de muncă pentru economia locală. Peste 75% dintre firmele românești se tem că aceste platforme le vor reduce vânzările. <strong>Acesta e contextul competitiv real în care intri — și motivul pentru care poziționarea contează mai mult decât execuția.</strong></p>
+    </div>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>Cum fac marketing cei mari</h2>
+      <p>Treisprezece companii, decodate în trei linii fiecare. Ultima linie e singura care te privește direct.</p>
+    </div>
+
+    <h3 style="margin-bottom:6px">România</h3>
+    <div class="cards">
+
+      <div class="card">
+        <span class="tag">Marketplace · peste 30% din piața online RO</span>
+        <h3>eMAG</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Nu cumpără atenție — o dețin. Marketplace cu peste 64.000 de selleri, fulfillment propriu (selleri care îl folosesc văd în medie +50% vânzări), abonamentul Genius, rețeaua easybox și Black Friday, un eveniment pe care practic l-au inventat în România și îl dețin ca proprietate media. În 2025 clienții au cumpărat 87,2 milioane de produse, cu 9,1% mai mult decât în anul anterior.</dd>
+          <dt>De ce merge</dt>
+          <dd>E un flywheel: mai mulți selleri → mai mult sortiment → mai mult trafic → mai mulți selleri. Marketingul de brand e doar stratul vizibil peste o infrastructură care face cumpărarea mai comodă decât alternativa. Genius transformă cumpărarea în abonament; lockerul elimină frecarea returului.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Inventează-ți propriul eveniment.</strong> Nu ai nevoie de Black Friday — ai nevoie de un moment recurent care îți aparține (o lansare lunară, o „zi” a comunității tale, un drop sezonier). Al doilea lucru: proiectează pentru <strong>a doua comandă</strong> din prima zi, nu pentru prima.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">DIY · valoare brand 504 mil € (+24%)</span>
+        <h3>Dedeman</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Investesc în memorie, nu în conversie. Sponsorizări naționale de lungă durată (Comitetul Olimpic Român ca partener principal, Simona Halep), mesaj constant de preț corect, brand explicit românesc. Rezultat: retailerul preferat în Home &amp; Deco atât online (19,7%), cât și offline (32,5%).</dd>
+          <dt>De ce merge</dt>
+          <dd>Categoria are frecvență mică — cumperi gresie o dată la câțiva ani. Când nevoia apare, câștigă brandul care era deja în cap. Publicitatea lor nu vinde azi; asigură că peste doi ani numele lor apare primul, fără căutare.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Dacă produsul tău se cumpără rar, nu optimiza conversia — construiește memorie.</strong> Pentru un magazin mic asta înseamnă: un singur mesaj repetat identic luni de zile și asocierea cu un context recurent din viața clientului. Consistența e strategia, nu bugetul.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Electro-IT · lider offline la IT&amp;C</span>
+        <h3>Altex</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Joacă pe încredere și omnichannel. Peste 4 din 10 consumatori aleg Altex când cumpără IT&amp;C offline. Directorul lor de marketing formulează teza explicit: AI schimbă drumul către cumpărare, dar nu înlocuiește relevanța, consistența și încrederea construite de un brand.</dd>
+          <dt>De ce merge</dt>
+          <dd>La produse scumpe și rare, riscul perceput e mai mare decât diferența de preț. Magazinul fizic, garanția, service-ul și posibilitatea de a vorbi cu un om sunt marketing, chiar dacă nu apar în bugetul de marketing.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Reducerea riscului e un canal de creștere.</strong> Retur extins, garanție peste minimul legal, un număr de telefon la care răspunde cineva, poze reale ale produsului în mână. Pentru un brand necunoscut, asta convertește mai bine decât o reducere.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Beauty · ~2,1 mil vizite/lună pe notino.ro</span>
+        <h3>Notino</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>O mașinărie de căutare. Zeci de mii de pagini de produs și de categorie optimizate pe long-tail (fiecare parfum, fiecare gramaj), plus campanii de Search segmentate fin — segmentarea le-a adus +32% conversii în Irlanda și +27% în Lituania. Sunt în top 10 în clasamentul TOP 500 Cross-Border Retail Europe.</dd>
+          <dt>De ce merge</dt>
+          <dd>Beauty e o categorie în care oamenii caută nume exacte de produs. Cine deține rezultatul pentru „nume produs + preț / review / ml” deține cererea deja existentă. Nu creează cerere — o interceptează, la scară.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Long-tail-ul e singura zonă de SEO în care un magazin mic poate câștiga.</strong> Nu ținti „parfumuri”, ci întrebările lungi și specifice pe care nimeni nu s-a obosit să le răspundă bine. Fiecare din ele aduce puțin trafic, dar cu intenție de cumpărare foarte mare.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Fashion · content-first</span>
+        <h3>Answear</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Rulează fashion-ul ca publicație: editoriale, colaborări cu creatori, mărci proprii introduse treptat lângă cele multibrand, campanii sezoniere cu identitate vizuală puternică.</dd>
+          <dt>De ce merge</dt>
+          <dd>În fashion nimeni nu caută „bluză”. Descoperirea e vizuală și inspirațională, deci canalul principal e conținutul, nu căutarea. Mărcile proprii rezolvă problema marjei într-o categorie care în România a scăzut cu 10,3%.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Într-o categorie de descoperire, tratează-ți magazinul ca pe o revistă cu buton de cumpărare.</strong> Și: dacă revinzi produsele altcuiva, marja ta e mereu în mâna altcuiva — planifică de la început un produs propriu.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">e-grocery · Freshful 347 mil lei (2024) vs Sezamo 206 mil lei (2025)</span>
+        <h3>Freshful vs. Sezamo</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Se bat pe obișnuință, nu pe achiziție. Freshful (eMAG) a crescut de la 7,2 mil lei în 2021 la 347 mil lei în 2024 și raportează +25% clienți în 2025. Sezamo (grupul Rohlik) a crescut de 2,5 ori în 2025, la 206 mil lei, prin achiziție agresivă, promisiunea livrării rapide și un asistent AI de cumpărături.</dd>
+          <dt>De ce merge</dt>
+          <dd>Mâncarea se cumpără săptămânal. Cine câștigă a treia comandă câștigă clientul pe ani. De aceea investiția lor merge în livrare, sortiment și retenție — nu în notorietate.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Dacă produsul tău e consumabil, întreaga strategie se rezumă la o singură întrebare: cum ajunge clientul la comanda a treia?</strong> Reminder la momentul potrivit, abonament cu avantaj real, reaprovizionare într-un click.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Non-UE · comenzi RO +20% în 2026</span>
+        <h3>Temu, Shein, Trendyol</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Preț extrem plus algoritm. Prețul mediu al unui produs Shein e ~14 $, față de 26 $ la H&amp;M și 34 $ la Zara. Platformele memorează preferințele și istoricul, personalizează ofertele, gamifică sesiunea (roți, cronometre, cupoane) și cumpără reclame la un volum pe care nimeni local nu îl poate egala.</dd>
+          <dt>De ce merge</dt>
+          <dd>Combinația scară + date + costuri de producție face imposibilă competiția directă pe preț sau pe varietate. ARMO arată că peste 75% dintre firmele românești se tem de efectul lor.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Nimic — și asta e lecția.</strong> Singura mișcare validă e să te muți pe un teren unde nu te pot urma: perisabil, local, personalizat, reglementat, cu expertiză atașată sau cu o comunitate. Orice produs pe care ei îl pot clona la jumătate de preț nu e o afacere, e o pauză.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <h3 style="margin:44px 0 6px">Internațional</h3>
+    <div class="cards">
+
+      <div class="card">
+        <span class="tag">Fitness apparel · brand de peste 1 mld £</span>
+        <h3>Gymshark</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Ben Francis nu avea bani de reclame, așa că trimitea haine gratis unor YouTuberi de fitness pe care îi admira. Aceștia le-au purtat pentru că le-au plăcut. De acolo: ambasadori pe termen lung tratați ca parteneri, nu ca spațiu publicitar; provocări de comunitate precum #Gymshark66; și Gymshark World Tour — întâlniri fizice în mai multe țări, filmate și distribuite ca să ajungă mult dincolo de cei prezenți.</dd>
+          <dt>De ce merge</dt>
+          <dd>Produsul se poartă în sală și pe Instagram simultan — fiecare client devine, natural, distribuție. Ambasadorii aleși pentru relevanță și autenticitate produc conținut pe care nu trebuie să-l plătești de fiecare dată.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Cel mai bun buget de marketing pentru un început e produsul tău dat gratis, cu cap.</strong> 20–30 de micro-creatori reali din nișă, aleși pentru potrivire, nu pentru urmăritori. Plus: un ritual cu nume și hashtag propriu, la care oamenii se pot alătura.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Aplicație · echipă socială de 2 oameni full-time</span>
+        <h3>Duolingo</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Conținut construit în jurul unui personaj (bufnița Duo), nativ și diferit pe fiecare platformă — TikTok pentru viral, Instagram pentru meme, X pentru replici. Umor înainte de vânzare. Echipa e minusculă și, esențial, procesul de aprobare e aproape inexistent.</dd>
+          <dt>De ce merge</dt>
+          <dd>Viteza e avantajul. Conținutul care trebuie aprobat de trei niveluri ratează momentul cultural. Costul de achiziție prin organic ciudat e dramatic sub cel prin reclame „sigure” — un singur post reușit poate face treaba a zeci de mii de euro de media.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Ca antreprenor singur, ai deja singurul avantaj care contează aici: nu trebuie să ceri voie nimănui.</strong> Dă-ți un personaj recognoscibil (poți fi chiar tu) și publică fără să lustruiești. Conținutul care încearcă să vândă în secunda 1 nu e văzut de nimeni.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Beauty · comunitatea ca departament de produs</span>
+        <h3>Glossier</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>A pornit dintr-un blog, nu dintr-o fabrică. Produsele au fost dezvoltate pornind de la comentariile cititoarelor — literalmente întrebând ce lipsește. Clientele au devenit fețele campaniilor.</dd>
+          <dt>De ce merge</dt>
+          <dd>Când oamenii au fost consultați înainte de lansare, lansarea nu mai are nevoie de reclamă: publicul o așteaptă deja și o simte ca fiind a lui.</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Construiește audiența înainte de produs.</strong> E cea mai bună veste pentru situația în care ești acum, când încă nu ai ales ce vinzi: primele 90 de zile de conținut sunt și cercetare de piață gratuită, și listă de așteptare.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Băuturi &amp; produse de larg consum · brandul ca divertisment</span>
+        <h3>Liquid Death, Oatly, Warby Parker</h3>
+        <dl>
+          <dt>Ce fac</dt>
+          <dd>Liquid Death vinde apă la doză cu estetică de trupă metal — produsul e banal, ambalajul e conținutul. Oatly își scrie manifestele pe cutie și tratează pachetul ca pe un canal media. Warby Parker a rezolvat cea mai mare frecare a categoriei (nu poți proba ochelari online) cu „încearcă 5 acasă, gratuit” — o mecanică ce s-a promovat singură.</dd>
+          <dt>De ce merge</dt>
+          <dd>Toate trei au mutat diferențierea din produs (unde e greu) în ambalaj, atitudine sau mecanica de cumpărare (unde e ieftin și rapid).</dd>
+          <dt class="mono">Ce poți fura</dt>
+          <dd class="steal"><strong>Dacă produsul tău e greu de diferențiat, diferențiază experiența.</strong> Cutia, biletul scris de mână, mecanica de probă, tonul textelor. Sunt lucruri pe care le poți schimba într-o săptămână și pe care clientul le fotografiază.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>Cele 7 tipare comune</h2>
+      <p>Ce se repetă la toți cei de mai sus, indiferent de mărime, țară sau categorie. Astea sunt lecțiile transferabile.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Distribuție deținută, nu închiriată</h4>
+        <p>eMAG are aplicația și Genius. Gymshark are lista și comunitatea. Nimeni din cei mari nu depinde exclusiv de un algoritm pe care nu îl controlează. Urmăritorii sunt împrumutați; adresele de email și numerele de telefon sunt ale tale. Prima regulă a creșterii organice e că fiecare bucată de atenție trebuie convertită în ceva ce poți reactiva gratuit.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Un singur unghi, repetat până la plictiseală</h4>
+        <p>Dedeman spune același lucru de zeci de ani. Oatly are un singur ton. Duolingo are o singură bufniță. Repetiția pare plictisitoare din interior exact în momentul în care începe să funcționeze în exterior. Un magazin mic moare mai des din schimbarea mesajului la fiecare trei săptămâni decât din mesaj greșit.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Un ritual propriu, cu dată în calendar</h4>
+        <p>Black Friday pentru eMAG, #Gymshark66 pentru Gymshark, drop-urile pentru brandurile de streetwear. Un ritual transformă cererea difuză în vârfuri previzibile și dă publicului un motiv să revină din proprie inițiativă. Poate fi cât de mic: „lansare în prima marți din lună”.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Conținutul arată produsul în viață, nu în catalog</h4>
+        <p>Hainele Gymshark apar în sală, nu pe fundal alb. Cel mai bun conținut de vânzare nu arată obiectul, ci momentul în care obiectul rezolvă ceva. Datele susțin asta brutal: paginile cu poze de la clienți convertesc cu 30–45% mai bine decât cele cu poze doar profesionale, iar cele cu video review 40–60% mai bine.</p>
+      </div></li>
+      <li><span class="n">05</span><div>
+        <h4>Comunitatea e infrastructură, nu campanie</h4>
+        <p>Turneele Gymshark, blogul Glossier, grupurile de clienți. Comunitatea nu e o acțiune de trimestru, e ceva ce rulează permanent și produce, simultan, conținut, feedback de produs și vânzări. E cel mai lent de construit și cel mai greu de copiat de un concurent.</p>
+      </div></li>
+      <li><span class="n">06</span><div>
+        <h4>Nativ pe platformă, nu redistribuit</h4>
+        <p>Duolingo face conținut diferit pe fiecare rețea. Un videoclip TikTok pus pe Instagram cu tot cu watermark e semnalul universal că brandul nu înțelege platforma — și algoritmul îl tratează ca atare. Repurposing înseamnă refilmare sau re-montare, nu reupload.</p>
+      </div></li>
+      <li><span class="n">07</span><div>
+        <h4>Un sistem industrial de dovezi</h4>
+        <p>Toți cei mari au un motor care produce continuu recenzii, poze de clienți și mărturii — nu le adună la întâmplare. Efectul e măsurabil: doar 10 recenzii pe un produs pot crește conversia cu ~45%, UGC-ul crește conversia cu 25–40% în medie, iar 92% dintre consumatori au mai multă încredere în conținut de la alți clienți decât în publicitate.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout calm">
+      <h4>Observația centrală</h4>
+      <p>Niciunul dintre cele șapte tipare nu costă bani. Toate costă <strong>timp și consecvență</strong> — exact resursele pe care le are un antreprenor la început și nu le are o companie mare. Asta e, literalmente, oportunitatea ta.</p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>Asimetria ta</h2>
+      <p>Ce nu poți copia de la ei — și ce ai tu, și ei nu au.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ei au</th><th>Tu ai</th><th>Cum se traduce în acțiune</th></tr></thead>
+        <tbody>
+          <tr><td>Bugete de media de milioane</td><td>Timp și zero cost de aprobare</td><td>Publici azi ce ei ar publica peste șase săptămâni. Volumul de încercări îți ține loc de buget.</td></tr>
+          <tr><td>Infrastructură logistică proprie</td><td>Curieri și lockere la același preț ca ei</td><td>Sameday, Cargus, FAN sunt disponibile oricui. Diferența n-o mai face livrarea, ci ambalajul și comunicarea din jurul ei.</td></tr>
+          <tr><td>Zeci de mii de SKU-uri</td><td>5–15 produse pe care le știi pe de rost</td><td>Poți răspunde personal la orice întrebare. Un magazin cu 40.000 de produse nu poate.</td></tr>
+          <tr><td>Notorietate națională</td><td>Un chip și o poveste</td><td>Oamenii cumpără de la oameni. Fondatorul vizibil e un avantaj pe care o corporație nu îl poate fabrica.</td></tr>
+          <tr><td>Echipe de date și AI</td><td>Contact direct cu fiecare client</td><td>50 de conversații reale îți spun mai mult decât un dashboard. Și le poți avea săptămâna asta.</td></tr>
+          <tr><td>Marje mici pe volum uriaș</td><td>Libertatea de a alege marje mari pe volum mic</td><td>Nu trebuie să vinzi ieftin. Nu ai acționari care cer creștere de volum.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Concluzia practică: orice strategie care te pune în competiție directă pe <em>preț, sortiment sau viteză de livrare</em> te pune să joci exact acolo unde ei sunt structural mai buni. Orice strategie construită pe <em>specificitate, relație și expertiză</em> te pune acolo unde ei nu pot ajunge, indiferent de buget.</p>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Alegerea produsului</h2>
+      <p>Decizia care determină ~70% din rezultat, luată înainte de primul post. Marketingul organic e lent — deci produsul trebuie să suporte lentoarea.</p>
+    </div>
+
+    <h3>Cele 7 filtre, cu praguri</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Filtru</th><th>Prag</th><th>De ce contează exact aici</th></tr></thead>
+        <tbody>
+          <tr><td>Marjă brută</td><td class="num">≥ 60%, ideal 70%+</td><td>Organicul aduce vânzări în luna 4–6, nu în săptămâna 2. Ai nevoie de marjă ca să supraviețuiești până atunci și ca să-ți permiți produse gratis pentru creatori.</td></tr>
+          <tr><td>Repetabilitate</td><td class="num">recumpărare la 30–90 zile</td><td>Consumabilele îți dau LTV. Un produs cumpărat o dată în viață te obligă să găsești clienți noi la infinit — cel mai scump model posibil fără buget.</td></tr>
+          <tr><td>Filmabilitate</td><td class="num">≥ 3 momente vizuale</td><td>Are un before/after? Un moment de demonstrație? Un sunet? Un proces? Dacă răspunsul e nu, nu vei putea face 150 de videoclipuri despre el, oricât de bun ar fi.</td></tr>
+          <tr><td>Valoare medie a coșului</td><td class="num">≥ 180–250 lei</td><td>Sub acest prag nu poți oferi livrare gratuită (așteptare standard în RO) și nu-ți acoperi costul de ambalare și retur. Media pieței e ~57 €.</td></tr>
+          <tr><td>Rezistență la clonare</td><td class="num">test Temu</td><td>Întreabă: poate fi produs în China și livrat la jumătate de preț? Dacă da, ieși. Protecție reală dau: perisabilitatea, localitatea, personalizarea, reglementarea, expertiza atașată, comunitatea.</td></tr>
+          <tr><td>Dimensiune fizică</td><td class="num">încape în easybox</td><td>65% dintre cumpărători preferă lockerul, iar 42% returnează prin el. Un produs voluminos pierde din start la conversie și la cost de livrare.</td></tr>
+          <tr><td>Cerere verificabilă</td><td class="num">dovezi în 3 locuri</td><td>Volum de căutare în Google, produse similare cu recenzii pe eMAG, conținut cu vizualizări pe TikTok. Dacă nu găsești în niciunul, creezi o categorie — cel mai scump lucru din marketing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Unde bate vântul în România</h3>
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Cu tracțiune</span>
+        <dl>
+          <dt>Farma, suplimente, wellness</dt><dd>Categoria a crescut cu 65% în 2025. Consumabil, recurent, cu barieră de reglementare care ține platformele non-UE la distanță.</dd>
+          <dt>Pet premium</dt><dd>Piața crește ~12% pe an. Hrană, suplimente, accesorii. Clienți cu LTV mare și atașament emoțional — cea mai bună combinație pentru comunitate.</dd>
+          <dt>Eco / zero waste</dt><dd>Creștere raportată de ~35% pe an. Se pretează la storytelling, la conținut educativ și la un public care distribuie din convingere.</dd>
+          <dt>Produse artizanale și locale</dt><dd>Exact terenul pe care Temu nu poate călca. Marjă bună, poveste inclusă, aprovizionare la scară mică fezabilă.</dd>
+          <dt>Produse digitale</dt><dd>Marjă 80–95%, zero livrare, zero stoc. Cel mai bun mod de a testa dacă poți construi audiență, cu risc financiar aproape nul.</dd>
+          <dt>B2B cu comandă recurentă</dt><dd>Consumabile pentru saloane, cabinete, cafenele, ateliere. Volume previzibile, mai puțină concurență pe conținut, cicluri lungi de fidelitate.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">De evitat la început</span>
+        <dl>
+          <dt>Fashion generalist</dt><dd>Categoria a scăzut cu 10,3%, sub asaltul direct al Shein și Trendyol. Viabil doar hiper-nișat (mărimi speciale, un singur sport, un singur material).</dd>
+          <dt>Electro &amp; IT</dt><dd>Crește (+21%), dar e terenul eMAG și Altex: marje de câteva procente, capital de stoc mare, decizie luată pe preț și încredere.</dd>
+          <dt>Gadget-uri ieftine „virale”</dt><dd>Clonabile într-o săptămână. Nu construiesc brand și nu au recumpărare — vinzi o dată și o iei de la capăt.</dd>
+          <dt>Orice se cumpără o dată în viață</dt><dd>Necesită investiție în memorie de brand pe termen lung, adică exact modelul Dedeman. Nu ai bugetul pentru el.</dd>
+          <dt>Dropshipping generic</dt><dd>Fără control pe produs, pe termen de livrare sau pe ambalaj — adică fără niciunul dintre lucrurile care fac diferențierea posibilă.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>Testul de validare în 14 zile — înainte să cumperi stoc</h4>
+      <p><strong>Zilele 1–4:</strong> 20 de conversații reale cu oameni din publicul-țintă. Nu întrebi „ai cumpăra?”, ci „când ai avut ultima oară problema asta și ce ai făcut?”. <strong>Zilele 5–8:</strong> o pagină simplă cu propunerea, prețul real și un buton de precomandă sau listă de așteptare. <strong>Zilele 9–14:</strong> trei videoclipuri despre problemă, nu despre produs, publicate pe platforma unde stă publicul. <strong>Pragul de trecere:</strong> 30+ înscrieri sau 5 precomenzi plătite din trafic organic. Dacă nu se întâmplă, ai economisit câteva mii de lei de stoc.</p>
+    </div>
+  </section>
+
+  <section id="s6">
+    <div class="sechead"><div class="secnum">06</div><h2>Playbook 0→12 luni</h2>
+      <p>Patru faze. Fiecare are un singur obiectiv și o metrică clară de trecere. Nu treci mai departe până nu o atingi.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">F0</span><div>
+        <h4>Zilele 1–30 · Fundația</h4>
+        <p><strong>Obiectiv:</strong> să existe ceva de vândut și cineva căruia. Alegi publicul și problema, apoi produsul prin cele 7 filtre. Rezolvi partea legală (SRL, CAEN 4791, termeni și condiții, politică GDPR, dreptul de retragere în 14 zile — ANPC dă amenzi între 2.000 și 100.000 lei pentru lipsuri aici). Ridici magazinul pe o platformă gata făcută, nu pe cod propriu. Scrii propoziția de poziționare: „Ajut [cine] să [rezultat], fără [frecarea principală]”. Îți deschizi conturile și rezervi numele peste tot.<br><em>Metrică de trecere: poți explica în 15 secunde de ce ar cumpăra cineva de la tine și nu de pe eMAG.</em></p>
+      </div></li>
+      <li><span class="n">F1</span><div>
+        <h4>Lunile 1–3 · Motorul de conținut</h4>
+        <p><strong>Obiectiv:</strong> să dovedești că poți produce constant. O singură platformă principală. 5 postări pe săptămână, 12 săptămâni la rând, fără excepții. Nu urmărești vânzări în această fază — urmărești rata de retenție a videoclipurilor și comentariile. Vorbești cu fiecare om care comentează. Din comentarii îți iese lista de subiecte pentru trimestrul următor și, adesea, următorul produs.<br><em>Metrică de trecere: 60 de postări publicate și minimum 3 care au depășit de 5 ori media ta. Acelea îți arată unghiul care funcționează.</em></p>
+      </div></li>
+      <li><span class="n">F2</span><div>
+        <h4>Lunile 3–6 · Captarea și retenția</h4>
+        <p><strong>Obiectiv:</strong> să transformi atenția împrumutată în distribuție deținută. Pui un motiv real de înscriere (nu „10% reducere”, ci ceva util în nișa ta). Construiești cele 6 fluxuri de email. Pornești motorul de recenzii: cerere automată la 7 zile după livrare, stimulent pentru poză. Publici primele 15–20 de articole de long-tail. Trimiți produs la 20–30 de micro-creatori, fără brief rigid.<br><em>Metrică de trecere: 1.000 de adrese în listă, 30+ recenzii cu poză, primele vânzări care vin din email și din căutare, nu din feed.</em></p>
+      </div></li>
+      <li><span class="n">F3</span><div>
+        <h4>Lunile 6–12 · Amplificarea</h4>
+        <p><strong>Obiectiv:</strong> să adaugi canale peste un motor care deja funcționează. Program de afiliere. Listare pe eMAG Marketplace și TikTok Shop — dar tratate ca surse de descoperire, cu strategia explicită de a muta clientul în canalul tău. Program de ambasadori pentru primii 20 de clienți fideli. Primul tău ritual recurent, cu dată în calendar. Abia acum, dacă vrei, adaugi reclame plătite — peste conținut deja validat organic, unde costul e mult mai mic.<br><em>Metrică de trecere: peste 30% din venit vine din clienți care revin, iar canalele deținute (email, comunitate) generează venit fără să postezi.</em></p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s7">
+    <div class="sechead"><div class="secnum">07</div><h2>Motorul de conținut</h2>
+      <p>Partea pe care o vei face efectiv, în fiecare zi. Aici se câștigă sau se pierde tot.</p>
+    </div>
+
+    <h3>O platformă principală, una secundară</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Platformă</th><th>Ce îți dă</th><th>Alege-o dacă</th></tr></thead>
+        <tbody>
+          <tr><td>TikTok</td><td>Cea mai rapidă distribuție către străini. 8,71 mil utilizatori RO, 32,5 h/lună, 90% utilizare zilnică la 18–24 ani.</td><td>Publicul tău e sub 40 de ani și produsul are un moment vizual. E și platforma cu cel mai mare avantaj de early mover acum, prin TikTok Shop.</td></tr>
+          <tr><td>YouTube</td><td>Efect cumulativ. Un video bun aduce trafic ani la rând. 30 h/lună în RO, al doilea după TikTok.</td><td>Produsul cere explicație, comparație sau demonstrație lungă. Cel mai bun raport efort/durată de viață.</td></tr>
+          <tr><td>Instagram</td><td>Estetică și încredere de brand. Locul unde oamenii verifică dacă ești real înainte să cumpere.</td><td>Categoria e vizuală (beauty, deco, fashion, food). Funcționează mai bine ca sprijin decât ca motor principal.</td></tr>
+          <tr><td>Facebook</td><td>Acoperire la 45+ (92,3% utilizare zilnică la 55–64 ani) și grupuri de nișă foarte active.</td><td>Publicul tău e matur, sau nișa are grupuri unde se discută deja despre problema ta.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Cadență realistă</h3>
+    <p>Nu 3 postări pe zi — vei renunța în trei săptămâni, ceea ce e cel mai frecvent mod de eșec. <strong>Cinci pe săptămână, timp de 12 săptămâni</strong>, este pragul minim la care algoritmul are date suficiente ca să te înțeleagă. Filmezi grupat (o sesiune de 2 ore pentru 10 clipuri), publici zilnic.</p>
+
+    <h3>Șase formate care funcționează</h3>
+    <ol class="plain">
+      <li><strong>Problemă → agitație → soluție, în 15 secunde.</strong> Arăți frustrarea concretă în primele 2 secunde. Produsul apare în ultimele 4.</li>
+      <li><strong>Tutorial în care produsul e incidental.</strong> Înveți ceva util; produsul e doar prezent în cadru. Cel mai bun raport valoare/vânzare.</li>
+      <li><strong>Din culise și fondator.</strong> Prima comandă, ambalarea, o greșeală, un furnizor. E formatul pe care o corporație nu îl poate reproduce.</li>
+      <li><strong>Mituri demontate / comparație.</strong> „Nu e adevărat că…”, „X vs Y — diferența reală”. Generează comentarii, iar comentariile generează distribuție.</li>
+      <li><strong>Conținut de la clienți.</strong> Repostezi, cu permisiune. Postările cu UGC convertesc de ordine de mărime mai bine decât cele create de brand.</li>
+      <li><strong>Serie numerotată.</strong> „Ziua 14 din 100 în care construiesc…”. Numărul creează obligație de urmărire și te obligă și pe tine să continui.</li>
+    </ol>
+
+    <h3>Regula 60/30/10</h3>
+    <p>Din 10 postări: <strong>6 educă</strong> (rezolvă problema publicului, chiar și fără produsul tău), <strong>3 distrează sau arată omul din spate</strong>, <strong>1 vinde direct</strong>. Inversarea acestei proporții e cel mai frecvent motiv pentru care conturile de magazine online nu cresc.</p>
+
+    <h3>Douăsprezece deschideri care opresc scroll-ul</h3>
+    <div class="hooks">
+      <div class="hook"><b>Eroare costisitoare</b>Am pierdut 3.000 de lei până să înțeleg asta despre…</div>
+      <div class="hook"><b>Contraintuitiv</b>Tot ce ți s-a spus despre… e greșit. Uite de ce.</div>
+      <div class="hook"><b>Specific numeric</b>Trei lucruri pe care le verific la fiecare… înainte să dau bani.</div>
+      <div class="hook"><b>Demonstrație</b>Pun asta la test. Dacă nu funcționează, o spun.</div>
+      <div class="hook"><b>Comparație</b>Ăsta costă 40 de lei. Ăsta 400. Diferența reală:</div>
+      <div class="hook"><b>Confesiune</b>Nu am vrut să spun asta public, dar…</div>
+      <div class="hook"><b>Adresare directă</b>Dacă ai [problema], oprește-te 20 de secunde.</div>
+      <div class="hook"><b>Din interior</b>Lucrez în domeniu de 6 ani. Uite ce nu îți zice nimeni.</div>
+      <div class="hook"><b>Înainte / după</b>Aceeași persoană, la 30 de zile distanță.</div>
+      <div class="hook"><b>Obiecție preluată</b>„E prea scump.” Corect. Uite de ce e prețul ăsta.</div>
+      <div class="hook"><b>Curiozitate concretă</b>Am deschis 200 de colete anul ăsta. Unul singur a fost…</div>
+      <div class="hook"><b>Local</b>De ce în România se face invers față de restul Europei la…</div>
+    </div>
+
+    <div class="callout warn">
+      <h4>Capcana producției lustruite</h4>
+      <p>Videoclipul filmat pe telefon, fără montaj, cu tine vorbind, performează în mod obișnuit mai bine decât producția de studio. Lustruirea semnalează „reclamă” și publicul derulează. Păstrează bugetul de producție pentru fotografiile de pe pagina de produs, unde chiar contează.</p>
+    </div>
+  </section>
+
+  <section id="s8">
+    <div class="sechead"><div class="secnum">08</div><h2>SEO în epoca AI</h2>
+      <p>Căutarea nu a murit, dar s-a schimbat radical în 2025–2026. Regulile vechi de SEO produc acum mai puțin trafic pentru același efort.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>47–64%</b><span>din căutări afișează AI Overviews în 2026 (25–30% la lansare, în 2024)</span></div>
+      <div class="stat down"><b>−58%</b><span>scăderea ratei de click pentru poziția 1 pe cuvintele cu AI Overview</span></div>
+      <div class="stat"><b>80/20</b><span>GEO e 80% poziționare și autoritate, doar 20% tehnic</span></div>
+    </div>
+
+    <p>Concluzia practică nu e „renunț la SEO”, ci: <strong>trafic mai puțin, dar cu intenție mai mare</strong>, plus o a doua bătălie, pentru a fi <em>citat</em> în răspunsurile generate de AI. Cele trei se suprapun, dar nu sunt identice.</p>
+
+    <h3>Ce faci concret, în ordine</h3>
+    <ul class="check">
+      <li><strong>Ținteste long-tail-ul tranzacțional și comparativ.</strong> Nu „suplimente”, ci „ce magneziu se ia seara pentru crampe”. Puțin volum, intenție uriașă, competiție mică. Modelul Notino, la scara ta.</li>
+      <li><strong>Scrie extractabil.</strong> Răspunsul complet în primele 40–60 de cuvinte de sub titlu, apoi detaliile. H2-uri formulate ca întrebări reale. Tabele comparative. Secțiune de întrebări frecvente. Sistemele AI extrag fragmente — dă-le fragmente clare.</li>
+      <li><strong>Pune datele structurate.</strong> Schema pentru Product, Review/AggregateRating, FAQ, Organization, BreadcrumbList. E partea tehnică ieftină și obligatorie.</li>
+      <li><strong>Construiește autoritate în afara site-ului tău.</strong> Modelele lingvistice citează surse terțe: discuții pe Reddit și forumuri, comparatoare, presă de nișă, recenzii independente. Prezența ta acolo influențează dacă ești recomandat într-un răspuns AI — nu poți optimiza asta doar de pe propriul site.</li>
+      <li><strong>Nu miza pe o singură platformă AI.</strong> Modelele diferite extrag din surse diferite, iar suprapunerea e mai mică decât s-ar crede. Diversifică sursele în care apari.</li>
+      <li><strong>Alimentează feed-urile.</strong> Google Merchant Center și fișele de pe marketplace-uri sunt intrări separate în ecosistemul de descoperire.</li>
+    </ul>
+
+    <div class="callout calm">
+      <h4>Formula pentru primele 20 de articole</h4>
+      <p>Zece de tipul <strong>„cum alegi X pentru Y”</strong>, cinci <strong>„X vs Y — care e diferența”</strong>, trei <strong>„greșeli frecvente la X”</strong>, două <strong>„cât costă X în România în 2026”</strong>. Toate cu răspunsul în primul paragraf, un tabel și o secțiune de întrebări. E un trimestru de muncă și un activ care lucrează ani.</p>
+    </div>
+  </section>
+
+  <section id="s9">
+    <div class="sechead"><div class="secnum">09</div><h2>Retenție</h2>
+      <p>Canalele pe care le deții. Aici se face profitul, pentru că nu plătești de două ori pentru același client.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>41%</b><span>din venitul pe email vine din fluxuri automate, generate de doar 5,3% din trimiteri</span></div>
+      <div class="stat"><b>~13x</b><span>rata de comandă a fluxurilor față de campaniile obișnuite</span></div>
+      <div class="stat"><b>38–45%</b><span>ponderea email+SMS în venitul total, la brandurile din decila superioară</span></div>
+      <div class="stat"><b>12–18%</b><span>rata de conversie a fluxului de bun venit</span></div>
+      <div class="stat"><b>8–12%</b><span>rata de recuperare a coșurilor abandonate</span></div>
+      <div class="stat"><b>40–60%</b><span>rata de deschidere a fluxului de bun venit (18–25% la campanii)</span></div>
+    </div>
+
+    <p>Diferența dintre fluxuri și campanii e cea mai mare pârghie nefolosită de magazinele mici din România. Un flux se scrie o dată și lucrează la nesfârșit. O campanie se scrie de fiecare dată și moare într-o zi. <strong>Începe cu fluxurile.</strong></p>
+
+    <h3>Cele șase fluxuri obligatorii</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Flux</th><th>Declanșator</th><th>Conținut</th></tr></thead>
+        <tbody>
+          <tr><td>Bun venit</td><td>Înscriere în listă</td><td>3–4 emailuri: povestea ta și de ce faci asta, cum se folosește produsul, dovezi de la clienți, apoi o ofertă. Nu vinde în primul.</td></tr>
+          <tr><td>Coș abandonat</td><td>La 1h, 24h, 72h</td><td>Reamintire simplă, apoi obiecția principală rezolvată (livrare, retur, garanție), apoi o urgență reală, nu inventată.</td></tr>
+          <tr><td>Navigare abandonată</td><td>Produs văzut, fără adăugare în coș</td><td>Un singur email cu produsul și două recenzii. Recuperează intenție care altfel dispare.</td></tr>
+          <tr><td>Post-achiziție</td><td>La livrare + 3 zile</td><td>Cum să obții rezultate maxime din ce ai cumpărat. Zero vânzare. Aici se construiește recumpărarea.</td></tr>
+          <tr><td>Cerere de recenzie</td><td>La 7–10 zile de la livrare</td><td>Cerere directă, cu stimulent pentru poză sau video. Alimentează motorul de dovezi din tiparul 07.</td></tr>
+          <tr><td>Reaprovizionare</td><td>La 70–80% din durata de consum</td><td>Doar pentru consumabile. Cel mai profitabil email pe care îl vei scrie vreodată.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Dincolo de email</h3>
+    <ul class="check">
+      <li><strong>WhatsApp.</strong> În România ratele de deschidere sunt mult peste email, dar toleranța la abuz e zero. Folosește-l pentru confirmări, întrebări și lansări rare — nu pentru promoții săptămânale.</li>
+      <li><strong>Un grup privat pentru clienți.</strong> Facebook sau WhatsApp. Aici obții feedback de produs gratuit, conținut generat de membri și primii 20 de ambasadori.</li>
+      <li><strong>Program de ambasadori, varianta Gymshark.</strong> Alege 10–20 de clienți care postează deja despre tine. Dă-le produs, acces devansat la lansări și un cod propriu. Nu-i plăti la început — leagă-i de brand, nu de bani.</li>
+      <li><strong>Un ritual cu dată fixă.</strong> Lansare în prima marți din lună, o rubrică săptămânală, o provocare de 30 de zile. Transformă publicul pasiv în public care revine singur.</li>
+    </ul>
+  </section>
+
+  <section id="s10">
+    <div class="sechead"><div class="secnum">10</div><h2>Canale gratuite specifice României</h2>
+      <p>Oportunități locale care nu apar în ghidurile internaționale.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>TikTok Shop — fereastra de early mover</h4>
+        <p>TikTok Shop e activ în România, iar Europa de Est e următoarea frontieră de expansiune după Spania, Irlanda și Germania. În piețele care au deschis mai devreme, brandurile de beauty, modă și food au raportat conversii de 3–5 ori mai mari decât prin Instagram Shopping. Avantajul de a intra devreme pe un canal nou e cel mai ieftin avantaj din marketing — și expiră.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Micro și nano-creatori</h4>
+        <p>75,9% din baza de creatori din România sunt nano și micro, iar zona de 10.000–30.000 de urmăritori are cea mai bună combinație de engagement și încredere. Tarife orientative: nano 30–150 € pe postare, micro de la ~150 € (mulți acceptă produs în locul plății, la început). <strong>Atenție la drepturile de utilizare</strong> — dacă vrei să refolosești materialul în reclame, se negociază separat de la început, altfel costul crește ulterior cu 30–100%.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Afiliere</h4>
+        <p>2Performant conectează peste 100.000 de afiliați cu sute de comercianți români și raportează un raport de întoarcere a bugetului de 16,3:1. Plătești doar la vânzare, deci riscul e zero. E canalul potrivit pentru faza 3, nu pentru început — ai nevoie întâi de un magazin care convertește.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Marketplace-urile ca descoperire, nu ca destinație</h4>
+        <p>Peste 60% din vânzările online trec prin marketplace-uri, deci ignorarea lor înseamnă să renunți la majoritatea pieței. Dar clientul de acolo e al lor, nu al tău. Strategia corectă: listezi ca să fii descoperit, apoi muți relația în canalul tău prin ce pui în colet — un bilet, un cod, un motiv real de a te căuta direct.</p>
+      </div></li>
+      <li><span class="n">05</span><div>
+        <h4>Grupuri și comunități</h4>
+        <p>Grupuri de Facebook pe nișe (mămici, animale de companie, alergare, grădinărit, antreprenoriat), subreddit-urile românești, forumuri de specialitate. Regula e simplă și inflexibilă: <strong>90 de zile de răspunsuri utile fără link înainte de orice mențiune a produsului.</strong> Altfel ești dat afară și pierzi canalul definitiv.</p>
+      </div></li>
+      <li><span class="n">06</span><div>
+        <h4>Presă de business și podcasturi</h4>
+        <p>StartupCafe, Wall-Street, Retail.ro, ZF, Start-up.ro publică frecvent povești de antreprenori la început. Un email cu o poveste concretă și cifre reale are șanse mari, e gratuit și îți dă și un link de autoritate — util și pentru SEO, și pentru a fi citat de sistemele AI.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s11">
+    <div class="sechead"><div class="secnum">11</div><h2>Măsurare</h2>
+      <p>Organicul e greu de atribuit. Fără un sistem simplu, vei lua decizii pe intuiție și vei renunța exact înainte să funcționeze.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ritm</th><th>Ce urmărești</th><th>Ce decizi</th></tr></thead>
+        <tbody>
+          <tr><td>Săptămânal</td><td>Postări publicate, rata de retenție a videoclipurilor, comentarii, adrese noi în listă</td><td>Ce format repeți săptămâna următoare. Nimic altceva.</td></tr>
+          <tr><td>Lunar</td><td>Vânzări pe sursă, rata de conversie a magazinului, valoarea medie a comenzii, recenzii noi</td><td>Ce pagini de produs repari, ce obiecție adaugi în conținut.</td></tr>
+          <tr><td>Trimestrial</td><td>Procent din venit din clienți care revin, venit pe canal deținut, trafic organic din căutare</td><td>Dacă adaugi un canal nou sau dublezi pe cel existent.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Cum atribui organicul, practic</h3>
+    <ul class="check">
+      <li><strong>Întrebarea de după cumpărare.</strong> Un singur câmp pe pagina de mulțumire: „De unde ai auzit de noi?”. E cea mai exactă sursă de adevăr pe care o vei avea, mai bună decât orice instrument de analiză.</li>
+      <li><strong>Coduri unice per creator și per platformă.</strong> Nu pentru reducere, ci pentru urmărire.</li>
+      <li><strong>Etichete UTM</strong> pe fiecare link din bio, din newsletter și din descrieri.</li>
+      <li><strong>Curba de căutare a numelui de brand.</strong> Cea mai bună dovadă că organicul funcționează: crește numărul de oameni care îți caută numele direct în Google.</li>
+    </ul>
+
+    <div class="callout">
+      <h4>Praguri de decizie</h4>
+      <p><strong>Continui</strong> dacă la 90 de zile ai cel puțin 3 postări care au depășit de 5 ori media ta — ai găsit un unghi. <strong>Schimbi unghiul, nu platforma</strong>, dacă ai publicat 60 de postări și nimic nu s-a desprins: aproape întotdeauna problema e mesajul, nu canalul. <strong>Schimbi produsul</strong> doar dacă ai avut atenție (vizualizări, comentarii, înscrieri) dar nu ai avut vânzări — atunci ai o problemă de ofertă, nu de marketing.</p>
+    </div>
+  </section>
+
+  <section id="s12">
+    <div class="sechead"><div class="secnum">12</div><h2>Capcane</h2>
+      <p>Modurile obișnuite în care se pierde un an.</p>
+    </div>
+    <ol class="plain">
+      <li><strong>Prea multe platforme simultan.</strong> Cu o singură persoană, patru conturi înseamnă patru conturi mediocre. Una principală, până când funcționează.</li>
+      <li><strong>Oprirea la trei săptămâni.</strong> Cel mai frecvent eșec. Rezultatele organice apar tipic în lunile 3–6. Cine se oprește în săptămâna 4 plătește tot costul și nu ia niciun beneficiu.</li>
+      <li><strong>Schimbarea mesajului prea des.</strong> Momentul în care ție ți se pare repetitiv este momentul în care publicul abia începe să te rețină.</li>
+      <li><strong>Concurența pe preț cu platformele non-UE.</strong> E o luptă pierdută structural. Mută-te pe alt teren.</li>
+      <li><strong>Conținut care vinde în fiecare postare.</strong> Inversează raportul 60/30/10 și algoritmul te va îngropa.</li>
+      <li><strong>Neglijarea legalului.</strong> Termeni și condiții, politică de confidențialitate GDPR, dreptul de retragere în 14 zile, date de identificare vizibile. ANPC amendează între 2.000 și 100.000 lei, iar sancțiunile GDPR merg mult mai sus.</li>
+      <li><strong>Amânarea colectării de adrese.</strong> Fiecare zi fără formular de înscriere e audiență pierdută definitiv.</li>
+      <li><strong>Reclame plătite prea devreme.</strong> Publicitatea amplifică ce ai. Dacă nu ai mesaj validat și pagină care convertește, amplifici zero — cu bani.</li>
+    </ol>
+  </section>
+
+  <section id="s13">
+    <div class="sechead"><div class="secnum">13</div><h2>Planul de 90 de zile</h2>
+      <p>Dacă ai citit tot și vrei un singur lucru de făcut mâine, e tabelul ăsta.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Săptămâni</th><th>Focus</th><th>Livrabil concret</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1–2</td><td>Public și problemă</td><td>20 de conversații reale. O propoziție de poziționare scrisă. Trei nișe candidate, trecute prin cele 7 filtre.</td></tr>
+          <tr><td class="num">3–4</td><td>Validare</td><td>Pagină de precomandă sau listă de așteptare. Primele 3 videoclipuri despre problemă. Prag: 30 de înscrieri sau 5 precomenzi.</td></tr>
+          <tr><td class="num">5–6</td><td>Fundația</td><td>Firmă și documente legale. Magazin funcțional cu 3–5 produse. Formular de înscriere activ din prima zi.</td></tr>
+          <tr><td class="num">7–10</td><td>Motorul de conținut</td><td>5 postări pe săptămână pe o singură platformă. Filmare grupată, o sesiune pe săptămână. Răspuns la fiecare comentariu.</td></tr>
+          <tr><td class="num">9–10</td><td>Fluxurile de email</td><td>Bun venit, coș abandonat, post-achiziție — scrise și pornite. Restul urmează în trimestrul doi.</td></tr>
+          <tr><td class="num">11–12</td><td>Dovezi și creatori</td><td>Cerere automată de recenzie. Produs trimis la 20 de micro-creatori din nișă. Primele 5 articole de long-tail.</td></tr>
+          <tr><td class="num">13</td><td>Bilanț</td><td>Ce format a funcționat, ce unghi s-a desprins, de unde au venit vânzările. Planul pentru trimestrul doi se scrie din date, nu din presupuneri.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout calm">
+      <h4>Ordinea contează mai mult decât viteza</h4>
+      <p>Aproape toți încep de la magazin. Ordinea corectă e <strong>public → problemă → validare → produs → magazin → conținut</strong>. Magazinul construit înainte de a ști cui vinzi este cel mai scump obiect decorativ din eCommerce.</p>
+    </div>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Datele din raport, verificate în august 2026. Cifrele de piață provin în principal din raportul MerchantPro eCommerce Insights 2026, DataReportal, Brand Finance, Sameday și Klaviyo.</p>
+    </div>
+    <div class="sources">
+      <a href="https://www.economica.net/piata-de-ecommerce-din-romania-ar-putea-depasi-85-miliarde-de-euro-in-2026-dupa-un-avans-de-5-mai-mic-decat-in-2025924159_924159.html">Economica.net — Piața de eCommerce ar putea depăși 8,5 mld € în 2026</a>
+      <a href="https://www.merchantpro.ro/whitepapers/raport-ecommerce-insights-2026">MerchantPro — Raport eCommerce Insights 2026</a>
+      <a href="https://www.wall-street.ro/articol/ecommerce/cifre-importante-din-comertul-online-romanesc-cu-cat-a-crescut-piata.html">Wall-Street — Topul celor mai vizitate magazine online</a>
+      <a href="https://economedia.ro/piata-de-ecommerce-din-romania-se-apropie-de-85-miliarde-euro-in-2026-intre-ai-si-presiunea-marketplace-urilor-internationale.html">Economedia — Presiunea marketplace-urilor și a AI</a>
+      <a href="https://agerpres.ro/economic/2026/03/19/ecommerce-ul-din-romania-creste-spre-8-5-miliarde-euro-sub-presiunea-platformelor-non-ue-ai-si-a-con--1538959">AGERPRES — eCommerce sub presiunea platformelor non-UE</a>
+      <a href="https://www.retail.ro/articole/stiri-si-noutati/2025-un-an-cu-doua-viteze-in-ecommerce-emag-trendyol-si-temu-marii-castigatori-ai-comenzilor-online-14950.html">Retail.ro — Un an cu două viteze: eMAG, Trendyol și Temu</a>
+      <a href="https://stirileprotv.ro/stiri/eplan/emag-marketplace-in-2025-vanzari-mai-mari-prin-ai-cross-border-si-fulfillment.html">Știrile ProTV — eMAG Marketplace: AI, cross-border și fulfillment</a>
+      <a href="https://www.zf.ro/in-the-spotlight/stejara-pircan-vp-emag-romania-bulgaria-si-ungaria-companiile-romanesti-listate-pe-emag-marketplace-au-exportat-produse-de-peste-2-mld-lei-de-la-lansarea-proiectului-pana-azi-23199954">ZF — Interviu Stejara Pîrcan, VP eMAG</a>
+      <a href="https://www.retail.ro/articole/interviuri-si-analize/emag-depaseste-dacia-si-devine-cel-mai-valoros-brand-romanesc-dedeman-si-altex-completeaza-cresterea-sectorului-de-retail-6664.html">Retail.ro — Valorile de brand eMAG, Dedeman, Altex</a>
+      <a href="https://www.zf.ro/companii/brand-finance-dacia-cel-valoros-brand-romanesc-2026-valoare-1-2-mld-23156518">ZF — Brand Finance 2026: clasamentul brandurilor românești</a>
+      <a href="https://mkor.eu/blog/romanian-retailers-are-preferred-by-online-shoppers/">MKOR — Retailerii preferați de cumpărătorii români</a>
+      <a href="https://www.sfin.ro/altex-ai-marketing-incredere-branduri/">Săptămâna Financiară — Lecția ALTEX despre AI și încredere</a>
+      <a href="https://www.similarweb.com/website/notino.ro/">Similarweb — Trafic notino.ro</a>
+      <a href="https://www.dotidot.io/case-studies/notino-boosted-conversions-with-segmented-search-strategy">Dotidot — Studiu de caz Notino: segmentarea campaniilor de Search</a>
+      <a href="https://revistaprogresiv.ro/stiri/tech/freshful-raporteaza-o-crestere-cu-aproape-25-a-numarului-de-clienti-in-2025/">Progresiv — Creșterea Freshful în 2025</a>
+      <a href="https://www.economica.net/cum-se-poarta-batalia-magazinelor-alimentare-online-freshful-by-emag-vs-sezamo_949764.html">Economica.net — Freshful vs Sezamo</a>
+      <a href="https://www.antena3.ro/economic/shein-temu-trendyol-fac-prapad-in-comertul-romanesc-cum-pierde-economia-locala-miliarde-din-cauza-platformelor-din-afara-ue-792151.html">Antena 3 CNN — Studiul ASE despre impactul platformelor non-UE</a>
+      <a href="https://hotnews.ro/temu-si-shein-vs-magazine-online-romanesti-solutii-pentru-antreprenori-in-lupta-cu-colosii-chinezi-care-au-inundat-internetul-1775975">HotNews — Soluții pentru antreprenorii români în fața Temu și Shein</a>
+      <a href="https://www.zf.ro/companii/retail-agrobusiness/au-ajuns-plaformele-chinezesti-temu-shein-cucereasca-piata-moda-22875999">ZF — Prețurile medii Shein vs H&amp;M vs Zara</a>
+      <a href="https://traficmedia.ro/preferinta-pentru-easybox-depaseste-livrarea-la-adresa/">Traficmedia — Preferința pentru easybox depășește livrarea la adresă</a>
+      <a href="https://www.cargus.ro/blog/cum-cumpara-romanii-online-2026-pret-livrare-experienta/">Cargus — Cum cumpără românii online în 2026</a>
+      <a href="https://datareportal.com/reports/digital-2026-romania">DataReportal — Digital 2026: Romania</a>
+      <a href="https://datambar.com/en/social-media-global-trends-romania/">Datambar — Tendințe de utilizare social media în România 2026</a>
+      <a href="https://www.dancovision.ro/blog/top-5-trenduri-social-commerce-pe-tiktok-si-instagram-in-romania">Danco Vision — Trenduri de social commerce în România</a>
+      <a href="https://www.retail.ro/articole/stiri-si-noutati/shopping-ul-se-muta-pe-tiktok-inca-trei-piete-noi-in-europa-15027.html">Retail.ro — Expansiunea TikTok Shop în Europa</a>
+      <a href="https://startupcafe.ro/tiktok-romania-2025-afaceri-locale-prezente-platforma-melodie-virala-dame-un-grrr-91977">StartupCafe — Afaceri locale crescute pe TikTok în 2025</a>
+      <a href="https://mocapp.net/blog/cat-costa-o-campanie-cu-influenceri-2026/?lang=ro">MOCAPP — Cât costă o campanie cu influenceri în 2026</a>
+      <a href="https://keepface.com/site/en/influencer-marketing-in-romania-2026/">Keepface — Piața de influencer marketing din România</a>
+      <a href="https://2performant.com/advertisers/">2Performant — Rețeaua de afiliere</a>
+      <a href="https://digitalagencynetwork.com/gymshark-marketing-strategy/">Digital Agency Network — Strategia de marketing Gymshark</a>
+      <a href="https://iide.co/case-studies/marketing-strategy-of-gymshark/">IIDE — Gymshark: secretul creșterii prin comunitate</a>
+      <a href="https://brand24.com/blog/duolingo-social-media-strategy/">Brand24 — Strategia de social media Duolingo</a>
+      <a href="https://technical.ly/company-culture/duolingo-viral-marketing-strategy-lessons/">Technical.ly — Cum a construit Duolingo strategia virală</a>
+      <a href="https://www.klaviyo.com/products/email-marketing/benchmarks">Klaviyo — Benchmark-uri de email marketing 2026</a>
+      <a href="https://www.klaviyo.com/uk/blog/email-marketing-benchmarks-open-click-and-conversion-rates">Klaviyo — Rate de deschidere, click și conversie</a>
+      <a href="https://www.shno.co/marketing-statistics/user-generated-content-statistics">Shno — Statistici despre conținutul generat de utilizatori</a>
+      <a href="https://archive.com/blog/ugc-impact-ecommerce-sales-statistics">Archive — Impactul UGC asupra vânzărilor de eCommerce</a>
+      <a href="https://aristral.com/blog/seo-geo-aeo-statistics-2026">Aristral — Statistici SEO, GEO și AEO 2026</a>
+      <a href="https://writer.com/blog/geo-aeo-optimization/">Writer — Ghid GEO, AEO și SEO în 2026</a>
+      <a href="https://eseospace.com/blog/how-ai-overviews-impact-seo-2026/">eSEOspace — Impactul AI Overviews asupra SEO</a>
+      <a href="https://www.gomag.ro/blog/ce-sa-vinzi-online-produse-si-idei-de-afaceri/">Gomag — Cum găsești produse și nișe profitabile</a>
+      <a href="https://validsoftware.ro/ce-verifica-anpc-pe-un-magazin-online-in-2026/">Valid Software — Ce verifică ANPC la un magazin online în 2026</a>
+      <a href="https://www.sensmedia.ro/acte-necesare-pentru-un-magazin-online-in-2026/">SensMedia — Acte necesare pentru un magazin online</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Raport de research realizat în august 2026. Cifrele reflectă cele mai recente date publice disponibile la acel moment și trebuie reverificate înainte de decizii de investiție. Sumele în euro și lei sunt preluate ca atare din sursele citate.</p>
+  </footer>
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>
