@@ -2,8 +2,9 @@
 
 Research pe marketingul celor mai mari jucători din comerțul online — românesc și
 internațional — și playbook-ul organic derivat din el, pentru un magazin la început de drum.
-Plus documentul de decizie care aplică filtrele pe un profil concret de fondator, și scanarea
-de produse care testează ipoteza „ce merge în afară și n-a ajuns încă la noi”.
+Plus documentul de decizie care aplică filtrele pe un profil concret de fondator, scanarea
+de produse care testează ipoteza „ce merge în afară și n-a ajuns încă la noi”, și selecția
+pe valoare evidentă — produse care nu au nevoie să fie explicate ca să se vândă.
 
 ## Fișiere
 
@@ -15,6 +16,8 @@ de produse care testează ipoteza „ce merge în afară și n-a ajuns încă la
 | `decizia-de-business.html` | Aceeași versiune, ca pagină web |
 | `Fereastra-de-doi-ani-raport.pdf` | Scanarea de produse, 16 pagini |
 | `vanatoarea-de-produse.html` | Aceeași versiune, ca pagină web |
+| `Nimic-de-explicat-raport.pdf` | Selecția pe valoare evidentă, 16 pagini |
+| `zece-produse-fara-explicatii.html` | Aceeași versiune, ca pagină web |
 
 ## Raportul de research — structură
 
@@ -83,6 +86,28 @@ produse cu creștere documentată extern, verificate unul câte unul pentru disp
 | 11 | Comparația cu recomandarea precedentă |
 | 12 | Capcanele acestui joc |
 
+## Selecția pe valoare evidentă — structură
+
+Răspunde obiecției că ideile precedente cereau prea multă educație. Introduce două filtre noi
+— testul de 3 secunde și testul de calcul — și scanează încă nouă categorii alese pentru
+valoare imediat vizibilă. Rezultat: în toate nouă produsul există deja în România, dar modelul
+de vânzare pe abonament lipsește peste tot.
+
+| # | Secțiune |
+|---|---|
+| 00 | Ai dreptate — ce anulează obiecția din documentele precedente |
+| 01 | Cele două filtre noi, aplicate și retroactiv |
+| 02 | A doua scanare — 9 categorii, stadiu produs vs. stadiu model |
+| 03 | De la „ce vinzi” la „cum vinzi” — cele 4 leviere |
+| 04 | Cele 10 produse, cu propoziția de 3 secunde și socoteala |
+| 05 | Punctajul pe 8 criterii, inclusiv lei pe client pe an |
+| 06 | Recomandarea |
+| 07 | Economia |
+| 08 | Cele două canale, cu cifre — eMAG marketplace vs. magazin propriu |
+| 09 | Primele 30 de zile |
+| 10 | Ce se schimbă față de documentele precedente |
+| 11 | Capcanele modelului de abonament |
+
 ## Surse
 
 Raportul de research: peste 40 de surse, verificate în august 2026 — între altele MerchantPro
@@ -96,6 +121,10 @@ Scanarea de produse adaugă rapoarte de piață pentru fiecare categorie testat�
 medicale care elimină un candidat (recenzia sistematică PLOS One din 2025 privind lipirea gurii
 în somn) și verificările de disponibilitate în România, cu link către listarea găsită. Listele
 complete sunt la finalul fiecărui document.
+
+Selecția pe valoare evidentă adaugă datele demografice INS pentru ianuarie 2026, informațiile
+publice despre comisioanele eMAG Marketplace, și verificările de disponibilitate pentru cele
+nouă categorii scanate.
 
 ## Cum au fost generate PDF-urile
 

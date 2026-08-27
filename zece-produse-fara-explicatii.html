@@ -1,0 +1,931 @@
+<meta charset="utf-8">
+<title>Nimic de explicat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+
+/* ---------- adăugiri ---------- */
+.verdict{
+  border:1px solid var(--teal); background:var(--teal-soft);
+  padding:26px 26px 22px; margin:34px 0 8px;
+}
+.verdict .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--teal); display:block; margin-bottom:14px; font-weight:600;
+}
+.verdict h2{margin-bottom:12px; max-width:20ch}
+.verdict p{max-width:64ch; color:var(--ink-2)}
+.verdict p:last-child{margin-bottom:0}
+.verdict .oneline{
+  font-family:"Archivo",sans-serif; font-size:19px; font-weight:600; line-height:1.4;
+  color:var(--ink); letter-spacing:-.01em; max-width:52ch; margin-bottom:14px;
+}
+
+/* stadiul de sosire în România */
+.st{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600;
+  letter-spacing:.1em; padding:3px 7px 2px; border:1px solid currentColor; white-space:nowrap;
+}
+.st0{color:var(--teal)}
+.st1{color:var(--ok)}
+.st2{color:var(--danger)}
+.stagerow{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:26px 0}
+@media (min-width:820px){.stagerow{grid-template-columns:repeat(3,1fr)}}
+.stagecell{background:var(--surface); padding:18px 20px}
+.stagecell h4{margin:10px 0 8px; font-size:17px}
+.stagecell p{font-size:16px; margin-bottom:.6em}
+.stagecell p:last-child{margin-bottom:0}
+
+.legend{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted);
+  display:flex; flex-wrap:wrap; gap:6px 18px; margin:-14px 0 26px;
+}
+.m{font-family:"IBM Plex Mono",monospace; font-size:13px; line-height:1}
+.m.y{color:var(--ok)} .m.p{color:var(--signal)} .m.n{color:var(--danger)}
+table.score{min-width:760px}
+table.score th.rot{text-align:center; padding:11px 6px; font-size:9.5px; letter-spacing:.06em}
+table.score td.mk{text-align:center; padding:11px 6px}
+table.score td.tot{
+  font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+  text-align:center; font-size:13px; font-weight:600; color:var(--ink);
+}
+table.score tr.win td,table.ten tr.win td{background:var(--teal-soft)}
+table.score tr.win td:first-child,table.ten tr.win td:first-child{color:var(--ink); font-weight:600}
+table.scan{min-width:720px}
+table.scan td.stc{white-space:nowrap}
+td.tr{text-align:right; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px; white-space:nowrap}
+th.tr{text-align:right}
+tr.sum td{background:var(--surface-2); color:var(--ink); font-weight:600; border-top:1px solid var(--line-strong)}
+.steps{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.steps li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.steps li:last-child{border-bottom:1px solid var(--line)}
+.steps .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.steps h4{margin-bottom:5px; font-size:17px}
+.steps p{margin:0 0 .55em; font-size:16.5px}
+.steps p:last-child{margin-bottom:0}
+.steps code{
+  font-family:"IBM Plex Mono",monospace; font-size:13.5px; background:var(--surface-2);
+  padding:1px 5px; color:var(--ink);
+}
+.st.stm{color:var(--signal)}
+.lever{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); display:block; margin-bottom:6px;
+}
+.calc{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:12.5px;
+  line-height:1.5; color:var(--ok);
+}
+table.ten{min-width:820px}
+table.ten td.stc{white-space:nowrap; text-align:center}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Ai dreptate</a></li>
+      <li><a href="#s1"><span>01</span> Cele două filtre noi</a></li>
+      <li><a href="#s2"><span>02</span> A doua scanare</a></li>
+      <li><a href="#s3"><span>03</span> De la „ce” la „cum”</a></li>
+      <li><a href="#s4"><span>04</span> Cele 10 produse</a></li>
+      <li><a href="#s5"><span>05</span> Punctajul</a></li>
+      <li><a href="#s6"><span>06</span> Recomandarea</a></li>
+      <li><a href="#s7"><span>07</span> Economia</a></li>
+      <li><a href="#s8"><span>08</span> Cele două canale</a></li>
+      <li><a href="#s9"><span>09</span> Primele 30 de zile</a></li>
+      <li><a href="#s10"><span>10</span> Ce se schimbă</a></li>
+      <li><a href="#s11"><span>11</span> Capcanele</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Al patrulea document · selecție pe valoare evidentă · august 2026</div>
+    <h1>Nimic de explicat</h1>
+    <p class="lede">Ai spus că ideile cer prea multă educație și că românul cumpără doar dacă chiar merită. Ai dreptate, iar obiecția schimbă răspunsul — nu produsul, ci ce anume vinzi de fapt.</p>
+    <div class="byline">
+      <span>9 categorii verificate în plus</span>
+      <span>10 produse, punctate</span>
+      <span>Economia celor două canale</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Ai dreptate</a></li>
+        <li><a href="#s1">Cele două filtre noi</a></li>
+        <li><a href="#s2">A doua scanare</a></li>
+        <li><a href="#s3">De la „ce” la „cum”</a></li>
+        <li><a href="#s4">Cele 10 produse</a></li>
+        <li><a href="#s5">Punctajul</a></li>
+        <li><a href="#s6">Recomandarea</a></li>
+        <li><a href="#s7">Economia</a></li>
+        <li><a href="#s8">Cele două canale</a></li>
+        <li><a href="#s9">Primele 30 de zile</a></li>
+        <li><a href="#s10">Ce se schimbă</a></li>
+        <li><a href="#s11">Capcanele</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Ai dreptate</h2>
+      <p>Obiecția ta desființează teza primelor trei documente. Merită spus direct, nu ocolit.</p>
+    </div>
+
+    <p>Toate trei rapoartele de până acum s-au sprijinit pe același motor: 150 de videoclipuri care educă piața, ca să vinzi apoi ceva ce omul nu știa că vrea. E un model care funcționează — dar e cel mai lent și cel mai fragil model posibil pentru cineva cu 15.000 lei, 17 ore pe săptămână și niciun avantaj de start. Tu spui că nu vrei să fii profesor. E o alegere rațională, nu o scuză.</p>
+
+    <p>Am reluat scanarea, cu un singur criteriu nou: <strong>produsul trebuie să se explice singur, iar valoarea trebuie să fie o socoteală, nu o poveste</strong>. Am verificat încă nouă categorii alese special pentru asta. Rezultatul a fost la fel de neplăcut ca data trecută, dar într-un mod mult mai util.</p>
+
+    <ul class="check">
+      <li><strong>Toate cele nouă categorii există deja în România.</strong> Consumabile pentru aspiratoare robot, capete de periuță, hrană proaspătă pentru câini, biltong, îngrijire pentru vârstnici, filtre de apă, consumabile pentru espressoare, lame de ras, detergenți concentrați. Multe au magazine specializate dedicate, nu doar listări pe eMAG.</li>
+      <li><strong>Dar toate au același gol.</strong> În niciuna dintre ele nu vinde nimeni <em>pe abonament, potrivit pe modelul aparatului tău, livrat când trebuie schimbat</em>. Am căutat. Rezultatele sunt zero.</li>
+      <li><strong>Un abonament nu cere educație.</strong> Omul știe deja ce e produsul și de ce îl vrea. Tu nu-l convingi de nimic — îi rezolvi frecarea de a-l căuta, de a nimeri modelul corect și de a-și aminti să-l comande din nou.</li>
+      <li><strong>Și e exact tipul de valoare pe care o cumpără românul:</strong> aritmetică. „1.500 de lei pe an pe apă îmbuteliată sau 400 pe cartușe” nu e o campanie de convingere. E o socoteală pe care o face singur, în cinci secunde.</li>
+      <li><strong>Concluzia care schimbă totul:</strong> întrebarea „ce produs vând” e epuizată în România. Diferența nu mai vine din <em>ce</em> vinzi, ci din <em>cum</em>. Iar asta e o veste bună pentru tine, pentru că un model nu trebuie explicat.</li>
+      <li><strong>Recomandarea se schimbă.</strong> Sub criteriile noi, pisicile din raportul 2 pierd — modelul lor depindea de conținut educativ. Ce iese în loc, și de ce, e în secțiunea 06.</li>
+    </ul>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Cele două filtre noi</h2>
+      <p>Traducerea obiecției tale în ceva ce se poate aplica unui produs în zece secunde.</p>
+    </div>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Filtrul 1</span>
+        <h3>Testul de 3 secunde</h3>
+        <dl>
+          <dt>Întrebarea</dt>
+          <dd>Poți spune ce face produsul într-o singură propoziție, <strong>fără să convingi pe nimeni de nimic</strong>? Nu „de ce ai avea nevoie”, ci pur și simplu ce e.</dd>
+          <dt>Exemplu care trece</dt>
+          <dd>„Cartușul pentru filtrul tău de apă, livrat automat când trebuie schimbat.” Gata. Nimeni nu are întrebări.</dd>
+          <dt>Exemplu care pică</dt>
+          <dd>„Colostru bovin.” Urmează douăzeci de minute de explicat ce e, de ce ai avea nevoie, și de ce ar funcționa — plus un articol din Bloomberg care spune că nu funcționează.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Filtrul 2</span>
+        <h3>Testul de calcul</h3>
+        <dl>
+          <dt>Întrebarea</dt>
+          <dd>Poate cumpărătorul să facă singur, în cap, socoteala care arată că merită? Fără graficele tale, fără studii, fără să te creadă pe cuvânt.</dd>
+          <dt>Exemplu care trece</dt>
+          <dd>„Un cap original de periuță costă 25 de lei, unul compatibil 6. Schimbi patru pe an.” Omul face înmulțirea și decide singur.</dd>
+          <dt>Exemplu care pică</dt>
+          <dd>Orice produs premium care costă mai mult decât alternativa și se justifică prin calitate. Acolo trebuie să fii crezut — și ca să fii crezut, trebuie să educi.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <h4>Ce se întâmplă când aplic filtrele retroactiv</h4>
+      <p>Din cei patru candidați finali ai raportului precedent, <strong>trei pică</strong>. Suplimentul anti-mahmureală cere să fii crezut că funcționează. Colostrul, la fel, și mai rău. Tabletele de apă de gură cer explicat de ce ai renunța la sticlă. Doar prosoapele faciale trec ambele teste — și alea picau oricum la zid.</p>
+      <p>Cu alte cuvinte: obiecția ta a invalidat aproape tot ce ți-am recomandat în documentul anterior. E corect că ai spus-o.</p>
+    </div>
+
+    <div class="callout calm">
+      <h4>O distincție care contează</h4>
+      <p>Nu orice explicație e educație. <strong>Educația impusă</strong> înseamnă să convingi pe cineva de ceva ce nu căuta — lent și scump. <strong>Educația cerută</strong> înseamnă să răspunzi la o întrebare pe care omul o pune deja: „care cartuș se potrivește la filtrul meu?”, „ce absorbție îi trebuie mamei?”. A doua nu e marketing, e serviciu — și e exact ce te diferențiază de un magazin care listează SKU-uri.</p>
+    </div>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>A doua scanare</h2>
+      <p>Nouă categorii, alese special pentru valoare evidentă. Verificate una câte una.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="scan">
+        <thead><tr><th>Categorie</th><th class="stc">Produs</th><th class="stc">Model</th><th>Ce am găsit în România</th></tr></thead>
+        <tbody>
+          <tr><td>Consumabile aspirator robot</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td><td>Robothub, vacuum-parts, AccesoriiXiaomi, Dedal-robot, plus Altex și eMAG — șase magazine, niciun abonament</td></tr>
+          <tr><td>Capete de periuță electrică</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td><td>1.197 de produse pe eMAG, plus dm — saturat total la produs, gol la model</td></tr>
+          <tr><td>Hrană proaspătă pentru câini</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st1">S1</span></td><td>Nutricione, NutriCanis, Boopr, Maxi-Pet — categoria e ocupată de branduri românești</td></tr>
+          <tr><td>Snacks proteice din carne</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td><td>Zulu Biltong (producător din București), Dryfood, GymBeam, Freshful, Jack Link's pe eMAG</td></tr>
+          <tr><td>Îngrijire pentru vârstnici</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td><td>Senimag, scutece-adulti.ro, Golden Protect, Ancoora, Pervita și altele — opt magazine care vând SKU-uri, niciunul serviciu</td></tr>
+          <tr><td>Filtre de apă și cartușe</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td><td>Dedeman, Altex, eMAG, plus specialiștii Filtro, Aquator, Purification</td></tr>
+          <tr><td>Consumabile pentru espressor</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td><td>Altex, Media Galaxy, Dedeman, kfea, magazincafea, ropressocafe, espressorul.ro — șapte</td></tr>
+          <tr><td>Lame de ras</td><td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td><td>Carrefour, Auchan, Notino, eMAG, Barber Store — plus Lidl și Kaufland la raft</td></tr>
+          <tr><td>Detergenți concentrați</td><td class="stc"><span class="st st1">S1</span></td><td class="stc"><span class="st st0">S0</span></td><td>Există în zona eco și HoReCa (obio, sterge.ro, furnizor-unic), dar nu ca ofertă pentru publicul larg</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="st st0">S0</span> absent</span>
+      <span><span class="st st1">S1</span> prezent, nebrandat</span>
+      <span><span class="st st2">S2</span> ocupat</span>
+      <span>„Produs” = se găsește obiectul. „Model” = se găsește vândut pe abonament, potrivit pe modelul tău.</span>
+    </div>
+
+    <p>Nouă din nouă la produs. Zero din nouă la model. Adunat cu runda precedentă, sunt <strong>douăzeci de categorii verificate</strong> în care produsul era deja acolo. Nu e un eșec al căutării — e starea reală a pieței românești în 2026. Există câteva mii de vânzători mici care au cules deja tot ce se putea culege prin simpla revânzare.</p>
+
+    <div class="callout">
+      <h4>Singura excepție găsită</h4>
+      <p>Piesele auto potrivite pe seria de șasiu. Acolo, șase site-uri românești — epiesa, aaoparts, srcpieseauto, MCF, piese.ro, Autokarma — fac deja exact potrivirea pe model despre care vorbim. E singura categorie din toate douăzeci în care <em>și</em> produsul, <em>și</em> modelul sunt luate. O includ în listă tocmai ca reper: așa arată o categorie cu adevărat închisă.</p>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>De la „ce vinzi” la „cum vinzi”</h2>
+      <p>Patru leviere care nu cer educație. Toate cele zece produse din secțiunea următoare stau pe unul dintre ele.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">A</span><div>
+        <h4>Abonamentul potrivit pe model</h4>
+        <p>Omul are un aparat. Aparatul consumă ceva. El nu știe care variantă se potrivește, uită să comande, și când își aduce aminte caută douăzeci de minute printre listări cu nume din patru majuscule. Tu întrebi o dată ce model are și rezolvi problema pentru totdeauna. Zero educație: el știe deja de ce are nevoie de piesa aia.</p>
+      </div></li>
+      <li><span class="n">B</span><div>
+        <h4>Calculul brutal</h4>
+        <p>Produsul costă vizibil mai puțin decât alternativa pe care omul o folosește acum, iar diferența se vede fără să fie explicată. Nu vinzi calitate — vinzi aritmetică. Singura condiție: socoteala trebuie să fie în favoarea ta chiar și când cumpărătorul o face pesimist.</p>
+      </div></li>
+      <li><span class="n">C</span><div>
+        <h4>Producția proprie și perisabilul</h4>
+        <p>Dacă produsul se strică în două săptămâni sau se face la comandă, nu poate fi livrat dintr-un depozit din Asia și nu poate fi listat mâine de încă cinci vânzători. E cel mai solid zid din toate, dar cere să produci ceva — deci timp și autorizații.</p>
+      </div></li>
+      <li><span class="n">D</span><div>
+        <h4>Segmentul prost servit</h4>
+        <p>Un grup de cumpărători care știe exact ce vrea, are bani, cumpără lunar și e servit prost de toată lumea — de obicei pentru că e o categorie neplăcută, plictisitoare sau incomodă. Aici nu concurezi pe produs, ci pe faptul că ție îți pasă. E cel mai subestimat levier din listă.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout warn">
+      <h4>Ce nu mai e un levier</h4>
+      <p><strong>Sortimentul.</strong> Nu poți avea mai multe produse decât eMAG. <strong>Prețul.</strong> Nu poți fi mai ieftin decât un vânzător care nu plătește nimic. <strong>Noutatea.</strong> Am arătat în documentul precedent că avansul e de 12–24 de luni. Ce rămâne sunt cele patru de mai sus, și toate patru sunt despre <em>cum</em>, nu despre <em>ce</em>.</p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>Cele zece produse</h2>
+      <p>Fiecare cu propoziția de 3 secunde și cu socoteala care o susține. Stadiile sunt verificate, nu presupuse.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="ten">
+        <thead><tr><th>Produs</th><th>Propoziția de 3 secunde</th><th class="stc">Produs</th><th class="stc">Model</th><th>Zidul</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="lever">Levierul A</span>Cartușe de filtru de apă</td>
+            <td>Cartușul potrivit pentru filtrul tău, livrat când trebuie schimbat.<span class="calc">~1.500 lei/an apă îmbuteliată → ~400 lei/an cartușe</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Potrivirea pe model plus recurența</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul A</span>Consumabile pentru espressor</td>
+            <td>Decalcifiantul și tabletele care se potrivesc la aparatul tău, la fiecare două luni.<span class="calc">60 lei protejează un aparat de 2.500–5.000 lei</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Potrivirea pe model; cumpărător nesensibil la preț</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul A</span>Kit pentru aspirator robot</td>
+            <td>Filtrele, periile și lavetele pentru modelul tău, la fiecare trei luni.<span class="calc">Kit 90 lei vs. aparat de 2.000 lei cu aspirație scăzută</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Slab — șase magazine specializate deja în categorie</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul A</span>Consumabile auto pe serie de șasiu</td>
+            <td>Ștergătoarele, becurile și filtrele care se potrivesc exact la mașina ta.<span class="calc">Reper negativ: singura categorie cu ambele stadii închise</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st2">S2</span></td>
+            <td>Niciunul — epiesa, aaoparts și încă patru fac deja asta</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul B</span>Capete compatibile de periuță</td>
+            <td>Patru capete pe an, potrivite la periuța ta, la un sfert din prețul originalelor.<span class="calc">25 lei originalul × 4 = 100 lei/an → 24 lei/an</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Slab — valoare pe client prea mică pentru a susține un business</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul B</span>Detergenți concentrați</td>
+            <td>Un litru pe care îl diluezi acasă și îți ține cât douăzeci.<span class="calc">1 L concentrat = 20 L soluție; ~85% mai puțin plastic</span></td>
+            <td class="stc"><span class="st st1">S1</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Moderat; dar diluarea cere totuși un minim de explicat</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul B</span>Lame de ras pe abonament</td>
+            <td>Lame bune, acasă, la fiecare două luni, la jumătate din prețul Gillette.<span class="calc">Erodat: Lidl și Kaufland au deja alternativa ieftină la raft</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Niciunul; și concurezi cu prețul de discount</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul C</span>Hrană proaspătă gătită pentru pisici</td>
+            <td>Mâncare gătită, porționată, livrată săptămânal.<span class="calc">Costă mai mult, nu mai puțin — testul de calcul pică</span></td>
+            <td class="stc"><span class="st st1">S1</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Foarte solid: perisabilitate plus înregistrare sanitar-veterinară</td>
+          </tr>
+          <tr>
+            <td><span class="lever">Levierul C</span>Snacks proteice din carne, produse în RO</td>
+            <td>Carne uscată, 60% proteină, fără zahăr.<span class="calc">Premium — se vinde pe gust, deci trebuie crezut</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Solid: autorizație de producție alimentară</td>
+          </tr>
+          <tr class="win">
+            <td><span class="lever">Levierul D</span>Îngrijire pentru vârstnici, pe abonament administrat</td>
+            <td>Tot ce îi trebuie părintelui tău, în aceeași zi din fiecare lună, fără să te mai gândești.<span class="calc">4,06 mil. persoane peste 65 de ani, în creștere an de an</span></td>
+            <td class="stc"><span class="st st2">S2</span></td><td class="stc"><span class="st st0">S0</span></td>
+            <td>Serviciul și relația — nu produsul</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Patru dintre cele zece pică la testul de calcul sau la zid și sunt aici ca să arate exact unde se rupe raționamentul: <strong>capetele de periuță</strong> trec ambele teste dar produc 24 de lei pe an de client — nu ai business, ai un hobby. <strong>Lamele de ras</strong> concurează cu raftul de discount. <strong>Consumabilele auto</strong> sunt singura categorie cu ambele stadii închise. <strong>Snacksurile din carne</strong> se vând pe gust, adică pe încredere, adică pe educație.</p>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Punctajul</h2>
+      <p>Criteriile de până acum, plus cele două filtre noi și valoarea pe client pe an — fiindcă ai cerut ce aduce bani, nu ce sună bine.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="score">
+        <thead>
+          <tr>
+            <th>Produs</th>
+            <th class="rot">Zero<br>educație</th>
+            <th class="rot">Testul<br>de calcul</th>
+            <th class="rot">Marjă</th>
+            <th class="rot">Recu-<br>rență</th>
+            <th class="rot">Lei/client<br>pe an</th>
+            <th class="rot">Zid</th>
+            <th class="rot">Cerere<br>dovedită</th>
+            <th class="rot">Fit 15k<br>și 17h</th>
+            <th class="rot">Scor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Consumabile pentru espressor</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">7/8</td>
+          </tr>
+          <tr class="win">
+            <td>Îngrijire vârstnici, abonament administrat</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">6,5/8</td>
+          </tr>
+          <tr>
+            <td>Cartușe de filtru de apă</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">6,5/8</td>
+          </tr>
+          <tr>
+            <td>Kit pentru aspirator robot</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">6,5/8</td>
+          </tr>
+          <tr>
+            <td>Detergenți concentrați</td>
+            <td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">6/8</td>
+          </tr>
+          <tr>
+            <td>Capete compatibile de periuță</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">6/8</td>
+          </tr>
+          <tr>
+            <td>Snacks proteice din carne</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">5,5/8</td>
+          </tr>
+          <tr>
+            <td>Lame de ras pe abonament</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">5,5/8</td>
+          </tr>
+          <tr>
+            <td>Hrană proaspătă pentru pisici</td>
+            <td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">5/8</td>
+          </tr>
+          <tr>
+            <td>Consumabile auto pe serie de șasiu</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td>
+            <td class="tot">4,5/8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="m y">●</span> trece</span>
+      <span><span class="m p">◐</span> parțial</span>
+      <span><span class="m n">○</span> nu trece</span>
+      <span>„Lei/client pe an” = <span class="m y">●</span> peste 2.000 · <span class="m p">◐</span> 200–2.000 · <span class="m n">○</span> sub 200</span>
+      <span>Rândul evidențiat e recomandarea, nu scorul cel mai mare — motivul e imediat sub tabel</span>
+    </div>
+
+    <p>Espressorul are cel mai bun scor. Îngrijirea pentru vârstnici are cei mai mulți bani. Diferența dintre ele e coloana „lei pe client pe an”, și e mai mare decât pare: un abonat la consumabile de espressor cheltuie 300–600 de lei pe an, unul la îngrijire cheltuie 4.000–7.000. Ca să faci aceiași bani din espressoare, îți trebuie de zece ori mai mulți clienți. Secțiunea următoare arată de ce asta decide.</p>
+  </section>
+
+  <section id="s6">
+    <div class="sechead"><div class="secnum">06</div><h2>Recomandarea</h2>
+      <p>Ai spus că nu te interesează tipul de firmă, ci ce aduce bani cel mai sigur. Deci aleg pe cifre.</p>
+    </div>
+
+    <div class="verdict">
+      <span class="tag">Recomandarea</span>
+      <p class="oneline">Un abonament lunar administrat de consumabile pentru îngrijirea la domiciliu a unui părinte în vârstă — nu un magazin cu scutece, ci un serviciu care se ocupă.</p>
+      <p>Cumpărătorul nu e bătrânul. E copilul lui, între 40 și 55 de ani, care are un job, locuiește uneori în alt oraș și trăiește cu o listă mentală permanentă. Omul ăsta știe exact ce îi trebuie părintelui. Nu ai nimic de explicat, nimic de convins, nicio categorie de creat.</p>
+      <p>Ce cumpără de fapt nu e produsul, ci absența unei sarcini. Aceleași lucruri, aceeași zi din fiecare lună, ambalaj neutru fără nimic scris pe cutie, un om pe care îl sună când se schimbă nevoile. Cele opt magazine existente vând coduri de produs. Niciunul nu vinde asta.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat up"><b>4,06 mil</b><span>persoane peste 65 de ani în România, ianuarie 2026</span></div>
+      <div class="stat"><b>18,8%</b><span>din populație, în creștere de la 18,5% într-un singur an</span></div>
+      <div class="stat"><b>136,6</b><span>vârstnici la 100 de tineri — indicele de îmbătrânire, în creștere</span></div>
+      <div class="stat"><b>~3 mil</b><span>copii sub 14 ani — pentru prima dată, mult sub numărul vârstnicilor</span></div>
+    </div>
+
+    <p>E singura tendință demografică din România care e sigură. Piața asta crește indiferent de economie, de modă, de algoritm și de Temu — și crește în fiecare an, mecanic. Nicio altă categorie din cele douăzeci verificate nu are asta.</p>
+
+    <div class="callout warn">
+      <h4>Ce trebuie spus înainte să te entuziasmezi</h4>
+      <p><strong>E o afacere grea emoțional.</strong> Vorbești zilnic cu oameni al căror părinte se stinge. Unii clienți dispar pentru că a murit cineva. Dacă asta te dărâmă, alege espressoarele — au scorul mai bun oricum și nu-ți cer nimic sufletește.</p>
+      <p><strong>Marja e mai mică.</strong> 30–40% pe produse de brand, nu 70%. Compensezi prin volumul pe client, nu prin procent.</p>
+      <p><strong>Coletele sunt mari.</strong> Un stoc lunar de scutece nu intră în easybox. Filtrul de easybox din primul raport nu se aplică aici: la un abonament cu livrare programată, curierul la ușă e ce se așteaptă oricum clientul.</p>
+      <p><strong>Serviciul consumă timp.</strong> Apelurile vin în timpul zilei. Abonamentul e proiectat exact ca să le elimine — după convorbirea de configurare, comanda pleacă singură — dar dacă ajungi la 100 de clienți fără să automatizezi, te blochează.</p>
+    </div>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Alternativa 1 · scor 7/8</span>
+        <h3>Consumabile pentru espressor</h3>
+        <dl>
+          <dt>Când o alegi în locul recomandării</dt>
+          <dd>Dacă vrei operațiune ușoară: totul asincron, colete de 300 de grame, marjă de 70%, cumpărător care nu se ceartă pe preț, și zero încărcătură emoțională. E cel mai plăcut business din toată lista.</dd>
+          <dt>Ce pierzi</dt>
+          <dd>Banii. 300–600 de lei pe an de client înseamnă că ai nevoie de câteva sute de abonați ca să faci ce faci din patruzeci în cealaltă variantă. Iar câteva sute de abonați ceri marketing la scară, adică exact ce n-ai.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Alternativa 2 · scor 6,5/8</span>
+        <h3>Cartușe de filtru de apă</h3>
+        <dl>
+          <dt>Când o alegi</dt>
+          <dd>Are cel mai brutal calcul din listă — 1.500 de lei pe an pe apă îmbuteliată față de 400 pe cartușe — și prima comandă e mare, pentru că include sistemul.</dd>
+          <dt>Ce pierzi</dt>
+          <dd>Recurența e la 6 luni, nu lunară, deci relația cu clientul e rece. Și vinzi întâi un obiect scump, ceea ce face prima conversie mult mai grea decât un abonament de 400 de lei pe lună la ceva de care omul are nevoie oricum.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="s7">
+    <div class="sechead"><div class="secnum">07</div><h2>Economia</h2>
+      <p>Cifrele pentru recomandare. Estimări prudente, de confirmat cu ofertele reale de la distribuitori.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Pe abonat, pe lună</th><th class="tr">Pachet standard</th><th class="tr">Pachet extins</th></tr></thead>
+        <tbody>
+          <tr><td>Valoarea comenzii lunare</td><td class="tr">340 lei</td><td class="tr">560 lei</td></tr>
+          <tr><td>Cost de achiziție a mărfii</td><td class="tr">−215 lei</td><td class="tr">−350 lei</td></tr>
+          <tr><td>Livrare prin curier la domiciliu (colet mare)</td><td class="tr">−22 lei</td><td class="tr">−26 lei</td></tr>
+          <tr><td>Ambalaj neutru, insert, etichetă</td><td class="tr">−6 lei</td><td class="tr">−8 lei</td></tr>
+          <tr><td>Procesare plată</td><td class="tr">−9 lei</td><td class="tr">−15 lei</td></tr>
+          <tr class="sum"><td>Marjă netă pe lună</td><td class="tr">88 lei</td><td class="tr">161 lei</td></tr>
+          <tr class="sum"><td>Marjă brută</td><td class="tr">37%</td><td class="tr">37,5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>~1.400</b><span>lei marjă netă pe an, de la un singur abonat mediu</span></div>
+      <div class="stat"><b>8</b><span>abonați acoperă cele ~800 lei de costuri fixe lunare</span></div>
+      <div class="stat"><b>40</b><span>abonați → ~4.000 lei marjă netă pe lună</span></div>
+      <div class="stat"><b>~14</b><span>luni de abonament, durata medie realistă a unui client</span></div>
+    </div>
+
+    <p>Comparația care contează: ca să produci aceiași 4.000 de lei pe lună din consumabile pentru espressoare, la 40 de lei marjă pe an de client, îți trebuie în jur de <strong>1.200 de abonați</strong>. Patruzeci de clienți se obțin din trei parteneriate de recomandare. O mie două sute cer un an de marketing plătit.</p>
+
+    <div class="callout">
+      <h4>De unde vin primii patruzeci</h4>
+      <p>Nu din reclamă. Din <strong>cine îi vede deja</strong>: agențiile de îngrijire la domiciliu, cabinetele de geriatrie, secțiile de recuperare de la spitale, grupurile de Facebook pentru îngrijitori, și — cel mai direct — căminele private, care cumpără ele însele lunar și pot deveni și clienți, și canal. Un singur parteneriat cu o agenție de îngrijire îți poate aduce zece abonați dintr-o dată.</p>
+    </div>
+
+    <div class="callout warn">
+      <h4>Cifra care decide dacă merge</h4>
+      <p>Rata de reînnoire la luna 3. Dacă un abonat din trei renunță după prima lună, modelul nu funcționează — înseamnă că vinzi doar produsul, nu serviciul, iar produsul se ia mai ieftin în altă parte. Peste 80% reînnoire la luna 3 înseamnă că ai construit ceva ce nu se copiază.</p>
+    </div>
+  </section>
+
+  <section id="s8">
+    <div class="sechead"><div class="secnum">08</div><h2>Cele două canale, cu cifre</h2>
+      <p>Ai cerut să vezi socoteala înainte să alegi. Iat-o, pe aceeași comandă de 340 de lei.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Pe o comandă de 340 lei</th><th class="tr">eMAG Marketplace</th><th class="tr">Magazin propriu</th></tr></thead>
+        <tbody>
+          <tr><td>Comision de platformă</td><td class="tr">−41 lei</td><td class="tr">0 lei</td></tr>
+          <tr><td>Cost de achiziție a clientului, prima comandă</td><td class="tr">0 lei</td><td class="tr">−50 lei</td></tr>
+          <tr><td>Cost de achiziție, comenzile următoare</td><td class="tr">−41 lei / lună</td><td class="tr">0 lei</td></tr>
+          <tr><td>Abonament automat posibil</td><td class="tr">nu</td><td class="tr">da</td></tr>
+          <tr><td>Deții datele clientului</td><td class="tr">nu</td><td class="tr">da</td></tr>
+          <tr><td>Când primești banii</td><td class="tr">de două ori pe lună</td><td class="tr">imediat</td></tr>
+          <tr class="sum"><td>Cost total pe 12 luni de abonament</td><td class="tr">−492 lei</td><td class="tr">−50 lei</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Comisionul eMAG e între <strong>7% și 25%</strong>, în funcție de categorie; grila exactă nu e publică și se vede doar în contul de vânzător și în contract. Am folosit 12% ca ipoteză de lucru pentru categoria asta — verific-o tu în cont înainte să construiești pe ea. Nu există abonament lunar de platformă: plătești doar comision. Dacă folosești Fulfillment by eMAG, se adaugă procesarea, de la 3,40 lei pe unitate, plus depozitarea, gratuită în primele 30 de zile dacă marfa se rotește bine.</p>
+
+    <div class="callout calm">
+      <h4>Ce arată tabelul, într-o propoziție</h4>
+      <p>Pe <em>prima</em> comandă, cele două canale te costă aproape la fel. Pe a douăsprezecea, eMAG te-a costat de zece ori mai mult. <strong>Marketplace-ul e rațional pentru achiziție și catastrofal pentru recurență</strong> — exact invers decât un business pe abonament are nevoie.</p>
+    </div>
+
+    <p>Strategia care rezolvă tensiunea, și care e singurul lucru din documentele astea care contrazice raportul întâi doar în aparență: <strong>listezi pe eMAG doar pachetul de probă de o lună</strong>, la preț corect, ca să te găsească oameni care caută deja „scutece adulți” fără să știe de tine. În cutie pui ce trebuie ca omul să vrea luna următoare direct de la tine — și de acolo încolo relația e a ta, iar comisionul dispare.</p>
+
+    <div class="callout warn">
+      <h4>De verificat înainte, nu după</h4>
+      <p>Marketplace-urile au de obicei clauze care restricționează atragerea clienților în afara platformei. Citește contractul eMAG pe partea asta înainte să tipărești orice insert. Un insert care spune „ne găsești și pe site” e altceva decât unul care oferă o reducere condiționată de a comanda direct — primul e uzual, al doilea poate încălca termenii.</p>
+    </div>
+  </section>
+
+  <section id="s9">
+    <div class="sechead"><div class="secnum">09</div><h2>Primele 30 de zile</h2>
+      <p>Costul până în ziua 14 rămâne zero, ca în toate documentele precedente.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">1–7</span><div>
+        <h4>Zece conversații, nu douăzeci</h4>
+        <p>Cauți pe Facebook grupurile de îngrijitori și de aparținători — există și sunt active. Nu întrebi „ai cumpăra un abonament?”. Întrebi: <em>„cum faci acum rost de lucrurile de care are nevoie mama ta, și cât timp îți ia pe lună?”</em>. Zece răspunsuri îți spun dacă vinzi produs sau vinzi timp.</p>
+      </div></li>
+      <li><span class="n">8–14</span><div>
+        <h4>Trei telefoane care contează mai mult decât o sută de clipuri</h4>
+        <p>Suni trei agenții de îngrijire la domiciliu din orașul tău și le propui simplu: le trimiți clienților lor consumabilele lunar, ei nu se mai ocupă. În paralel, o pagină cu oferta, prețul real și un formular. Nimic cumpărat până acum.</p>
+        <p><strong>Prag:</strong> o agenție care spune „hai să încercăm” sau 5 aparținători care lasă datele. Sub asta, nu mergi mai departe.</p>
+      </div></li>
+      <li><span class="n">15–30</span><div>
+        <h4>Distribuitorul și firma</h4>
+        <p>Contactezi distribuitorii de Seni, Tena, MoliCare și Hartmann pentru prețuri de revânzare — asta e conversația care decide marja, și e cea pe care majoritatea o amână. SRL, contabil, termeni și condiții, GDPR. Verifici ce produse sunt decontate prin casa de asigurări, pentru că acolo farmaciile cu contract sunt imbatabile și nu vrei să concurezi degeaba.</p>
+        <p><strong>Prag:</strong> ai un preț de achiziție scris, care lasă cel puțin 30% marjă la prețul de raft al concurenței.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s10">
+    <div class="sechead"><div class="secnum">10</div><h2>Ce se schimbă față de documentele precedente</h2>
+      <p>Obiecția ta a mutat concluzia. Merită arătat exact unde.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ce spunea</th><th>Ce rămâne valabil</th><th>Ce se schimbă</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Raportul 1 — motorul de conținut, 5 postări pe săptămână, 12 săptămâni</td>
+            <td>Distribuția deținută bate distribuția închiriată. Fluxurile de email. Proiectarea pentru a doua comandă.</td>
+            <td>Conținutul educativ nu mai e motorul. Devine opțional — util, dar nu obligatoriu.</td>
+          </tr>
+          <tr>
+            <td>Raportul 2 — consumabile pentru pisici de interior</td>
+            <td>Logica celor 7 filtre. Nișarea. Abonamentul ca formă.</td>
+            <td>Pică. Modelul depindea de 150 de clipuri care educă un public. Exact ce ai spus că nu vrei.</td>
+          </tr>
+          <tr>
+            <td>Raportul 3 — produse din val, la Stadiul 1</td>
+            <td>Taxonomia stadiilor. Filtrul de siguranță. Metoda de scanare săptămânală.</td>
+            <td>Trei din patru candidați finali pică la testul de 3 secunde.</td>
+          </tr>
+          <tr>
+            <td>Filtrul „încape în easybox”</td>
+            <td>Valabil pentru vânzare de impuls, unde frecarea la livrare omoară conversia.</td>
+            <td>Nu se aplică la abonament cu livrare programată. Clientul așteaptă curierul oricum.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Ce nu se schimbă în niciun document: alegi un cumpărător, nu un produs; construiești o listă care e a ta; și verifici singur, în zece minute, orice îți spun eu, pentru că datele au termen de valabilitate.</p>
+  </section>
+
+  <section id="s11">
+    <div class="sechead"><div class="secnum">11</div><h2>Capcanele</h2>
+      <p>Specifice modelului de abonament, nu comerțului în general.</p>
+    </div>
+
+    <ul class="check">
+      <li><strong>Să vinzi produs în loc de serviciu.</strong> Dacă abonamentul tău e doar „aceleași scutece, dar automat”, ești un magazin cu extra pași și pierzi la preț. Serviciul e configurarea inițială, ajustarea când se schimbă nevoile, și faptul că omul are pe cine suna. Fără astea, nu ai niciun zid.</li>
+      <li><strong>Renunțarea tăcută.</strong> Abonamentele nu se anulează cu scandal, ci prin refuzul unei livrări. Sună fiecare client care refuză o lună — jumătate din motive se rezolvă într-o conversație de trei minute.</li>
+      <li><strong>Potrivirea greșită.</strong> Într-o categorie unde mărimea și absorbția contează, o singură greșeală costă mai mult decât marja pe trei luni. Confirmă în scris configurația la prima comandă și păstreaz-o.</li>
+      <li><strong>Dependența de marketplace.</strong> Dacă la luna 12 toate comenzile tale vin prin eMAG, nu ai un business, ai un raion în magazinul altcuiva. Urmărește lunar procentul de comenzi directe; dacă nu crește, insertul tău nu funcționează.</li>
+      <li><strong>Blocajul la o sută de clienți.</strong> Modelul se sufocă în serviciu manual exact când începe să meargă. De la abonatul al treizecilea, tot ce se repetă trebuie scris într-o procedură și automatizat, altfel 17 ore pe săptămână devin 40.</li>
+      <li><strong>Concurența decontată.</strong> O parte din produsele pentru incontinență se decontează prin casa de asigurări la farmaciile cu contract. Nu concura acolo. Construiește pe ce nu se decontează și pe ce nu acoperă rețeta.</li>
+    </ul>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Datele demografice, comisioanele de platformă și fiecare verificare de disponibilitate, august 2026.</p>
+    </div>
+    <div class="sources">
+      <a href="https://www.businessmagazin.ro/actualitate/romania-avea-inceputul-anului-2026-populatie-dupa-domiciliu-21-6-23110544">Business Magazin / INS — Populația României la 1 ianuarie 2026 și indicele de îmbătrânire</a>
+      <a href="https://www.zf.ro/zf-24/incepem-stam-prost-demografia-romania-avea-inceputul-anului-2026-23110393">ZF — Peste 4 milioane de persoane de 65+, față de sub 3 milioane de copii</a>
+      <a href="https://www.1asig.ro/INS-Persoanele-in-varsta-de-65-de-ani-si-peste-reprezenta-19-din-populatia-rezidenta-a-Romaniei-articol-101-64490.htm">INS via 1asig — Ponderea persoanelor de 65 de ani și peste</a>
+      <a href="https://www.cunoasterea.ro/persoanele-varstnice-in-romania-date-politici-si-provocari-structurale/">Cunoașterea Științifică — Persoanele vârstnice în România: date și provocări structurale</a>
+      <a href="https://startarium.com/article/comisioane-rating-vizibilitate-emag-marketplace-ghid-rapid">Startarium — Comisioane, rating și vizibilitate pe eMAG Marketplace</a>
+      <a href="https://www.millionaireclub.ro/blog/taxe-comisioane-profit-emag-marketplace">Millionaire Club — Taxele și comisioanele pe eMAG Marketplace</a>
+      <a href="https://marketplace.emag.ro/infocenter/grow-your-business/faq-2/?lang=en">eMAG Marketplace — Întrebări frecvente pentru vânzători</a>
+      <a href="https://zeff.ro/blog/cat-costa-sa-vinzi-pe-emag">Zeff — Cât costă să vinzi pe eMAG, inclusiv costurile Fulfillment by eMAG</a>
+      <a href="https://senimag.ro/">Senimag — Verificare stadiu: magazin specializat de îngrijire pentru vârstnici</a>
+      <a href="https://www.scutece-adulti.ro/">Scutece-adulti.ro — Verificare stadiu: al doilea magazin specializat</a>
+      <a href="https://www.ancoora.ro/">Ancoora — Verificare stadiu: al treilea magazin specializat</a>
+      <a href="https://www.robothub.ro/">Robothub — Verificare stadiu: consumabile pentru aspiratoare robot</a>
+      <a href="https://www.vacuum-parts.ro/">Vacuum-parts — Verificare stadiu: al doilea specialist pe aceeași categorie</a>
+      <a href="https://www.kfea.ro/intretinere/decalcifiere">Kfea — Verificare stadiu: consumabile pentru espressoare</a>
+      <a href="https://www.espressorul.ro/categorie-produs/accesorii-si-piese-aparate-cafea/solutii-lichide-granule-praf-pastile-etc-de-curatare-si-decalcifiere/">Espressorul.ro — Verificare stadiu: al doilea specialist pe consumabile de cafea</a>
+      <a href="https://filtro.ro/">FILTRO — Verificare stadiu: sisteme și cartușe de filtrare a apei</a>
+      <a href="https://www.dedeman.ro/ro/filtre-apa-si-sisteme-filtrare-apa/c/366">Dedeman — Verificare stadiu: filtre de apă în retailul mare</a>
+      <a href="https://www.epiesa.ro/">ePiesa — Verificare stadiu: potrivirea pieselor auto pe model, deja rezolvată</a>
+      <a href="https://www.srcpieseauto.ro/identificare-piese-conform-serie-sasiu">SRC Piese Auto — Identificare pe serie de șasiu</a>
+      <a href="https://nutricione.ro/en">Nutricione — Verificare stadiu: hrană proaspătă pentru câini, brand românesc</a>
+      <a href="https://nutricanis.ro/">NutriCanis — Verificare stadiu: al doilea brand românesc pe aceeași categorie</a>
+      <a href="https://dryfood.ro/collections/beef-jerky-romania">Dryfood — Verificare stadiu: magazin specializat de carne uscată</a>
+      <a href="https://www.emag.ro/rezerva-periuta-de-dinti-electrica-oral-b-precision-clean-eb20-8-buc-4210201094593/pd/D80NQBBBM/">eMAG — Verificare stadiu: capete de periuță electrică</a>
+      <a href="https://www.sterge.ro/detergent-ecologic-concentrat-tanet-sr-13-pentru-diverse-suprafete-miros-discret1-l-dilutie-0-5-certificat-ecolabel/">Sterge.ro — Verificare stadiu: detergent concentrat, zona profesională</a>
+      <a href="https://agerpres.ro/ots/piata-cafelei-de-specialitate-din-romania-in-2026-de-la-cafenele-artizanale-la-automatele-de-vending--660697">AGERPRES — Piața cafelei de specialitate din România în 2026</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Al patrulea document din serie, august 2026. Stadiile de disponibilitate au fost verificate prin căutare publică la data redactării și se schimbă în luni, nu în ani. Comisionul eMAG folosit în secțiunea 08 este o ipoteză de lucru de 12%, aleasă din intervalul public de 7–25%; grila reală se vede doar în contul de vânzător și trebuie confirmată acolo. Cifrele de cost și marjă sunt estimări construite pe practica obișnuită a categoriei și se confirmă doar cu ofertele reale primite de la distribuitori. Regimul fiscal, cotele de TVA și regulile de decontare prin casa de asigurări se stabilesc cu un contabil, nu pe baza acestui document.</p>
+  </footer>
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>
