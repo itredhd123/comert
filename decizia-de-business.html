@@ -1,0 +1,932 @@
+<meta charset="utf-8">
+<title>Pariul pe pisici</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+
+/* ---------- adăugiri pentru raportul de decizie ---------- */
+.verdict{
+  border:1px solid var(--teal); background:var(--teal-soft);
+  padding:26px 26px 22px; margin:34px 0 8px;
+}
+.verdict .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--teal); display:block; margin-bottom:14px; font-weight:600;
+}
+.verdict h2{margin-bottom:12px; max-width:20ch}
+.verdict p{max-width:64ch; color:var(--ink-2)}
+.verdict p:last-child{margin-bottom:0}
+.verdict .oneline{
+  font-family:"Archivo",sans-serif; font-size:19px; font-weight:600; line-height:1.4;
+  color:var(--ink); letter-spacing:-.01em; max-width:52ch; margin-bottom:14px;
+}
+
+.legend{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted);
+  display:flex; flex-wrap:wrap; gap:6px 18px; margin:-14px 0 26px;
+}
+.m{font-family:"IBM Plex Mono",monospace; font-size:13px; line-height:1}
+.m.y{color:var(--ok)} .m.p{color:var(--signal)} .m.n{color:var(--danger)}
+table.score{min-width:720px}
+table.score th.rot{text-align:center; padding:11px 6px; font-size:9.5px; letter-spacing:.06em}
+table.score td.mk{text-align:center; padding:11px 6px}
+table.score td.tot{
+  font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+  text-align:center; font-size:13px; font-weight:600; color:var(--ink);
+}
+table.score tr.win td{background:var(--teal-soft)}
+table.score tr.win td:first-child{color:var(--ink); font-weight:600}
+
+.faze{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:26px 0}
+@media (min-width:760px){.faze{grid-template-columns:1fr 1fr}}
+.faza{background:var(--surface); padding:20px 22px; display:flex; flex-direction:column}
+.faza .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--signal); display:block; margin-bottom:10px; font-weight:600;
+}
+.faza h4{margin-bottom:8px; font-size:17px}
+.faza p{font-size:16px; margin-bottom:.7em}
+.faza p:last-child{margin-bottom:0}
+.faza .big{
+  font-family:"Archivo",sans-serif; font-size:27px; font-weight:700; letter-spacing:-.03em;
+  color:var(--ink); font-variant-numeric:tabular-nums; display:block; margin:auto 0 2px;
+}
+.faza .big + span{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted); display:block;
+}
+td.tr{text-align:right; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px; white-space:nowrap}
+th.tr{text-align:right}
+tr.sum td{background:var(--surface-2); color:var(--ink); font-weight:600; border-top:1px solid var(--line-strong)}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Verdictul</a></li>
+      <li><a href="#s1"><span>01</span> Ce exclude profilul tău</a></li>
+      <li><a href="#s2"><span>02</span> Nouă candidate, filtrate</a></li>
+      <li><a href="#s3"><span>03</span> Nișa, exact</a></li>
+      <li><a href="#s4"><span>04</span> De ce ține</a></li>
+      <li><a href="#s5"><span>05</span> Cum intri cu 15.000 lei</a></li>
+      <li><a href="#s6"><span>06</span> Economia unitară</a></li>
+      <li><a href="#s7"><span>07</span> Bugetul de start</a></li>
+      <li><a href="#s8"><span>08</span> Bugetul de timp</a></li>
+      <li><a href="#s9"><span>09</span> Primele 90 de zile</a></li>
+      <li><a href="#s10"><span>10</span> Dacă nu-ți plac pisicile</a></li>
+      <li><a href="#s11"><span>11</span> Ce să nu faci</a></li>
+      <li><a href="#s12"><span>12</span> Riscurile reale</a></li>
+      <li><a href="#s13"><span>13</span> Când te oprești</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Decizie de produs · continuare la „Contraofensiva organică” · august 2026</div>
+    <h1>Pariul pe pisici</h1>
+    <p class="lede">Ai raportul de piață. Ai filtrele. Ce lipsea era răspunsul. Iată-l, calculat pe restricțiile tale reale: 15.000 lei, 17 ore pe săptămână, un job pe care nu-l lași, zero avantaj de start.</p>
+    <div class="byline">
+      <span>9 candidate, 7 filtre</span>
+      <span>Prag de abandon inclus</span>
+      <span>Recuperare estimată: luna 8–10</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Verdictul</a></li>
+        <li><a href="#s1">Ce exclude profilul tău</a></li>
+        <li><a href="#s2">Nouă candidate, filtrate</a></li>
+        <li><a href="#s3">Nișa, exact</a></li>
+        <li><a href="#s4">De ce ține</a></li>
+        <li><a href="#s5">Cum intri cu 15.000 lei</a></li>
+        <li><a href="#s6">Economia unitară</a></li>
+        <li><a href="#s7">Bugetul de start</a></li>
+        <li><a href="#s8">Bugetul de timp</a></li>
+        <li><a href="#s9">Primele 90 de zile</a></li>
+        <li><a href="#s10">Dacă nu-ți plac pisicile</a></li>
+        <li><a href="#s11">Ce să nu faci</a></li>
+        <li><a href="#s12">Riscurile reale</a></li>
+        <li><a href="#s13">Când te oprești</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Verdictul</h2>
+      <p>Răspunsul întâi, argumentele după. Dacă citești un singur ecran, ăsta e.</p>
+    </div>
+
+    <div class="verdict">
+      <span class="tag">Recomandarea</span>
+      <p class="oneline">Un brand de consumabile pentru pisici de interior, vândut pe abonament lunar — pornit ca distribuitor al unui brand european de nișă, convertit la etichetă proprie în luna 6.</p>
+      <p>Nu „pet shop”. Nu „magazin de animale”. O singură specie, ținută în casă, cu o singură categorie de probleme recurente: hidratare insuficientă, ghemotoace de blană, plictiseală, greutate. Toate se rezolvă cu ceva ce se consumă și se cumpără din nou peste 30 de zile.</p>
+      <p>Începi vânzând produsele altcuiva pentru că 15.000 lei nu ajung pentru o producție proprie. Construiești lista de clienți și conținutul pe banii lor. Când ai 200 de cumpărători care revin, comanzi propria etichetă și marja sare de la 47% la 79% peste noapte, fără să schimbi nimic altceva.</p>
+    </div>
+
+    <ul class="check">
+      <li><strong>Trece toate cele 7 filtre din raportul tău.</strong> Singura idee din nouă care le trece. Marjă peste prag, recumpărare la 30 de zile, produs care încape în easybox, categorie pe care Temu nu o poate ataca frontal.</li>
+      <li><strong>Categoria crește, și crește exact în partea scumpă.</strong> Piața de pet food din România a urcat cu aproape 11% valoric în ultimul an, dar doar 5,7% în volum — adică oamenii cumpără mai scump, nu mai mult. Segmentul super-premium avansează cu 10–15% pe an.</li>
+      <li><strong>Hrana pentru pisici a devenit liderul valoric al pieței</strong>, depășind câinii. Reprezintă peste 50% din valoare, deși doar 30% din volum: prețul pe kilogram e cel puțin dublu. Aici se face marja.</li>
+      <li><strong>Abonamentele abia se formează în România.</strong> Aproape jumătate dintre proprietari comandă deja online, dar livrarea recurentă e încă un teren gol. E fereastra ta, și e mai mare decât TikTok Shop.</li>
+      <li><strong>Pisicile sunt cea mai ieftină distribuție organică din lume.</strong> Nu ai avantaj de start, deci ai nevoie ca algoritmul să lucreze pentru tine. Nicio altă categorie nu-ți dă atâta acoperire gratuită per oră de filmare — și clienții îți trimit ei materialul.</li>
+      <li><strong>Un singur lucru poate anula tot ce scrie mai jos:</strong> dacă pisicile nu te interesează, oprește-te la secțiunea 10. Raportul tău o spune deja — nu poți produce 150 de videoclipuri despre ceva care te plictisește, iar planul ăsta cere exact atât în primele patru luni.</li>
+    </ul>
+
+    <div class="callout calm">
+      <h4>Ce faci în următoarele 14 zile</h4>
+      <p>Nu cumperi nimic. Intri în cele 4–5 grupuri mari de Facebook despre pisici din România, porți 20 de conversații reale și pui o singură întrebare: <em>„când s-a îmbolnăvit ultima oară pisica ta și cât te-a costat?”</em>. Răspunsurile îți dau produsul. Costul: zero lei.</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Ce exclude profilul tău</h2>
+      <p>Patru răspunsuri, luate ca restricții matematice. Fiecare taie ceva din listă înainte să începem.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Restricția</th><th>Ce elimină automat</th><th>Ce lasă în picioare</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>15.000 lei capital</td>
+            <td>Producție proprie de la zero (un lot minim la façon costă 20.000–40.000 lei), spațiu fizic, stoc pe categorii largi, orice necesită certificări scumpe.</td>
+            <td>Distribuție a unui brand existent, etichetă proprie pe un produs standard, un singur SKU dus foarte adânc.</td>
+          </tr>
+          <tr>
+            <td>17 ore pe săptămână</td>
+            <td>Orice cere prezență în timpul programului: vânzare B2B la telefon, livrări zilnice proprii, clienți care sună la 11 dimineața.</td>
+            <td>Comenzi asincrone, expediere grupată de două ori pe săptămână, conținut filmat în bloc duminica.</td>
+          </tr>
+          <tr>
+            <td>Fără avantaj de start</td>
+            <td>Orice se bazează pe expertiză tehnică, meșteșug, rețea de contacte sau credibilitate profesională împrumutată.</td>
+            <td>Categorii unde <em>curiozitatea documentată public</em> ține loc de expertiză: înveți odată cu publicul, în văzul lui.</td>
+          </tr>
+          <tr>
+            <td>Produs fizic online</td>
+            <td>Software, cursuri, agenție, servicii — adică exact zonele cu marja cea mai mare și riscul cel mai mic.</td>
+            <td>Consumabile mici, ușoare, scumpe pe gram, care intră în easybox.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <h4>Restricția care doare cel mai tare</h4>
+      <p>„Fără avantaj de start” e cea grea, nu banii. Cu bani puțini se poate; fără nicio asimetrie, singurul lucru care te diferențiază în luna 1 este <strong>cât de îngust alegi</strong>. Un magazin de „produse pentru animale” cu 15.000 lei nu are nicio șansă împotriva Petmart sau Animax. Un brand care rezolvă o singură problemă a unei singure specii ținute într-un singur fel are.</p>
+    </div>
+
+    <p>Observație oarecum incomodă, dar corectă: cea mai mare marjă la profilul tău nu era produsul fizic. Un produs digital sau un serviciu productizat ar fi avut 85% marjă, zero stoc și risc aproape nul. Ai ales produs fizic — plecăm de acolo, dar merită știut că plătești o primă de aproximativ 30 de puncte de marjă și 15.000 lei de capital blocat pentru privilegiul de a avea un obiect real.</p>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>Nouă candidate, trecute prin cele 7 filtre</h2>
+      <p>Filtrele sunt cele din raportul tău, cu pragurile lor. Nu am schimbat niciunul ca să iasă răspunsul dorit.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="score">
+        <thead>
+          <tr>
+            <th>Idee</th>
+            <th class="rot">Marjă<br>≥60%</th>
+            <th class="rot">Recump.<br>30–90z</th>
+            <th class="rot">Film.<br>≥3 mom.</th>
+            <th class="rot">Coș<br>≥200 lei</th>
+            <th class="rot">Test<br>Temu</th>
+            <th class="rot">Easy<br>box</th>
+            <th class="rot">Cerere<br>3 locuri</th>
+            <th class="rot">Fit<br>profil</th>
+            <th class="rot">Scor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="win">
+            <td>Consumabile pentru pisici de interior</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">8/8</td>
+          </tr>
+          <tr>
+            <td>Suplimente pentru câini seniori</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">7,5/8</td>
+          </tr>
+          <tr>
+            <td>Cosmetice funcționale hiper-nișate</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">6,5/8</td>
+          </tr>
+          <tr>
+            <td>Eco / zero waste pentru casă</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">5,5/8</td>
+          </tr>
+          <tr>
+            <td>Consumabile B2B pentru saloane</td>
+            <td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td>
+            <td class="tot">5/8</td>
+          </tr>
+          <tr>
+            <td>Cafea de specialitate pe abonament</td>
+            <td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">5/8</td>
+          </tr>
+          <tr>
+            <td>Fashion nișat (un sport, o mărime)</td>
+            <td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">4/8</td>
+          </tr>
+          <tr>
+            <td>Gadgeturi „virale” din China</td>
+            <td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td>
+            <td class="tot">3,5/8</td>
+          </tr>
+          <tr>
+            <td>Dropshipping generalist</td>
+            <td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td>
+            <td class="tot">1/8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="m y">●</span> trece pragul</span>
+      <span><span class="m p">◐</span> parțial, cu condiții</span>
+      <span><span class="m n">○</span> nu trece</span>
+      <span>„Fit profil” = 15.000 lei, 17 ore, fără avantaj de start</span>
+    </div>
+
+    <p>Locul doi — <strong>suplimentele pentru câini seniori</strong> — pierde pe un singur punct, dar unul care contează: proprietarii de câini mari cumpără des și hrană, iar sacul de 12 kg nu intră în easybox. Ajungi să concurezi pe livrare cu magazinele care au deja depozit. La pisici, aproape tot ce vinzi are sub un kilogram.</p>
+    <p><strong>B2B pentru saloane</strong> are cea mai bună economie din tot tabelul — comenzi de 800–1.500 lei, previzibile, cu fidelitate de ani. Pierde exclusiv pe programul tău: se vinde la telefon, între 10 și 17, exact când ești la job. Dacă situația asta se schimbă, recitește secțiunea 10.</p>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>Nișa, exact</h2>
+      <p>„Pisici” e încă prea larg. Mai tai o dată.</p>
+    </div>
+
+    <p>Publicul nu e „iubitorii de pisici”. E <strong>proprietarul de pisică ținută exclusiv în apartament, care a fost măcar o dată la veterinar cu o urgență și a plătit peste 500 de lei pentru ea</strong>. Omul ăsta are trei caracteristici pe care nu le găsești ușor în altă parte: a simțit deja frica, are venit disponibil, și consumă masiv conținut despre subiect fără să caute activ să cumpere.</p>
+
+    <p>Pisica de interior are un set de probleme închis și bine documentat, iar toate se rezolvă cu ceva consumabil:</p>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Nu bea apă</h4>
+        <p>Pisica descinde dintr-un animal de deșert și își lua apa din pradă. Hrănită uscat, în casă, ajunge cronic subhidratată — de aici problemele urinare, cea mai frecventă urgență scumpă la motanii de apartament. Soluția se vinde: supe, plicuri lickable, pastă, apă aromată. Se consumă zilnic.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Ghemotoacele de blană</h4>
+        <p>Problemă vizibilă, dezgustătoare, repetitivă, despre care toți proprietarii vorbesc. Se rezolvă cu pastă cu malț, fibre, perii. Recumpărare lunară.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Plictiseala și greutatea</h4>
+        <p>O pisică de apartament doarme, mănâncă și se îngrașă. Jucăriile de îmbogățire, dozatoarele-puzzle, iarba de pisică și recompensele hipocalorice sunt consumabile sau se strică — deci se recumpără.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Mirosul din litieră</h4>
+        <p>Singura problemă pe care o are proprietarul, nu pisica. Se rezolvă cu aditivi, filtre, deodorizante enzimatice. Marjă bună, recumpărare lunară, dar produs voluminos — de ținut ca extensie, nu ca produs principal.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout">
+      <h4>Produsul de start: unul singur</h4>
+      <p>Începi cu <strong>problema 01, hidratarea</strong> — plicuri lickable și supe, un singur produs în două-trei arome. Motivul: se consumă zilnic (cea mai rapidă recumpărare din listă), costă puțin la bucată dar se cumpără în cutii de 12–24, cântărește 15 grame, și se filmează singur. O pisică care linge un plic în fața camerei este, literal, formatul cu cea mai mare rată de vizionare completă din categorie.</p>
+    </div>
+
+    <p>Propoziția de poziționare, în formatul cerut de raportul tău — <em>„Ajut [cine] să [rezultat], fără [frecarea principală]”</em>:</p>
+
+    <div class="hooks">
+      <div class="hook"><b>Poziționare</b>Ajut proprietarii de pisici de apartament să-și țină motanul hidratat și departe de urgențele urinare, fără să se lupte cu el la castron.</div>
+      <div class="hook"><b>Testul de 15 secunde</b>„De ce să cumpăr de la tine și nu de pe eMAG?” — Pentru că eMAG îți vinde un produs; eu îți trimit în fiecare lună exact cât consumă pisica ta, și îți spun ce să urmărești la ea.</div>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>De ce ține</h2>
+      <p>Patru mecanisme, nu un sentiment. Fiecare are o cifră în spate.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat up"><b>+10,9%</b><span>creșterea valorică a pieței RO de pet food în ultimul an</span></div>
+      <div class="stat"><b>+5,7%</b><span>creșterea în volum — diferența e migrare spre premium</span></div>
+      <div class="stat up"><b>10–15%</b><span>creșterea anuală a segmentului super-premium</span></div>
+      <div class="stat"><b>~9 mil</b><span>animale de companie în România</span></div>
+      <div class="stat"><b>&gt;50%</b><span>din valoarea pieței de pet food e acum hrană pentru pisici</span></div>
+      <div class="stat"><b>~50%</b><span>dintre proprietari comandă deja online</span></div>
+    </div>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Mecanism 01</span>
+        <h3>Categoria migrează spre marjă, nu spre volum</h3>
+        <p>Valoarea crește de aproape două ori mai repede decât volumul. Asta înseamnă că oamenii nu cumpără mai multă mâncare — cumpără mâncare mai scumpă pentru același animal. Un intrat nou care vinde ieftin intră exact contra curentului; unul care vinde scump intră cu el.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Mecanism 02</span>
+        <h3>Reglementarea ține Temu la distanță</h3>
+        <p>Hrana și suplimentele pentru animale cer înregistrare sanitar-veterinară la DSVSA județean și trasabilitate. E o birocrație de câteva săptămâni pentru tine — și o barieră reală pentru o platformă care expediază direct din Asia. Adaugă perisabilitatea și ai exact tipul de protecție pe care raportul tău îl numește „test Temu trecut”.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Mecanism 03</span>
+        <h3>Conținutul se produce singur</h3>
+        <p>Nu ai avantaj de start, deci ai nevoie de distribuție gratuită. Pisicile sunt categoria cu cel mai mare raport acoperire-pe-oră-de-filmare de pe TikTok și YouTube, unde românii petrec 32,5 și respectiv 30 de ore pe lună. În plus, clienții îți trimit ei materialul — o pisică filmată de proprietar convertește mai bine decât orice produci tu.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Mecanism 04</span>
+        <h3>Abonamentul e teren gol în România</h3>
+        <p>Livrarea recurentă abia începe să prindă contur local, deși jumătate dintre proprietari cumpără deja online. Un abonament la 30 de zile îți dă venit previzibil, îți rezolvă problema recumpărării fără buget de reclamă și e exact „a doua comandă proiectată din prima zi” pe care raportul tău o cere.</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <h4>Contraargumentul onest</h4>
+      <p>Piața asta are deja jucători serioși: Petmart, Animax, zooplus, plus eMAG cu tot ce înseamnă marketplace. Niciunul dintre ei nu poate fi bătut pe sortiment, preț sau viteză. Pariul nu e că îi întreci — e că <strong>niciunul nu vinde o singură problemă</strong>. Toți vând catalog. Un catalog nu poate avea o voce, nu poate răspunde personal la 40 de comentarii pe zi și nu poate construi o comunitate în jurul unei singure frici. Tu poți. Dacă renunți la asta și devii tot catalog, ai pierdut din start.</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Cum intri cu 15.000 lei</h2>
+      <p>Două faze. Prima cumpără informație, a doua cumpără marjă. Nu le inversa.</p>
+    </div>
+
+    <p>Cu 15.000 lei nu poți comanda producție proprie — un lot minim la façon în categoria asta pornește de la 20.000–40.000 lei și îți consumă tot capitalul într-un produs pe care nu l-a validat nimeni. Soluția e să vinzi întâi produsele altcuiva.</p>
+
+    <div class="faze">
+      <div class="faza">
+        <span class="tag">Faza 1 · lunile 1–5</span>
+        <h4>Distribuitor al unui brand european de nișă</h4>
+        <p>Cauți un producător mic din UE — Polonia, Cehia, Italia, Germania — care face exact categoria ta și <strong>nu are încă distribuție în România</strong>. Le scrii cerând prețuri en-gros și, dacă se poate, exclusivitate pe piața locală. Prima comandă tipică: 1.200–1.800 €.</p>
+        <p>Ce cumperi de fapt nu e stocul. E dreptul de a afla, pe banii clienților, ce arome se vând, la ce preț se oprește cererea, cine cumpără a doua oară și ce scrie lumea în comentarii.</p>
+        <span class="big">47%</span><span>marjă brută în faza asta</span>
+      </div>
+      <div class="faza">
+        <span class="tag">Faza 2 · luna 6+</span>
+        <h4>Etichetă proprie pe același produs</h4>
+        <p>Când ai 200 de clienți care au cumpărat de cel puțin două ori, știi exact ce lot să comanzi. Mergi la un producător de façon — de multe ori chiar cel care fabrică pentru brandul pe care îl distribui — cu specificația scrisă de datele tale, nu de intuiție.</p>
+        <p>Nu schimbi nimic altceva: același public, același conținut, aceeași listă de email. Doar eticheta și costul de achiziție.</p>
+        <span class="big">79%</span><span>marjă brută după conversie</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>De ce ordinea asta și nu invers</h4>
+      <p>Aproape toți cei care eșuează în eCommerce fac fix pe dos: pun tot capitalul într-un lot de producție, apoi încearcă să găsească cui să-l vândă. Ai atunci un depozit plin și zero informație. În ordinea de mai sus, cel mai rău lucru care ți se poate întâmpla în luna 5 e să rămâi cu stoc dintr-un brand cunoscut, pe care îl lichidezi la preț de achiziție. Pierderea maximă e câteva mii de lei, nu tot bugetul.</p>
+    </div>
+
+    <p>Partea legală, de rezolvat în primele 30 de zile: SRL cu obiect principal CAEN 4791 (comerț cu amănuntul prin internet), înregistrare sanitar-veterinară la DSVSA-ul județean pentru comerț cu hrană și suplimente pentru animale, termeni și condiții, politică GDPR și dreptul de retragere în 14 zile afișat corect — ANPC dă amenzi între 2.000 și 100.000 lei exact pe lipsurile astea. Regimul fiscal (microîntreprindere sau impozit pe profit, pragul de TVA) s-a schimbat de mai multe ori în 2025–2026: stabilește-l cu un contabil în prima săptămână, nu după o postare de pe internet.</p>
+  </section>
+
+  <section id="s6">
+    <div class="sechead"><div class="secnum">06</div><h2>Economia unitară</h2>
+      <p>Cifrele care decid dacă merită. Sunt estimări prudente, de reverificat cu ofertele reale primite de la furnizori.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Pe comandă</th><th class="tr">Faza 1 — distribuție</th><th class="tr">Faza 2 — etichetă proprie</th></tr></thead>
+        <tbody>
+          <tr><td>Preț de raft pe produs</td><td class="tr">79 lei</td><td class="tr">89 lei</td></tr>
+          <tr><td>Produse pe comandă (medie)</td><td class="tr">3,0</td><td class="tr">3,0</td></tr>
+          <tr><td>Valoare medie a coșului</td><td class="tr">237 lei</td><td class="tr">267 lei</td></tr>
+          <tr><td>Cost de achiziție</td><td class="tr">−126 lei</td><td class="tr">−57 lei</td></tr>
+          <tr><td>Livrare easybox (gratuită peste 200 lei)</td><td class="tr">−16 lei</td><td class="tr">−16 lei</td></tr>
+          <tr><td>Ambalaj, insert, etichetă</td><td class="tr">−5 lei</td><td class="tr">−5 lei</td></tr>
+          <tr><td>Procesare plată cu cardul</td><td class="tr">−6 lei</td><td class="tr">−7 lei</td></tr>
+          <tr class="sum"><td>Marjă netă pe comandă</td><td class="tr">84 lei</td><td class="tr">182 lei</td></tr>
+          <tr class="sum"><td>Marjă brută</td><td class="tr">47%</td><td class="tr">79%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Costurile fixe lunare, în varianta în care faci totul singur din casă: contabil ~350 lei, platformă de magazin ~180 lei, domeniu, email și instrument de newsletter ~120 lei, diverse ~150 lei. Aproximativ <strong>800 lei pe lună</strong>.</p>
+
+    <div class="stats">
+      <div class="stat"><b>10</b><span>comenzi pe lună acoperă costurile fixe, în Faza 1</span></div>
+      <div class="stat"><b>~175</b><span>comenzi cumulate până recuperezi cei 15.000 lei</span></div>
+      <div class="stat"><b>luna 8–10</b><span>momentul realist al recuperării, dacă publici constant</span></div>
+      <div class="stat"><b>4</b><span>comenzi pe lună acoperă fixele după trecerea la etichetă proprie</span></div>
+    </div>
+
+    <p>Scenariul de an întâi, dacă execuți cele 5 postări pe săptămână fără să sari săptămâni: 5–10 comenzi în luna 3, 25–40 în luna 6, 80–120 în luna 12. La capătul de sus al lunii 12, cu marja din Faza 2, asta înseamnă în jur de 20.000 lei marjă netă lunară înainte de impozit și de reinvestirea în stoc — dintr-un business de seară. La capătul de jos, în jur de 13.000 lei. Sub 5 postări pe săptămână, niciun capăt nu se aplică; scenariul presupune consecvență, nu talent.</p>
+
+    <div class="callout warn">
+      <h4>Cifra de care să te temi</h4>
+      <p>Rata de recumpărare la 60 de zile. Dacă e sub 25%, tot modelul se prăbușește: fără recumpărare, fiecare leu de marjă trebuie să plătească achiziția unui client nou, iar tu nu ai buget de achiziție. Măsoar-o din prima lună, nu din a șasea.</p>
+    </div>
+  </section>
+
+  <section id="s7">
+    <div class="sechead"><div class="secnum">07</div><h2>Bugetul de start, linie cu linie</h2>
+      <p>Cei 15.000 lei, alocați. Ordinea coloanei „când” contează mai mult decât sumele.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Linie</th><th class="tr">Lei</th><th>Când</th></tr></thead>
+        <tbody>
+          <tr><td>Înființare SRL, taxe ONRC, capital social</td><td class="tr">600</td><td>după ce trece testul de 14 zile</td></tr>
+          <tr><td>Contabil, 6 luni plătite în avans</td><td class="tr">2.100</td><td>luna 1</td></tr>
+          <tr><td>Înregistrare sanitar-veterinară + documentație</td><td class="tr">400</td><td>luna 1</td></tr>
+          <tr><td>Prima comandă de stoc (~150 unități)</td><td class="tr">6.300</td><td>luna 1–2</td></tr>
+          <tr><td>Platformă de magazin, 12 luni</td><td class="tr">1.800</td><td>luna 1</td></tr>
+          <tr><td>Domeniu, email profesional, instrument de newsletter</td><td class="tr">500</td><td>luna 1</td></tr>
+          <tr><td>Ambalaj: cutii, insert scris de mână, etichete, bandă</td><td class="tr">900</td><td>luna 2</td></tr>
+          <tr><td>Lumină, trepied, fundal (telefonul e suficient)</td><td class="tr">450</td><td>zilele 1–14</td></tr>
+          <tr><td>Produse trimise gratuit către 15 creatori mici</td><td class="tr">1.000</td><td>luna 2–3</td></tr>
+          <tr><td>Rezervă operațională</td><td class="tr">950</td><td>neatinsă</td></tr>
+          <tr class="sum"><td>Total</td><td class="tr">15.000</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Trei observații despre tabelul ăsta. <strong>Prima:</strong> singura cheltuială din primele 14 zile e echipamentul de filmat, de 450 lei — restul așteaptă validarea. <strong>A doua:</strong> cei 1.000 de lei de produs trimis gratuit către creatori nano și micro nu sunt marketing, sunt exact mecanica cu care a pornit Gymshark și, în România, 75,9% din baza de creatori e formată din nano și micro, deci sunt accesibili. <strong>A treia:</strong> zero lei pentru reclamă plătită. Nu pentru că reclama nu funcționează, ci pentru că la 15.000 lei bugetul de media se termină în trei săptămâni și nu-ți lasă nimic în urmă.</p>
+
+    <div class="callout">
+      <h4>Ce nu cumperi în anul întâi</h4>
+      <p>Site făcut la comandă, logo de la agenție, ședință foto profesională, depozit, fulfillment extern, consultanță, cursuri, abonamente la instrumente „de creștere”. Toate arată a progres și niciunul nu produce prima comandă.</p>
+    </div>
+  </section>
+
+  <section id="s8">
+    <div class="sechead"><div class="secnum">08</div><h2>Bugetul de timp</h2>
+      <p>Șaptesprezece ore pe săptămână, alocate pe blocuri fixe. Un business de seară moare din fragmentare, nu din lipsă de ore.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Bloc</th><th class="tr">Ore</th><th>Când, concret</th></tr></thead>
+        <tbody>
+          <tr><td>Filmare grupată — 10 clipuri într-o sesiune</td><td class="tr">2,5</td><td>duminică dimineața</td></tr>
+          <tr><td>Montaj, descrieri, publicare</td><td class="tr">4,0</td><td>40 de minute în fiecare seară</td></tr>
+          <tr><td>Comentarii, mesaje, conversații cu clienți</td><td class="tr">3,5</td><td>30 de minute pe zi, la oră fixă</td></tr>
+          <tr><td>Ambalare și expediere</td><td class="tr">2,5</td><td>marți și vineri seara</td></tr>
+          <tr><td>Email, fluxuri automate, retenție</td><td class="tr">1,5</td><td>joi seara</td></tr>
+          <tr><td>Aprovizionare, facturi, administrativ</td><td class="tr">2,0</td><td>sâmbătă dimineața</td></tr>
+          <tr><td>Citit cifre, ajustat planul</td><td class="tr">1,0</td><td>sâmbătă, ultima oră</td></tr>
+          <tr class="sum"><td>Total</td><td class="tr">17,0</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Blocul de filmare e cel care sare primul când ai o săptămână grea la job — și e singurul care nu are voie să sară. Restul se poate amâna cu două zile fără consecințe. Conținutul nu: algoritmul măsoară consecvența, iar o pauză de două săptămâni în luna 2 te trimite înapoi la zero de audiență, chiar dacă vânzările lunii respective arată bine.</p>
+
+    <div class="callout calm">
+      <h4>Regula de supraviețuire</h4>
+      <p>Filmezi într-o sesiune de două ore materialul pentru zece clipuri, cu produsul, cu pisica, cu ambalarea, cu tot. Publici câte unul pe zi. Dacă ai filmat duminică, marți nu mai trebuie să ai chef — trebuie doar să apeși publică.</p>
+    </div>
+  </section>
+
+  <section id="s9">
+    <div class="sechead"><div class="secnum">09</div><h2>Primele 90 de zile</h2>
+      <p>Patru blocuri, fiecare cu un prag. Nu treci mai departe fără să-l atingi.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">1–14</span><div>
+        <h4>Validare, cu zero lei cheltuiți</h4>
+        <p>Douăzeci de conversații reale în grupurile de Facebook despre pisici și în comentariile paginilor mari. Nu întrebi „ai cumpăra?”, ci „când a avut ultima oară pisica ta o problemă și ce ai făcut?”. În paralel: o pagină simplă cu propunerea, prețul real și un buton de listă de așteptare, plus trei clipuri despre <em>problemă</em>, nu despre produs.</p>
+        <p><strong>Prag:</strong> 30 de înscrieri sau 5 precomenzi plătite, din trafic organic. Sub asta nu cumperi stoc.</p>
+      </div></li>
+      <li><span class="n">15–30</span><div>
+        <h4>Fundația</h4>
+        <p>SRL, contabil, înregistrare la DSVSA, termeni și condiții, GDPR. Trei-cinci furnizori europeni contactați, oferte cerute, un singur furnizor ales. Prima comandă lansată. Magazinul ridicat pe o platformă gata făcută — nu pe cod scris de tine sau de cineva plătit de tine.</p>
+        <p><strong>Prag:</strong> poți explica în 15 secunde, unui străin, de ce ar cumpăra de la tine și nu de pe eMAG.</p>
+      </div></li>
+      <li><span class="n">31–60</span><div>
+        <h4>Motorul de conținut</h4>
+        <p>Cinci postări pe săptămână, o singură platformă, fără excepții. În faza asta nu urmărești vânzări — urmărești rata de vizionare completă și comentariile. Vorbești personal cu fiecare om care comentează. Stocul sosește; primele comenzi apar. Suni sau scrii fiecărui prim client.</p>
+        <p><strong>Prag:</strong> 40 de postări publicate și 10 comenzi. Dacă ai postările dar nu comenzile, problema e oferta. Dacă n-ai postările, problema ești tu și planul se oprește aici.</p>
+      </div></li>
+      <li><span class="n">61–90</span><div>
+        <h4>A doua comandă</h4>
+        <p>Instalezi fluxurile de email obligatorii: bun venit, coș abandonat, confirmare, reaprovizionare la 25 de zile, reactivare la 60, cerere de recenzie. Lansezi abonamentul lunar și „momentul recurent” care îți aparține — o zi fixă din lună, o cutie, un ritual. Trimiți produs către 15 creatori mici.</p>
+        <p><strong>Prag:</strong> 30 de comenzi în luna 3 și cel puțin 25% dintre clienții lunii 1 reveniți pentru a doua comandă.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s10">
+    <div class="sechead"><div class="secnum">10</div><h2>Dacă nu-ți plac pisicile</h2>
+      <p>Nu e o glumă. E condiția de care depinde tot planul.</p>
+    </div>
+
+    <p>Planul de mai sus cere aproximativ 150 de videoclipuri în primele patru luni, despre același subiect îngust, fără să vezi vânzări în primele două. Nimeni nu duce asta din disciplină pură. Dacă subiectul nu te ține treaz, sari la una dintre variantele de mai jos — sunt scoruri mai mici în tabel, dar un scor de 6 executat bate un scor de 8 abandonat în luna 3.</p>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Alternativa A · scor 7,5</span>
+        <h3>Suplimente pentru câini seniori și rase mari</h3>
+        <dl>
+          <dt>Când o alegi în locul recomandării</dt>
+          <dd>Ai câine, sau lumea din jurul tău are. Aceeași mecanică — consumabil, recumpărare lunară, reglementat, emoțional — cu un public care cheltuie și mai mult pe animal.</dd>
+          <dt>Ce pierzi față de pisici</dt>
+          <dd>Riști să aluneci spre hrană, unde sacul de 12 kg te scoate din easybox și te bagă în competiție de livrare cu depozitele. Ține-te strict de suplimente și articulații.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Alternativa B · scor 6,5</span>
+        <h3>Cosmetice funcționale, o singură problemă</h3>
+        <dl>
+          <dt>Când o alegi în locul recomandării</dt>
+          <dd>Aprovizionarea e cea mai simplă din tot tabelul: producătorii români de façon pentru cosmetice lucrează de la 300–500 de bucăți, adică 4.000–8.000 lei. Marjă 75% din prima zi, fără fază de distribuție.</dd>
+          <dt>Ce pierzi</dt>
+          <dd>Atenția. Conținutul de beauty în România e saturat și dominat de oameni cu față și abilități de cameră. Fără avantaj de start, aici pornești în cel mai aglomerat feed care există. Funcționează doar hiper-nișat: o problemă, o piele, un context.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Alternativa C · scor 5, dar cea mai profitabilă pe oră</span>
+        <h3>Consumabile B2B pentru un singur tip de local</h3>
+        <dl>
+          <dt>Când o alegi</dt>
+          <dd>Dacă renunți la job, sau dacă ai un program flexibil. Saloane de unghii, cabinete, cafenele de specialitate, ateliere: comenzi de 800–1.500 lei, previzibile, cu fidelitate de ani și aproape fără nevoie de conținut.</dd>
+          <dt>De ce nu e recomandarea</dt>
+          <dd>Se vinde la telefon, între 10 și 17. Cu job full-time, nu ai când. E singurul motiv pentru care a picat — nu economia, care e cea mai bună din tabel.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Testul decisiv</span>
+        <h3>Cum alegi între ele în 20 de minute</h3>
+        <dl>
+          <dt>Întrebarea</dt>
+          <dd>Deschide TikTok și caută subiectul fiecărei variante. Dă scroll 20 de minute. La sfârșit, întreabă-te sincer: la care dintre ele ai avut chef să te uiți în continuare?</dd>
+          <dt>De ce funcționează</dt>
+          <dd>Dacă nu poți consuma 20 de minute de conținut despre subiect, nu vei putea produce 150 de clipuri despre el. Testul ăsta a salvat mai mulți bani decât orice studiu de piață.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="s11">
+    <div class="sechead"><div class="secnum">11</div><h2>Ce să nu faci</h2>
+      <p>Ideile care sună bine la 15.000 lei și se termină prost. Fiecare a fost considerată serios și eliminată dintr-un motiv anume.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ideea</th><th>De ce pare bună</th><th>De ce nu e</th></tr></thead>
+        <tbody>
+          <tr><td>Dropshipping generalist</td><td>Zero stoc, zero risc, se pornește într-un weekend.</td><td>Nu controlezi produsul, termenul de livrare sau ambalajul — adică niciunul dintre lucrurile care fac diferențierea posibilă. Vinzi la 8% marjă un produs pe care îl vinde și altcineva mâine.</td></tr>
+          <tr><td>Magazin de „produse pentru animale”</td><td>Piață în creștere, ai văzut cifrele de mai sus.</td><td>Fără nișare ești un catalog mic lângă cataloage mari. Petmart, Animax și zooplus au deja sortimentul, prețul și livrarea. Creșterea categoriei nu ajunge la tine, ci la ei.</td></tr>
+          <tr><td>Îmbrăcăminte cu print la comandă</td><td>Zero stoc, marjă aparent bună, se pornește instant.</td><td>Marjă reală 25–35% după costul de producție, produs identic cu al oricui, zero recumpărare. Fashion a scăzut oricum cu 10,3% sub asaltul Shein și Trendyol.</td></tr>
+          <tr><td>Gadgeturi „virale” aduse din China</td><td>Un clip poate face 500.000 de vizualizări și 200 de comenzi într-o săptămână.</td><td>Se clonează în șapte zile, nu au recumpărare și nu construiesc nimic. Când trece valul, o iei de la capăt cu alt produs — la infinit, fără să acumulezi nimic.</td></tr>
+          <tr><td>Electro, IT, accesorii telefon</td><td>Categoria crește cu 21%.</td><td>Terenul eMAG și Altex: marje de câteva procente, capital de stoc mare, decizie luată exclusiv pe preț și încredere în vânzător. Cu 15.000 lei nu ai niciuna dintre cele două.</td></tr>
+          <tr><td>Cafea de specialitate pe abonament</td><td>Consumabil perfect, recumpărare la 30 de zile, poveste bună.</td><td>Marja la revânzare e 45–50%, sub pragul de 60% — și e singura categorie din listă unde prăjitoriile locale au deja făcut exact ce ai vrea tu să faci, cu ani în avans.</td></tr>
+          <tr><td>Un site făcut de la zero</td><td>„Vreau ceva al meu, nu un șablon.”</td><td>Consumă 3.000–8.000 lei și două luni ca să obții mai puțin decât o platformă gata făcută. Clientul tău nu a refuzat niciodată o comandă din cauza temei. Faza asta vine în anul doi, dacă vine.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="s12">
+    <div class="sechead"><div class="secnum">12</div><h2>Riscurile reale</h2>
+      <p>Nu „piața e competitivă”. Lucrurile concrete care pot rupe planul, cu contramăsura fiecăruia.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Furnizorul te taie sau te pune în concurență</h4>
+        <p>Ai construit audiența pe produsul altcuiva. În ziua în care brandul decide să intre singur în România sau să dea distribuție altcuiva, rămâi fără produs.</p>
+        <p><strong>Contramăsură:</strong> exact de asta există Faza 2. Cere exclusivitate scrisă pe România de la început, chiar dacă e pe 12 luni, și pornește conversația cu producătorul de etichetă proprie în luna 4, nu în luna 8.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Stocul e cash blocat</h4>
+        <p>6.300 lei din 15.000 stau într-o cutie în casă. Dacă aromele alese greșit nu se vând, banii ăia nu mai lucrează pentru tine luni întregi.</p>
+        <p><strong>Contramăsură:</strong> prima comandă cea mai mică pe care ți-o acceptă furnizorul, chiar dacă prețul unitar e mai prost. Plătești o primă de câteva sute de lei pentru dreptul de a greși ieftin.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Nu treci de zidul lunii 3</h4>
+        <p>Aici moare majoritatea. Ai postat 40 de clipuri, ai 300 de urmăritori, ai 6 comenzi, ai un job și e ora 23. Momentul în care conținutul organic pare că nu funcționează e exact momentul dinaintea în care începe să funcționeze.</p>
+        <p><strong>Contramăsură:</strong> pragurile din secțiunea 13, scrise acum, când ești lucid. Decizia de a continua sau de a te opri se ia după o cifră stabilită dinainte, nu după cum te simți într-o marți seara.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Conformitatea sanitar-veterinară și ANPC</h4>
+        <p>Comerțul cu hrană și suplimente pentru animale cere înregistrare la DSVSA județean, iar magazinul online cere afișaje și politici pe care ANPC le verifică efectiv, cu amenzi între 2.000 și 100.000 lei.</p>
+        <p><strong>Contramăsură:</strong> ambele se rezolvă în luna 1, înainte de prima vânzare, cu ajutorul contabilului și al unui model de termeni și condiții. Nu e complicat — e doar plictisitor, și de-aia îl amână toți.</p>
+      </div></li>
+      <li><span class="n">05</span><div>
+        <h4>Îți pierzi interesul</h4>
+        <p>Riscul cel mai probabil din listă și singurul pe care nu-l poate acoperi niciun buget.</p>
+        <p><strong>Contramăsură:</strong> testul de 20 de minute din secțiunea 10, făcut onest, înainte să cheltui primul leu.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s13">
+    <div class="sechead"><div class="secnum">13</div><h2>Când te oprești</h2>
+      <p>Pragurile de abandon, scrise înainte de start. Partea pe care aproape nimeni nu o scrie și toată lumea ar avea nevoie de ea.</p>
+    </div>
+
+    <p>Un business care nu merge nu îți spune asta niciodată direct. Îți dă exact atâta speranță cât să mai bagi o lună, apoi încă una. Singura apărare e să decizi acum, pe cifre, unde e linia.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Moment</th><th>Dacă</th><th>Atunci</th></tr></thead>
+        <tbody>
+          <tr><td>Ziua 14</td><td>sub 30 de înscrieri sau 5 precomenzi</td><td>Nu cumperi stoc. Schimbi nișa, păstrezi metoda. Ai pierdut 450 lei și două săptămâni.</td></tr>
+          <tr><td>Luna 3</td><td>ai 40 de postări dar sub 10 comenzi</td><td>Problema e oferta, nu volumul. Rescrii poziționarea și prețul. Mai ai 60 de zile înainte de următorul prag.</td></tr>
+          <tr><td>Luna 6</td><td>rata de recumpărare la 60 de zile sub 25%</td><td>Produsul nu e consumabil în practică. Schimbi produsul, păstrezi publicul și lista — ele sunt activul real.</td></tr>
+          <tr><td>Luna 6</td><td>sub 1.000 de urmăritori după 120 de postări</td><td>Formatul nu funcționează, nu nișa. Schimbi formatul complet — alt tip de clip, altă deschidere, altă platformă.</td></tr>
+          <tr><td>Luna 9</td><td>marja netă lunară sub costurile fixe</td><td>Te oprești. Lichidezi stocul, închizi sau suspenzi firma.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout calm">
+      <h4>Ce înseamnă de fapt pragul din luna 9</h4>
+      <p>Dacă ajungi acolo, ai pierdut cel mult 15.000 lei și nouă luni de seri. În schimb ai învățat să înființezi o firmă, să negociezi cu furnizori europeni, să construiești un magazin, să produci 150 de videoclipuri și să vorbești cu câteva sute de clienți reali. Ăsta nu e un preț prost pentru informația respectivă — e mai ieftin decât aproape orice curs care pretinde că te învață aceleași lucruri, și e singura variantă în care le știi pe bune.</p>
+    </div>
+
+    <div class="verdict">
+      <span class="tag">Prima acțiune</span>
+      <p class="oneline">Astăzi: deschide TikTok, dă scroll 20 de minute pe conținut despre pisici, și fii onest cu tine dacă ți-a plăcut.</p>
+      <p>Dacă da, mâine intri în grupurile de Facebook și începi cele 20 de conversații. Nimic din ce urmează nu costă un leu până în ziua 14 — și în ziua 14 vei ști, pe cifre, dacă merită cei 15.000.</p>
+    </div>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Cifrele de piață folosite aici, plus cadrul de reglementare. Datele din raportul precedent nu sunt reluate.</p>
+    </div>
+    <div class="sources">
+      <a href="https://www.retail-fmcg.ro/analize/piata-locala-de-pet-food-o-analiza-retailzoom.html">RetailZoom — Piața locală de pet food: +10,9% valoric, +5,7% în volum</a>
+      <a href="https://www.retail-fmcg.ro/servicii/studii-de-piata/piata-de-pet-food-din-romania-creste-in-valoare-cu-aproape-6.html">Retail &amp; FMCG — Cat food devine lider valoric al pieței</a>
+      <a href="https://revistaprogresiv.ro/analize/fmcg/pet-food-o-piata-polarizata-cu-investitii-care-redeseneaza-harta-competitiei/">Progresiv — Pet food, o piață polarizată</a>
+      <a href="https://petscats.ro/piata-produselor-pentru-animale-de-companie-din-romania-va-incheia-anul-cu-o-valoare-de-577-de-milioane-de-lei-in-crestere-cu-10-raport-euromonitor-tendinta-tot-mai-multi-romani-trec-la-rase-de/">Euromonitor via PetsCats — Piața de produse pentru animale, +10%</a>
+      <a href="https://petomatic.ro/articles/cat-cheltuie-romanii-lunar-pe-hrana-animalului-de-companie-analiza-2025-2026">Petomatic — Cât cheltuie românii lunar pe hrana animalului</a>
+      <a href="https://www.puterea.ro/de-12-ori-mai-mare-in-17-ani-piata-hranei-pentru-animale-de-companie-ajunge-la-123-mil-euro-si-se-concentreaza-in-mainile-a-trei-mari-jucatori/">Puterea — Concentrarea pieței în mâinile a trei jucători</a>
+      <a href="https://www.ansvsa.ro/industrie-si-afaceri/inregistrare-si-autorizare/">ANSVSA — Înregistrarea și autorizarea unităților</a>
+      <a href="https://www.ansvsa.ro/industrie-si-afaceri/autorizare-inregistrare-unitati-animal-non-animal/">ANSVSA — Autorizare / înregistrare unități produse de origine animală</a>
+      <a href="http://timis.dsvsa.ro/operatori-economici/avizare-inregistrare-autorizare/aia-nutritie-animala/">DSVSA Timiș — Nutriție animală: dosarul de înregistrare</a>
+      <a href="https://bucuresti.dsvsa.ro/operatori-economici/avizare-inregistrare-autorizare/modele-de-formulare-autorizareinregistrare/">DSVSA București — Modele de formulare pentru înregistrare</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Document de decizie, august 2026. Continuare la raportul „Contraofensiva organică”, ale cărui filtre și praguri sunt aplicate aici. Cifrele de piață provin din sursele citate și trebuie reverificate înainte de o decizie de investiție. Sumele de cost și marjă sunt estimări construite pe prețuri de listă publice și pe practica obișnuită a categoriei — ele se confirmă doar cu ofertele reale primite de la furnizori. Regimul fiscal și cerințele de conformitate se stabilesc cu un contabil și cu DSVSA-ul județean, nu pe baza acestui document.</p>
+  </footer>
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>
