@@ -1,0 +1,918 @@
+<meta charset="utf-8">
+<title>Fereastra de doi ani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+
+/* ---------- adăugiri pentru raportul de scanare ---------- */
+.verdict{
+  border:1px solid var(--teal); background:var(--teal-soft);
+  padding:26px 26px 22px; margin:34px 0 8px;
+}
+.verdict .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--teal); display:block; margin-bottom:14px; font-weight:600;
+}
+.verdict h2{margin-bottom:12px; max-width:20ch}
+.verdict p{max-width:64ch; color:var(--ink-2)}
+.verdict p:last-child{margin-bottom:0}
+.verdict .oneline{
+  font-family:"Archivo",sans-serif; font-size:19px; font-weight:600; line-height:1.4;
+  color:var(--ink); letter-spacing:-.01em; max-width:52ch; margin-bottom:14px;
+}
+
+/* stadiul de sosire în România */
+.st{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600;
+  letter-spacing:.1em; padding:3px 7px 2px; border:1px solid currentColor; white-space:nowrap;
+}
+.st0{color:var(--teal)}
+.st1{color:var(--ok)}
+.st2{color:var(--danger)}
+.stagerow{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:26px 0}
+@media (min-width:820px){.stagerow{grid-template-columns:repeat(3,1fr)}}
+.stagecell{background:var(--surface); padding:18px 20px}
+.stagecell h4{margin:10px 0 8px; font-size:17px}
+.stagecell p{font-size:16px; margin-bottom:.6em}
+.stagecell p:last-child{margin-bottom:0}
+
+.legend{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted);
+  display:flex; flex-wrap:wrap; gap:6px 18px; margin:-14px 0 26px;
+}
+.m{font-family:"IBM Plex Mono",monospace; font-size:13px; line-height:1}
+.m.y{color:var(--ok)} .m.p{color:var(--signal)} .m.n{color:var(--danger)}
+table.score{min-width:760px}
+table.score th.rot{text-align:center; padding:11px 6px; font-size:9.5px; letter-spacing:.06em}
+table.score td.mk{text-align:center; padding:11px 6px}
+table.score td.tot{
+  font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+  text-align:center; font-size:13px; font-weight:600; color:var(--ink);
+}
+table.score tr.win td{background:var(--teal-soft)}
+table.score tr.win td:first-child{color:var(--ink); font-weight:600}
+table.scan{min-width:720px}
+table.scan td.stc{white-space:nowrap}
+td.tr{text-align:right; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px; white-space:nowrap}
+th.tr{text-align:right}
+tr.sum td{background:var(--surface-2); color:var(--ink); font-weight:600; border-top:1px solid var(--line-strong)}
+.steps{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.steps li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.steps li:last-child{border-bottom:1px solid var(--line)}
+.steps .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.steps h4{margin-bottom:5px; font-size:17px}
+.steps p{margin:0 0 .55em; font-size:16.5px}
+.steps p:last-child{margin-bottom:0}
+.steps code{
+  font-family:"IBM Plex Mono",monospace; font-size:13.5px; background:var(--surface-2);
+  padding:1px 5px; color:var(--ink);
+}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Ce am găsit</a></li>
+      <li><a href="#s1"><span>01</span> Exemplele tale, disecate</a></li>
+      <li><a href="#s2"><span>02</span> Cele trei stadii</a></li>
+      <li><a href="#s3"><span>03</span> Scanarea — 11 produse</a></li>
+      <li><a href="#s4"><span>04</span> Ce te protejează</a></li>
+      <li><a href="#s5"><span>05</span> Metoda, pas cu pas</a></li>
+      <li><a href="#s6"><span>06</span> Filtrul de siguranță</a></li>
+      <li><a href="#s7"><span>07</span> Cine a rămas în picioare</a></li>
+      <li><a href="#s8"><span>08</span> Recomandarea</a></li>
+      <li><a href="#s9"><span>09</span> Economia</a></li>
+      <li><a href="#s10"><span>10</span> Primele 30 de zile</a></li>
+      <li><a href="#s11"><span>11</span> Față de raportul precedent</a></li>
+      <li><a href="#s12"><span>12</span> Capcanele acestui joc</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Scanare de produse · al treilea document din serie · august 2026</div>
+    <h1>Fereastra de doi ani</h1>
+    <p class="lede">Ai cerut produse care merg puternic în afară și încă n-au ajuns la noi. Am scanat unsprezece. Șase erau deja aici. Asta e vestea proastă — și, în același timp, cea mai utilă lecție din tot documentul.</p>
+    <div class="byline">
+      <span>11 produse verificate</span>
+      <span>Metodă repetabilă, 90 min/săptămână</span>
+      <span>Un produs eliminat pe motive de siguranță</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Ce am găsit</a></li>
+        <li><a href="#s1">Exemplele tale, disecate</a></li>
+        <li><a href="#s2">Cele trei stadii</a></li>
+        <li><a href="#s3">Scanarea — 11 produse</a></li>
+        <li><a href="#s4">Ce te protejează</a></li>
+        <li><a href="#s5">Metoda, pas cu pas</a></li>
+        <li><a href="#s6">Filtrul de siguranță</a></li>
+        <li><a href="#s7">Cine a rămas în picioare</a></li>
+        <li><a href="#s8">Recomandarea</a></li>
+        <li><a href="#s9">Economia</a></li>
+        <li><a href="#s10">Primele 30 de zile</a></li>
+        <li><a href="#s11">Față de raportul precedent</a></li>
+        <li><a href="#s12">Capcanele acestui joc</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Ce am găsit</h2>
+      <p>Rezultatul scanării, înainte de metodă și de argumente.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>11</b><span>produse cu creștere mare în afară, verificate unul câte unul</span></div>
+      <div class="stat down"><b>6</b><span>erau deja în România, cu brand și distribuție — prea târziu</span></div>
+      <div class="stat up"><b>4</b><span>sunt aici doar ca listări generice, fără brand — fereastra deschisă</span></div>
+      <div class="stat"><b>1</b><span>lipsește complet — și probabil dintr-un motiv</span></div>
+    </div>
+
+    <ul class="check">
+      <li><strong>Intuiția ta e corectă, dar decalajul e mult mai mic decât pare.</strong> Între momentul în care un produs explodează în State și momentul în care apare pe eMAG la 40 de lei cu titlu de tip „Set 120 buc, unisex, multifuncțional” trec 12–24 de luni, nu cinci ani. Temu și marketplace-ul eMAG au comprimat distanța aproape la zero.</li>
+      <li><strong>Aproape nimic nu mai e „absent”. E doar nebrandat.</strong> Bandă de gură pentru somn, colostru bovin, suplimente de mahmureală, prosoape faciale de unică folosință — toate se vând deja în România. Niciunul nu are un brand, o poveste sau un abonament. <em>Acolo</em> e afacerea, nu în absență.</li>
+      <li><strong>Absența totală e de obicei un simptom, nu o oportunitate.</strong> Când un produs util chiar nu există la noi, cauza e aproape întotdeauna canalul (se distribuie B2B), reglementarea, sau faptul că românul nu are problema respectivă. Exact cazul celor două exemple ale tale.</li>
+      <li><strong>„Primul pe piață” nu e o protecție.</strong> E un avans de 12–24 de luni. Ce construiești cu avansul — brand, listă, abonament, dosar de reglementare — decide dacă rămâi ceva după ce se închide fereastra.</li>
+      <li><strong>Un produs a picat testul de siguranță, nu pe cel comercial.</strong> Banda de gură pentru somn are cea mai bună economie din toată lista și e singura pe care nu ți-o recomand. Motivul, cu studiul citat, e în secțiunea 06.</li>
+      <li><strong>Cel mai valoros lucru de aici nu e o idee, ci metoda.</strong> Nouăzeci de minute pe săptămână, șase teste, și poți rula scanarea asta singur — oricând, pe orice categorie. Secțiunea 05.</li>
+    </ul>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Exemplele tale, disecate</h2>
+      <p>Ambele sunt idei bune. Amândouă au aceeași problemă — și nu e cea la care te gândești.</p>
+    </div>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Exemplul 1 · apa de gură de 10 ml</span>
+        <h3>Nu e blocată de idee. E blocată de canal.</h3>
+        <dl>
+          <dt>De ce nu există la noi</dt>
+          <dd>Produsul nu se vinde consumatorului, ci departamentului de achiziții al unui hotel. Marja pe unitate e de câțiva bani; funcționează exclusiv la volume de zeci de mii. Ai identificat corect și tu: nu e o problemă de produs, e o problemă de acces la un canal închis.</dd>
+          <dt>Versiunea vandabilă a aceleiași idei</dt>
+          <dd>Aceeași nevoie — igienă orală portabilă, fără sticlă de 500 ml — se vinde direct consumatorului ca <strong>tablete de apă de gură</strong>. Și, ironic, ideea ta e deja în România: Georganics se importă de makeup.ro, obio.ro și nutrix.ro. Niciun brand românesc. Adică exact stadiul care ne interesează.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Exemplul 2 · stickerul pentru băutură</span>
+        <h3>Ideea e genială. Produsul nu funcționează.</h3>
+        <dl>
+          <dt>Ce arată datele</dt>
+          <dd>În laborator, testele pentru GHB și ketamină ating 100% acuratețe. Testate de oameni reali, în baruri, eficiența scade la ~65%, iar sensibilitatea — capacitatea de a prinde efectiv o băutură drogată — la <strong>50%</strong>. Vinul roșu, băuturile pe bază de lapte și lichiorurile dau fals negativ.</dd>
+          <dt>De ce contează pentru tine</dt>
+          <dd>Un test care ratează jumătate din cazuri nu oferă siguranță, ci senzația de siguranță — ceea ce e mai periculos decât nimic. Iar tu ai fi cel care a vândut-o. Categoria asta se vinde doar cu avertismente explicite, și atunci nu se mai vinde. Ideea rămâne bună; produsul actual nu o susține.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>Tiparul comun</h4>
+      <p>Ambele produse sunt de tip <em>„evident după ce l-ai văzut”</em> — genul care se explică într-o propoziție și produce reacția „de ce n-avem asta?”. Ăsta e instinctul corect și merită păstrat. Ce trebuie schimbat e locul unde îl aplici: nu la produsele care lipsesc, ci la cele care <strong>există deja la noi și n-are nimeni grijă de ele</strong>.</p>
+    </div>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>Cele trei stadii</h2>
+      <p>Harta reală a terenului. Orice produs pe care îl vei găsi vreodată se află în unul dintre ele.</p>
+    </div>
+
+    <div class="stagerow">
+      <div class="stagecell">
+        <span class="st st0">STADIUL 0</span>
+        <h4>Absent complet</h4>
+        <p>Nu găsești nimic pe eMAG, nimic în farmacii, zero căutări în Google Trends România.</p>
+        <p><strong>Ce pare:</strong> teren virgin.</p>
+        <p><strong>Ce e de fapt:</strong> plătești tu educarea pieței — cel mai scump lucru din marketing. Și, în majoritatea cazurilor, absența are o cauză: canal închis, reglementare, sau românul pur și simplu n-are problema aia.</p>
+      </div>
+      <div class="stagecell">
+        <span class="st st1">STADIUL 1</span>
+        <h4>Prezent, dar nebrandat</h4>
+        <p>Se găsește pe eMAG marketplace, Lunzo, Temu — cu titluri de tip „Benzi adezive JENUOS 120 buc, unisex”. Fără brand, fără poveste, fără abonament, fără nimeni care să explice la ce e bun.</p>
+        <p><strong>Ce e:</strong> cererea locală e deja dovedită, dar nu de tine și fără să te coste nimic.</p>
+        <p><strong>Punctul dulce.</strong> Aici se joacă.</p>
+      </div>
+      <div class="stagecell">
+        <span class="st st2">STADIUL 2</span>
+        <h4>Brandat, cu jucători locali</h4>
+        <p>Există branduri românești cu site propriu, ambalaj și poziționare. Produsul e pe raft la Dr. Max, Farmacia Tei, dm, Carrefour sau Decathlon.</p>
+        <p><strong>Ce e:</strong> fereastra s-a închis. Poți intra doar cu preț mai mic sau cu o nișă mai îngustă decât a lor — adică exact jocurile pe care nu le poți câștiga cu 15.000 lei.</p>
+      </div>
+    </div>
+
+    <p>Diferența dintre Stadiul 0 și Stadiul 1 e diferența dintre <em>a crea o categorie</em> și <em>a moșteni una</em>. Raportul tău anterior spunea corect că a crea o categorie e cel mai scump lucru din marketing. Stadiul 1 e portița: cererea există deja, dovedită de vânzările altcuiva, dar nimeni nu și-a pus numele pe ea.</p>
+
+    <div class="callout calm">
+      <h4>Testul de stadiu, în 5 minute</h4>
+      <p>Caută termenul în română pe eMAG. <strong>Zero rezultate</strong> = Stadiul 0. <strong>Rezultate cu titluri incoerente</strong>, cu mărci din patru litere majuscule și fotografii pe fundal alb = Stadiul 1. <strong>Un brand cu site propriu, ambalaj gândit și prezență în farmacii sau Decathlon</strong> = Stadiul 2. Nu ai nevoie de nicio unealtă plătită pentru testul ăsta.</p>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>Scanarea — unsprezece produse</h2>
+      <p>Fiecare are creștere reală, documentată, în afară. Coloana din dreapta e cea care decide.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="scan">
+        <thead><tr><th>Produs</th><th>Ce arată în afară</th><th class="stc">Stadiu RO</th><th>Dovada găsită în România</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Bandă de gură pentru somn</td>
+            <td>+134% creștere în căutări; piață de 394 mil. $ în 2025, CAGR 7,8%; abonamentele = ~15% din vânzări pe piețele mature</td>
+            <td class="stc"><span class="st st1">S1</span></td>
+            <td>JENUOS pe eMAG (120 buc), Lunzo, Ortorex, Hevi.ro — listări generice, niciun brand cu poziție</td>
+          </tr>
+          <tr>
+            <td>Colostru bovin</td>
+            <td>ARMRA: de la aproape zero la ~120–150 mil. $ anual; +3.000% în doi ani, împins de TikTok și celebrități</td>
+            <td class="stc"><span class="st st1">S1</span></td>
+            <td>OstroVit, Osavi, Codeage, Dr. Max — vândut ca pudră de sport, fără nicio poziționare de wellness</td>
+          </tr>
+          <tr>
+            <td>Supliment anti-mahmureală</td>
+            <td>3,59 mld $ în 2026 → 11,05 mld $ în 2034, CAGR 15,1%; DHM devine ingredient standardizat</td>
+            <td class="stc"><span class="st st1">S1</span></td>
+            <td>Himalaya Party Smart, Double Wood, More Labs, Pure Gold — importuri răzlețe, niciun brand local</td>
+          </tr>
+          <tr>
+            <td>Tablete de apă de gură</td>
+            <td>Categorie construită în State de Bite și Huppy; înlocuiește sticla de plastic</td>
+            <td class="stc"><span class="st st1">S1</span></td>
+            <td>Georganics, importat de makeup.ro, obio.ro, nutrix.ro, bilenegre.ro — niciun brand românesc</td>
+          </tr>
+          <tr>
+            <td>Prosoape faciale de unică folosință</td>
+            <td>Categorie multi-miliard în China; +449% comenzi pe Taobao; CAGR 11–15%, Asia-Pacific = 38,5% din piață</td>
+            <td class="stc"><span class="st st1">S1</span></td>
+            <td>Towl la Farmacia Tei și Bebe Tei, Gigicial pe eMAG — brand slab, se apropie de Stadiul 2</td>
+          </tr>
+          <tr>
+            <td>Deodorant pentru tot corpul</td>
+            <td>Categorie inventată de Lume; +125% în 24 de luni după achiziția Harry's; Mando lansat pentru bărbați</td>
+            <td class="stc"><span class="st st0">S0</span></td>
+            <td>Niciun rezultat relevant în România — și e o categorie construită pe o anxietate foarte americană</td>
+          </tr>
+          <tr>
+            <td>Șosete cu grip pentru fotbal</td>
+            <td>Categorie de 200+ mil. £ în UK, +26% pe an</td>
+            <td class="stc"><span class="st st2">S2</span></td>
+            <td>Decathlon Kipsta, plus branduri românești: Fusion Impact, Gripower, Fearless Goalkeepers</td>
+          </tr>
+          <tr>
+            <td>Foi de detergent pentru rufe</td>
+            <td>1,5 mld $ în 2026; CAGR estimat 16–22% pe valoare până în 2030</td>
+            <td class="stc"><span class="st st2">S2</span></td>
+            <td>Natulim, Dr. Beckmann Magic Leaves, FM World, Puella, Swirl — categorie deja aglomerată</td>
+          </tr>
+          <tr>
+            <td>Tablete de curățat gutiere și aparate dentare</td>
+            <td>Crește odată cu boom-ul alignerelor transparente</td>
+            <td class="stc"><span class="st st2">S2</span></td>
+            <td>Corega Pro Cleanser (GSK), Retainer Brite, Dontodent la dm — în Carrefour și în farmacii</td>
+          </tr>
+          <tr>
+            <td>Dispozitiv anti-înec</td>
+            <td>Categorie în creștere rapidă în State și UK, împinsă de conținut cu părinți</td>
+            <td class="stc"><span class="st st2">S2</span></td>
+            <td>LifeVac pe eMAG, GoldenProtect, AmazingMoms — plus critici medicale privind eficacitatea</td>
+          </tr>
+          <tr>
+            <td>Spray de toaletă</td>
+            <td>Categorie creată de Poo-Pourri în State, replicată de Reckitt</td>
+            <td class="stc"><span class="st st2">S2</span></td>
+            <td>Poo-Pourri pe eMAG și la Dasco; Air Wick a lansat V.I.Poo în România acum ani</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <h4>Citește tabelul invers</h4>
+      <p>Cele șase rânduri de Stadiul 2 sunt partea utilă. Fiecare a fost, acum doi-trei ani, exact genul de produs care ți-ar fi produs reacția „ce idee genială, la noi nu există”. Toate au fost aduse între timp de altcineva. Asta e cronometrul real al jocului — și motivul pentru care metoda din secțiunea 05 contează mai mult decât oricare produs din tabel.</p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>Ce te protejează de fapt</h2>
+      <p>Aici e contradicția pe care trebuie s-o rezolvi înainte să cumperi ceva.</p>
+    </div>
+
+    <p>Raportul tău anterior cere ca produsul să treacă <em>testul Temu</em>: dacă poate fi fabricat în China și livrat la jumătate de preț, ieși. Dar toată ideea din discuția asta e să aduci un produs care se fabrică în China. Contradicția e reală și nu se rezolvă prin produs. Se rezolvă prin ce pui în jurul lui.</p>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Reglementarea — cea mai puternică, și singura care se cumpără cu bani</h4>
+        <p>Un cosmetic vândut în UE cere notificare CPNP, o Persoană Responsabilă cu sediu în UE și un raport de siguranță. Un supliment alimentar cere notificare. Hrana pentru animale cere înregistrare sanitar-veterinară. Un dispozitiv medical cere marcaj CE și dosar tehnic. Nimic din toate astea nu e greu — e plictisitor și costă câteva mii de lei. Exact de aceea nu îl face aproape nimeni, și exact de aceea e un zid.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Personalizarea</h4>
+        <p>Un produs cu numele clientului, al echipei, al animalului sau al firmei pe el nu poate fi clonat de o platformă care expediază din depozit. Costă puțin să adaugi și schimbă complet natura competiției.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Perisabilitatea și prospețimea</h4>
+        <p>Orice are termen de valabilitate scurt sau trebuie păstrat la rece elimină automat livrarea directă din Asia. E motivul pentru care mâncarea, cosmeticele naturale și produsele proaspete rezistă acolo unde gadgeturile nu.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Educația și vocea</h4>
+        <p>Singura pe care o construiești singur, cea mai slabă juridic și cea mai puternică comercial. Un produs pe care nimeni nu-l înțelege se vinde doar dacă cineva îl explică. Platformele nu explică nimic — au listări, nu voce. Dacă tu ești cel care a explicat categoria unei țări întregi, ești și cel de la care se cumpără, chiar și când același obiect e cu 30% mai ieftin în altă parte.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout warn">
+      <h4>Ce nu e o protecție</h4>
+      <p><strong>Să fii primul.</strong> Nu e un zid, e un cronometru: 12–24 de luni. Dacă la finalul lor ai doar un magazin cu același produs pe care acum îl are toată lumea, ai pierdut. Dacă ai un brand, o listă de email, un abonament și un dosar de reglementare pe numele tău, ai câștigat — și n-ai câștigat din cauza produsului.</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Metoda, pas cu pas</h2>
+      <p>Nouăzeci de minute pe săptămână. Partea din documentul ăsta care rămâne valabilă și peste doi ani.</p>
+    </div>
+
+    <ol class="steps">
+      <li><span class="n">01</span><div>
+        <h4>Colectează semnalul — 30 de minute</h4>
+        <p>Nu căuta „produse trending”; listele alea sunt scrise pentru dropshipperi și conțin ce vinde deja toată lumea. Uită-te unde apare cererea înainte să fie articol:</p>
+        <p><strong>TikTok Creative Center</strong> — secțiunea Top Products și Top Ads, filtrate pe Statele Unite, UK și Australia. E gratuit și e cea mai bună unealtă din listă. <strong>Amazon Movers &amp; Shakers</strong> și New Releases, pe categorie, nu pe general. <strong>Reddit</strong> — subredituri de nișă, unde oamenii întreabă „ce ați cumpărat anul ăsta și v-a schimbat viața”. <strong>Kickstarter</strong>, filtrat pe proiecte deja livrate. Și cel mai subestimat canal: <strong>grupurile de români din UK, Germania și State</strong> — acolo se scrie constant „de ce nu se găsește asta la noi”.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Testul de stadiu — 5 minute per produs</h4>
+        <p>Caută termenul în română pe eMAG, apoi pe Google. Zero rezultate = Stadiul 0, treci cu grijă. Listări generice = Stadiul 1, oprește-te aici. Branduri cu site și prezență în farmacii, dm, Carrefour sau Decathlon = Stadiul 2, treci mai departe.</p>
+        <p>Verifică și magazinele-semnal, cele care aduc primele: <code>farmaciatei.ro</code>, <code>drmax.ro</code>, <code>dm.ro</code>, <code>obio.ro</code>, <code>lunzo.ro</code>. Dacă produsul e deja la ele, ai întârziat cu un an.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Testul de cerere locală — 5 minute</h4>
+        <p>Google Trends, regiune România, ultimele 12 luni, pe termenul în română. O linie plată la zero înseamnă Stadiul 0 și buget de educare pe care nu-l ai. O linie care urcă, chiar și de la puțin, înseamnă vânt din spate. Compară aceeași căutare cu Statele Unite pe 5 ani: dacă graficul românesc arată ca cel american decalat cu doi ani, ai găsit exact ce cauți.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Testul de protecție — 2 minute</h4>
+        <p>Care dintre cele patru protecții din secțiunea 04 se aplică? Dacă niciuna, oprește-te, oricât de bun ar fi produsul. Un produs fără zid e o campanie, nu o afacere.</p>
+      </div></li>
+      <li><span class="n">05</span><div>
+        <h4>Testul de siguranță și de dovezi — 10 minute</h4>
+        <p>Caută în engleză <code>[produs] risks</code>, <code>[produs] study</code>, <code>[produs] doctors warn</code>. Dacă apare o meta-analiză critică, un avertisment medical sau un articol de presă serioasă care demontează categoria, ieși. Motivul complet e în secțiunea următoare, cu două exemple din chiar lista de mai sus.</p>
+      </div></li>
+      <li><span class="n">06</span><div>
+        <h4>Testul de aprovizionare — 20 de minute</h4>
+        <p>Caută produsul pe Alibaba și pe 1688, cere trei oferte cu preț, cantitate minimă și termen. Întreabă explicit dacă pot pune eticheta ta. Dacă <em>cantitatea minimă × prețul unitar</em> depășește 8.000 lei, produsul nu e pentru prima ta comandă — indiferent cât de bun e.</p>
+        <p>Verifică în paralel dacă există un producător european: costă cu 20–40% mai mult pe unitate, dar îți dă termene de două săptămâni în loc de două luni, cantități minime mai mici și un argument de vânzare pe care Temu nu-l are.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout calm">
+      <h4>Cadența</h4>
+      <p>Duminică dimineața, 90 de minute, în același bloc în care oricum îți filmezi conținutul. Ține un singur fișier cu tot ce ai respins și de ce — un produs respins azi pentru Stadiul 0 poate fi Stadiul 1 peste opt luni, iar tu vei fi singurul care știe asta dinainte.</p>
+    </div>
+  </section>
+
+  <section id="s6">
+    <div class="sechead"><div class="secnum">06</div><h2>Filtrul de siguranță</h2>
+      <p>Pasul pe care nimeni nu-l face și care te scutește de o afacere pe care ai regreta-o.</p>
+    </div>
+
+    <p>Produsele virale de sănătate au un tipar: cresc pe TikTok cu doi-trei ani înaintea literaturii medicale, iar când literatura ajunge din urmă, uneori le demontează. Dacă ai construit un brand pe unul dintre ele, stocul, conținutul și numele tău se duc odată cu el. Două exemple, ambele din tabelul de mai sus.</p>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Cazul 1 · eliminat</span>
+        <h3>Banda de gură pentru somn</h3>
+        <dl>
+          <dt>De ce e tentantă</dt>
+          <dd>Cea mai bună economie din toată lista: 30 de benzi = 30 de nopți, adică recumpărare la fix 30 de zile. Cost de câțiva bani pe bucată, preț de raft 89 lei, marjă peste 85%, cântărește 30 de grame, și se filmează singură — „mi-am lipit gura 30 de nopți” e un format care se vinde din titlu.</dd>
+          <dt>De ce am eliminat-o</dt>
+          <dd>O recenzie sistematică publicată în 2025 în PLOS One a analizat 120 de înregistrări și a găsit doar 10 studii eligibile, cu 213 oameni în total. Patru din cele zece avertizează asupra unui <strong>risc serios de asfixiere</strong> pentru cine respiră pe gură din cauza unei obstrucții nazale nediagnosticate — sept deviat, alergii, polipi, apnee. Medici de la Oregon Health &amp; Science University au ieșit public împotriva practicii.</dd>
+          <dt>Traducere în business</dt>
+          <dd>Ai vinde un produs cu risc real unor oameni care nu se pot autodiagnostica, iar modelul tău depinde de folosirea lui în fiecare noapte. E o răspundere juridică, nu o oportunitate — și categoria e la un singur titlu de presă distanță de a fi restricționată pe platformele pe care contezi.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Cazul 2 · cu avertisment</span>
+        <h3>Colostrul bovin</h3>
+        <dl>
+          <dt>De ce e tentant</dt>
+          <dd>Creșterea e spectaculoasă: un singur brand american a urcat cu 3.000% în doi ani, până la venituri anuale raportate de 120–150 mil. $, împins de TikTok și de celebrități. În România se vinde deja, dar exclusiv ca pudră de sport, fără nicio poveste.</dd>
+          <dt>Semnalul de alarmă</dt>
+          <dd>În februarie 2026, Bloomberg a publicat o analiză care arată că beneficiile promise stau pe dovezi subțiri. Nu e periculos — e, cel mai probabil, doar ineficient. Dar asta îl face o modă, nu o categorie.</dd>
+          <dt>Traducere în business</dt>
+          <dd>Se poate face, legal și fără risc pentru nimeni. Dar intri știind că vinzi un val: când presa și algoritmul se întorc, rămâi cu stoc și cu un brand care nu se poate muta pe altceva. Un produs care crește pe TikTok și scade în literatură se vinde 18 luni și se regretă cinci ani.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>Regula, într-o propoziție</h4>
+      <p>Înainte să cumperi stoc, petrece zece minute căutând pe cine încearcă să te contrazică. Dacă găsești un studiu serios, ai economisit un an. Dacă nu găsești nimic, ai cumpărat liniște pe zece minute.</p>
+    </div>
+  </section>
+
+  <section id="s7">
+    <div class="sechead"><div class="secnum">07</div><h2>Cine a rămas în picioare</h2>
+      <p>Cei patru candidați de Stadiul 1 care au trecut și de filtrul de siguranță, punctați pe aceleași criterii ca data trecută, plus două noi.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="score">
+        <thead>
+          <tr>
+            <th>Candidat</th>
+            <th class="rot">Marjă<br>≥60%</th>
+            <th class="rot">Recump.<br>30–90z</th>
+            <th class="rot">Film.<br>≥3 mom.</th>
+            <th class="rot">Coș<br>≥200 lei</th>
+            <th class="rot">Zid<br>anti-clonă</th>
+            <th class="rot">Easy<br>box</th>
+            <th class="rot">Cerere<br>locală</th>
+            <th class="rot">Durabil<br>nu-i modă</th>
+            <th class="rot">Fit<br>15k lei</th>
+            <th class="rot">Scor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="win">
+            <td>Supliment anti-mahmureală, brandat pe contextul românesc</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">7,5/9</td>
+          </tr>
+          <tr>
+            <td>Prosoape faciale de unică folosință</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">7,5/9</td>
+          </tr>
+          <tr>
+            <td>Igienă orală solidă (tablete de apă de gură)</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">7/9</td>
+          </tr>
+          <tr>
+            <td>Colostru bovin, brandat</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">7/9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="m y">●</span> trece pragul</span>
+      <span><span class="m p">◐</span> parțial, cu condiții</span>
+      <span><span class="m n">○</span> nu trece</span>
+      <span>„Zid anti-clonă” = cel puțin una dintre cele 4 protecții din secțiunea 04</span>
+      <span>Zidul e o poartă, nu un punct: un <span class="m n">○</span> acolo elimină, indiferent de scorul total</span>
+    </div>
+
+    <p>Prosoapele faciale au cel mai bun conținut din toată lista — unghiul „prosopul tău de baie stă umed trei zile și ți-l pui pe față” se filmează singur și are toate ingredientele unui clip cu milioane de vizualizări. Dar pică la singurul criteriu care nu se negociază: n-au niciun zid. E hârtie de bumbac din China, fără reglementare, fără perisabilitate, fără personalizare. Prima lună bună pe care o ai atrage cinci copii identici, iar al șaselea e Temu.</p>
+    <p>Igiena orală solidă are zid — e cosmetic, deci cere notificare CPNP și Persoană Responsabilă — dar are un coș mediu prea mic: 180 de tablete la 50 de lei nu ajung la 200 de lei fără un pachet complet, pe care încă nu-l poți produce.</p>
+    <p>Colostrul are cea mai bună economie și cel mai bun zid din tabel, și pică la durabilitate din motivele din secțiunea 06.</p>
+  </section>
+
+  <section id="s8">
+    <div class="sechead"><div class="secnum">08</div><h2>Recomandarea</h2>
+      <p>Ce iese din scanarea asta, și cât de mult cântărește față de ce aveai deja.</p>
+    </div>
+
+    <div class="verdict">
+      <span class="tag">Din scanare</span>
+      <p class="oneline">Un supliment anti-mahmureală cu DHM, brandat pe ocaziile românești — nuntă, botez, revelion, festival — vândut ca <em>kit</em>, nu ca borcan de pastile.</p>
+      <p>Categoria crește cu 15% pe an la nivel global, spre 11 miliarde de dolari până în 2034. În România se vinde deja — Himalaya, Double Wood, More Labs, Pure Gold — dar ca importuri răzlețe, aruncate pe raft lângă vitamine, fără ca nimeni să lege produsul de momentul în care omul chiar are nevoie de el.</p>
+      <p>Zidul e reglementarea: suplimentele alimentare cer notificare, iar asta ține platformele non-UE la distanță. Conținutul se scrie singur, pentru că România are cea mai densă cultură de evenimente cu alcool din regiune: sezonul de nunți singur înseamnă câteva sute de mii de invitați pe an, fiecare cu aceeași dimineață de duminică.</p>
+    </div>
+
+    <p>Poziționarea nu e „pastila de mahmureală”. E <strong>kitul pentru a doua zi</strong>: plicul de seară, plicul de dimineață, electroliți, și o carte poștală cu instrucțiuni scrise cu umor. Se vinde în cutii de 4 sau 8 ocazii, se dăruiește, ajunge la nuntă în 200 de exemplare deodată dacă mireasa îl pune în mărturii — și ăsta e canalul care înlocuiește distribuția în cluburi din exemplul tău, fără să ai nevoie de niciun contract.</p>
+
+    <div class="callout warn">
+      <h4>Ce trebuie spus direct</h4>
+      <p>Recomandarea asta e mai slabă decât cea din raportul precedent. Pierde pe recumpărare — se cumpără de câteva ori pe an, nu în fiecare lună — și pe durabilitate, pentru că e o categorie susceptibilă la modă. O trec pe primul loc <em>din scanarea asta</em>, nu pe primul loc în general. Comparația completă e în secțiunea 11.</p>
+    </div>
+
+    <div class="callout">
+      <h4>Ce nu poți spune, legal</h4>
+      <p>Nu poți afirma că produsul previne, tratează sau vindecă mahmureala, și nu poți sugera că face consumul de alcool sigur. Regulamentul european privind mențiunile de sănătate e strict, iar ANPC verifică exact asta la magazinele online. Se vinde pe context, umor și ritual — nu pe promisiune medicală. Din fericire, ăsta e și marketingul mai bun.</p>
+    </div>
+  </section>
+
+  <section id="s9">
+    <div class="sechead"><div class="secnum">09</div><h2>Economia</h2>
+      <p>Cifrele pentru varianta de mai sus. Estimări prudente, de confirmat cu ofertele reale.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Pe comandă</th><th class="tr">Kit de 4 ocazii</th><th class="tr">Kit de 8 ocazii</th></tr></thead>
+        <tbody>
+          <tr><td>Preț de raft</td><td class="tr">129 lei</td><td class="tr">219 lei</td></tr>
+          <tr><td>Cost de producție la façon (4 / 8 doze duble)</td><td class="tr">−34 lei</td><td class="tr">−62 lei</td></tr>
+          <tr><td>Cutie, insert tipărit, etichete</td><td class="tr">−9 lei</td><td class="tr">−11 lei</td></tr>
+          <tr><td>Livrare easybox (gratuită peste 200 lei)</td><td class="tr">−16 lei</td><td class="tr">−16 lei</td></tr>
+          <tr><td>Procesare plată cu cardul</td><td class="tr">−3 lei</td><td class="tr">−6 lei</td></tr>
+          <tr class="sum"><td>Marjă netă pe comandă</td><td class="tr">67 lei</td><td class="tr">124 lei</td></tr>
+          <tr class="sum"><td>Marjă brută</td><td class="tr">74%</td><td class="tr">72%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Costurile fixe rămân cele din raportul precedent — contabil, platformă, domeniu, instrumente — aproximativ <strong>800 lei pe lună</strong>. La un coș mediu de 170 lei și o marjă netă de circa 90 lei, îți trebuie 9 comenzi pe lună ca să acoperi fixele.</p>
+
+    <div class="stats">
+      <div class="stat"><b>9</b><span>comenzi pe lună acoperă costurile fixe</span></div>
+      <div class="stat"><b>~170</b><span>comenzi cumulate până recuperezi investiția de start</span></div>
+      <div class="stat"><b>3.000+</b><span>lei — notificarea suplimentului și dosarul de conformitate</span></div>
+      <div class="stat"><b>500–1.000</b><span>bucăți, cantitatea minimă tipică la un producător român de façon</span></div>
+    </div>
+
+    <p>Diferența majoră față de planul precedent: aici <strong>nu ai fază de distribuție</strong>. Producătorii români de suplimente lucrează la façon de la 500–1.000 de bucăți, ceea ce încape în buget, deci intri direct cu etichetă proprie și cu marja mare din prima zi. În schimb, plătești din start notificarea și dosarul — cei 3.000 de lei care sunt, de fapt, zidul tău.</p>
+
+    <div class="callout warn">
+      <h4>Cifra care decide dacă merge</h4>
+      <p>Numărul de comenzi de peste 5 kituri deodată. Modelul funcționează dacă intri în circuitul de evenimente — mărturii de nuntă, cadouri de burlăcii, pachete corporate de Crăciun. Dacă la luna 6 toate comenzile tale sunt de un singur kit, ai un produs de impuls, nu o afacere, și marja nu va acoperi niciodată costul de a găsi mereu alți clienți.</p>
+    </div>
+  </section>
+
+  <section id="s10">
+    <div class="sechead"><div class="secnum">10</div><h2>Primele 30 de zile</h2>
+      <p>Aceleași praguri ca înainte. Costul până în ziua 14 rămâne zero.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">1–7</span><div>
+        <h4>Verifici că nu greșesc</h4>
+        <p>Rulezi tu însuți testul de stadiu pe cele patru candidate din secțiunea 07. Caută-le pe eMAG, la Dr. Max, la Farmacia Tei, pe Google Trends România. Documentul ăsta a fost scris pe baza a ce se vedea în august 2026 — lucrurile se mișcă în luni, nu în ani, iar o oră de verificare proprie face diferența dintre a te baza pe mine și a ști.</p>
+      </div></li>
+      <li><span class="n">8–14</span><div>
+        <h4>Douăzeci de conversații și o pagină</h4>
+        <p>Grupurile de nuntă de pe Facebook sunt printre cele mai active din România și sunt pline de oameni care organizează un eveniment chiar acum. Nu întrebi „ai cumpăra?”, ci „ce ai pus în mărturii și cât te-a costat una?”. În paralel, o pagină cu propunerea, prețul real și un buton de listă de așteptare.</p>
+        <p><strong>Prag:</strong> 30 de înscrieri sau 5 precomenzi. Sub asta, nu comanzi nimic.</p>
+      </div></li>
+      <li><span class="n">15–30</span><div>
+        <h4>Producătorul și dosarul</h4>
+        <p>Trei-cinci producători români de suplimente contactați, cerere de ofertă cu cantitate minimă, preț unitar și termen. În paralel, discuția cu un consultant pentru notificare. SRL, contabil, termeni și condiții, GDPR, dreptul de retragere.</p>
+        <p><strong>Prag:</strong> ai o ofertă scrisă care încape în 8.000 lei și un răspuns clar despre ce ai voie să scrii pe etichetă.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s11">
+    <div class="sechead"><div class="secnum">11</div><h2>Față de raportul precedent</h2>
+      <p>Comparația onestă, pe aceleași nouă criterii.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="score">
+        <thead>
+          <tr>
+            <th>Variantă</th>
+            <th class="rot">Marjă</th><th class="rot">Recump.</th><th class="rot">Film.</th><th class="rot">Coș</th>
+            <th class="rot">Zid</th><th class="rot">Easybox</th><th class="rot">Cerere</th><th class="rot">Durabil</th><th class="rot">Fit 15k</th><th class="rot">Scor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="win">
+            <td>Consumabile pentru pisici de interior (raportul precedent)</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">8,5/9</td>
+          </tr>
+          <tr>
+            <td>Supliment anti-mahmureală (scanarea asta)</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">7,5/9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Verdictul: <strong>scanarea nu a produs ceva mai bun decât aveai.</strong> Pisicile câștigă pe recumpărare — zilnică, nu de câteva ori pe an — și pe durabilitate, pentru că nu e o categorie care poate ieși din modă. Suplimentul câștigă un singur punct, la potrivirea cu bugetul: intri direct cu etichetă proprie, fără faza de distribuție.</p>
+
+    <div class="callout calm">
+      <h4>Partea care schimbă totuși ceva</h4>
+      <p>Recomandarea din raportul precedent <em>este</em> exact jocul pe care mi l-ai descris — doar că n-a fost prezentată așa. Snackurile lickable pentru pisici sunt un produs japonez, inventat de Inaba, care a construit o categorie de sute de milioane în State și Japonia. În România se găsesc prin importatori, fără niciun brand local care să le explice sau să le pună pe abonament. Cu alte cuvinte: e Stadiul 1, în cea mai bună categorie din tabel.</p>
+      <p>Nu am putut verifica asta la fel de riguros ca restul, pentru că motoarele de căutare pe care le folosesc sunt orientate spre piața americană. E prima verificare pe care ți-o recomand în ziua 1, și durează zece minute.</p>
+    </div>
+
+    <p>Al doilea lucru care se schimbă e permanent: metoda din secțiunea 05 se aplică oricărui business ai porni. Al doilea și al treilea produs din magazinul tău vor ieși din ea, oricare ar fi primul. Un magazin care vinde un singur lucru moare când moare lucrul acela; unul care are un sistem de găsit al doilea produs nu moare.</p>
+  </section>
+
+  <section id="s12">
+    <div class="sechead"><div class="secnum">12</div><h2>Capcanele acestui joc</h2>
+      <p>Specifice vânătorii de produse, nu eCommerce-ului în general.</p>
+    </div>
+
+    <ul class="check">
+      <li><strong>Sindromul produsului următor.</strong> Cea mai periculoasă. Metoda din secțiunea 05 produce, în fiecare duminică, un produs care pare mai bun decât cel pe care îl vinzi. Dacă îl asculți, nu vei ajunge niciodată la luna 6 cu nimic. Regula: scanezi săptămânal, dar <strong>nu schimbi produsul principal mai devreme de pragurile scrise</strong>. Ce găsești merge într-un fișier, nu în magazin.</li>
+      <li><strong>Confuzia dintre „nou” și „bun”.</strong> Un produs poate fi absent din România și complet nevandabil aici. Deodorantul pentru tot corpul e categoric absent — și e construit pe o anxietate americană foarte specifică, pe care nu am nicio dovadă că românul o are.</li>
+      <li><strong>Să cumperi stocul înainte de dosar.</strong> La cosmetice și suplimente, mărfurile fără notificare nu se pot vinde legal. Se întâmplă des ca cineva să aducă marfa și abia apoi să afle că are nevoie de Persoană Responsabilă și raport de siguranță. Dosarul înaintea containerului, întotdeauna.</li>
+      <li><strong>Să confunzi un vânzător cu un producător.</strong> Majoritatea listărilor de pe Alibaba sunt intermediari. Întreabă direct de certificări, de fabrică și de posibilitatea etichetei proprii; un intermediar se blochează la a doua întrebare tehnică.</li>
+      <li><strong>Să crezi că avansul e permanent.</strong> Este de 12–24 de luni. Din prima zi construiești lista de email și abonamentul, pentru că singurul lucru pe care nu ți-l poate copia nimeni sunt cei 2.000 de oameni care ți-au dat adresa lor.</li>
+      <li><strong>Să sari peste zece minute de căutat contraargumente.</strong> Vezi secțiunea 06. E cel mai ieftin lucru din toată lista și singurul care te scutește de un an pierdut.</li>
+    </ul>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Datele de creștere externă și verificările de disponibilitate în România, august 2026.</p>
+    </div>
+    <div class="sources">
+      <a href="https://growthmarketreports.com/report/bioactive-mouth-tape-market">Growth Market Reports — Piața de benzi de gură: 394 mil. $ în 2025, CAGR 7,8%</a>
+      <a href="https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0323643">PLOS One (2025) — Recenzie sistematică privind siguranța și eficacitatea benzilor de gură</a>
+      <a href="https://www.usnews.com/news/health-news/articles/2025-09-29/doctors-warn-against-mouth-taping-during-sleep">US News — Medicii avertizează împotriva lipirii gurii în somn</a>
+      <a href="https://www.businessoffashion.com/news/beauty/colostrum-supplement-sales-boom/">Business of Fashion — Vânzările de colostru explodează, dar dovezile sunt subțiri</a>
+      <a href="https://www.bloomberg.com/news/articles/2026-02-10/armra-colostrum-supplement-benefits-rest-on-thin-evidence">Bloomberg (feb. 2026) — Beneficiile ARMRA stau pe dovezi subțiri</a>
+      <a href="https://www.fortunebusinessinsights.com/hangover-cure-products-market-112380">Fortune Business Insights — Piața produselor anti-mahmureală: 3,59 mld $ în 2026, CAGR 15,1%</a>
+      <a href="https://www.mordorintelligence.com/industry-reports/hangover-rehydration-supplements-market/market-size">Mordor Intelligence — Suplimente de rehidratare post-alcool</a>
+      <a href="https://cosmeticsbridge.com/disposable-face-towels-in-china/">CosmeticsBridge — Prosopul facial de unică folosință, o piață multi-miliard în China</a>
+      <a href="https://dataintelo.com/report/disposable-facial-towel-market">Dataintelo — Piața globală de prosoape faciale de unică folosință, CAGR 11–15%</a>
+      <a href="https://www.cosmeticsandtoiletries.com/formulas-products/ap-deodorant/news/22955361/body-product-spotlight-lume-whole-body-deodorant">Cosmetics &amp; Toiletries — Lume și crearea categoriei de deodorant pentru tot corpul</a>
+      <a href="https://www.alliedmarketresearch.com/press-release/performance-grip-socks-market.html">Allied Market Research — Piața de șosete cu grip</a>
+      <a href="https://www.persistencemarketresearch.com/market-research/laundry-detergent-sheets-market.asp">Persistence Market Research — Foi de detergent: 1,5 mld $ în 2026</a>
+      <a href="https://duiprevention.org/drink-spiking-test-kits/">DUI Prevention — Teste pentru băuturi drogate: 100% în laborator, 50% sensibilitate în teren</a>
+      <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12335075/">NCBI — Evaluarea benzilor de test imunologice, rezultate fals negative și fals pozitive</a>
+      <a href="https://www.emag.ro/benzi-adezive-pentru-gura-pentru-somn-jenuosr-120-de-bucati-pliastre-pentru-sforait-pentru-barbati-si-femei-e12fz-01-0303-bkt/pd/D8JF7YYBM/">eMAG — Verificare stadiu: benzi de gură, listare generică</a>
+      <a href="https://comenzi.farmaciatei.ro/ingrijire-personala/servetele-si-igienizanti/servetele-uscate/prosoape-faciale-de-unica-folosinta-bamboo-80-bucati-towl-p399329">Farmacia Tei — Verificare stadiu: prosoape faciale de unică folosință</a>
+      <a href="https://www.drmax.ro/bautura-anti-mahmureala-cu-aroma-de-lamaie-100ml-more-labs">Dr. Max — Verificare stadiu: băutură anti-mahmureală More Labs</a>
+      <a href="https://makeup.ro/product/502425/">Makeup.ro — Verificare stadiu: tablete de apă de gură Georganics</a>
+      <a href="https://fusionimpact.ro/shop/sosete/sosete-grip-2-0-alb/">Fusion Impact — Verificare stadiu: brand românesc de șosete cu grip</a>
+      <a href="https://natulim.ro/products/detergent-ecologic-foi-40-de-spalari">Natulim — Verificare stadiu: foi de detergent, brand cu magazin propriu</a>
+      <a href="https://www.emag.ro/brands/brand/poo-pourri">eMAG — Verificare stadiu: Poo-Pourri, prezent cu 7 produse</a>
+      <a href="https://www.cosmopolitan.ro/cosmo-fun/v-i-poo-o-noua-categorie-pe-piata-de-odorizante-din-romania">Cosmopolitan.ro — V.I.Poo, categoria de spray de toaletă lansată în România</a>
+      <a href="https://www.emag.ro/dispozitiv-anti-inec-pentru-eliberarea-cailor-respiratorii-lifevac-home-kit-lv01/pd/DD873JYBM/">eMAG — Verificare stadiu: LifeVac disponibil în România</a>
+      <a href="https://academiadeprimajutor.ro/dispozitivele-anti-inec-eficiente-sau-nu/">Academia de Prim Ajutor — Critica dispozitivelor anti-înec</a>
+      <a href="https://driply.ro/blogs/noutati/top-bauturi-electroliti-fara-zahar-romania">Driply — Verificare stadiu: branduri românești de electroliți</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Al treilea document din serie, august 2026. Stadiile de disponibilitate în România au fost verificate prin căutare publică la data redactării și se schimbă în luni, nu în ani — reverifică-le tu înainte de orice decizie. Cifrele de creștere externă provin din rapoartele de piață citate; cele de cost și marjă sunt estimări construite pe practica obișnuită a categoriei și se confirmă doar cu ofertele reale primite de la producători. Cerințele de notificare și etichetare se stabilesc cu un consultant de conformitate, nu pe baza acestui document.</p>
+  </footer>
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>
