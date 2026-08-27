@@ -1,0 +1,806 @@
+<meta charset="utf-8">
+<title>Filtrele casei</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+
+/* ---------- adăugiri ---------- */
+.verdict{
+  border:1px solid var(--teal); background:var(--teal-soft);
+  padding:26px 26px 22px; margin:34px 0 8px;
+}
+.verdict .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--teal); display:block; margin-bottom:14px; font-weight:600;
+}
+.verdict h2{margin-bottom:12px; max-width:20ch}
+.verdict p{max-width:64ch; color:var(--ink-2)}
+.verdict p:last-child{margin-bottom:0}
+.verdict .oneline{
+  font-family:"Archivo",sans-serif; font-size:19px; font-weight:600; line-height:1.4;
+  color:var(--ink); letter-spacing:-.01em; max-width:52ch; margin-bottom:14px;
+}
+
+/* stadiul de sosire în România */
+.st{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600;
+  letter-spacing:.1em; padding:3px 7px 2px; border:1px solid currentColor; white-space:nowrap;
+}
+.st0{color:var(--teal)}
+.st1{color:var(--ok)}
+.st2{color:var(--danger)}
+.stagerow{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:26px 0}
+@media (min-width:820px){.stagerow{grid-template-columns:repeat(3,1fr)}}
+.stagecell{background:var(--surface); padding:18px 20px}
+.stagecell h4{margin:10px 0 8px; font-size:17px}
+.stagecell p{font-size:16px; margin-bottom:.6em}
+.stagecell p:last-child{margin-bottom:0}
+
+.legend{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--muted);
+  display:flex; flex-wrap:wrap; gap:6px 18px; margin:-14px 0 26px;
+}
+.m{font-family:"IBM Plex Mono",monospace; font-size:13px; line-height:1}
+.m.y{color:var(--ok)} .m.p{color:var(--signal)} .m.n{color:var(--danger)}
+table.score{min-width:760px}
+table.score th.rot{text-align:center; padding:11px 6px; font-size:9.5px; letter-spacing:.06em}
+table.score td.mk{text-align:center; padding:11px 6px}
+table.score td.tot{
+  font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+  text-align:center; font-size:13px; font-weight:600; color:var(--ink);
+}
+table.score tr.win td,table.ten tr.win td{background:var(--teal-soft)}
+table.score tr.win td:first-child,table.ten tr.win td:first-child{color:var(--ink); font-weight:600}
+table.scan{min-width:720px}
+table.scan td.stc{white-space:nowrap}
+td.tr{text-align:right; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px; white-space:nowrap}
+th.tr{text-align:right}
+tr.sum td{background:var(--surface-2); color:var(--ink); font-weight:600; border-top:1px solid var(--line-strong)}
+.steps{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.steps li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.steps li:last-child{border-bottom:1px solid var(--line)}
+.steps .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.steps h4{margin-bottom:5px; font-size:17px}
+.steps p{margin:0 0 .55em; font-size:16.5px}
+.steps p:last-child{margin-bottom:0}
+.steps code{
+  font-family:"IBM Plex Mono",monospace; font-size:13.5px; background:var(--surface-2);
+  padding:1px 5px; color:var(--ink);
+}
+.st.stm{color:var(--signal)}
+.lever{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); display:block; margin-bottom:6px;
+}
+.calc{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:12.5px;
+  line-height:1.5; color:var(--ok);
+}
+table.ten{min-width:820px}
+table.ten td.stc{white-space:nowrap; text-align:center}
+
+/* scara de valoare pe client — argumentul din secțiunea 03 */
+.ladder{margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+.ladder .row{
+  display:grid; grid-template-columns:minmax(0,1fr) 108px 1fr; align-items:center;
+  gap:14px; padding:11px 18px; border-bottom:1px solid var(--line);
+}
+.ladder .row:last-child{border-bottom:none}
+.ladder .row.total{background:var(--teal-soft); border-top:1px solid var(--teal)}
+.ladder .lbl{font-size:16px; color:var(--ink-2)}
+.ladder .row.total .lbl{color:var(--ink); font-weight:600; font-family:"Archivo",sans-serif}
+.ladder .val{
+  font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+  font-size:13.5px; color:var(--ink); text-align:right; white-space:nowrap;
+}
+.ladder .bar{height:9px; background:var(--surface-2); position:relative}
+.ladder .bar i{display:block; height:100%; background:var(--signal)}
+.ladder .row.total .bar i{background:var(--teal)}
+@media (max-width:620px){
+  .ladder .row{grid-template-columns:minmax(0,1fr) 108px; }
+  .ladder .bar{display:none}
+}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Verdictul</a></li>
+      <li><a href="#s1"><span>01</span> Ce am căutat</a></li>
+      <li><a href="#s2"><span>02</span> Cei patru care au trecut</a></li>
+      <li><a href="#s3"><span>03</span> Niciunul nu ajunge singur</a></li>
+      <li><a href="#s4"><span>04</span> Abonamentul de filtre</a></li>
+      <li><a href="#s5"><span>05</span> Punctajul</a></li>
+      <li><a href="#s6"><span>06</span> Cele șapte eliminate</a></li>
+      <li><a href="#s7"><span>07</span> Economia</a></li>
+      <li><a href="#s8"><span>08</span> Primele 30 de zile</a></li>
+      <li><a href="#s9"><span>09</span> Capcanele</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Al cincilea document · a doua rundă de zece · august 2026</div>
+    <h1>Filtrele casei</h1>
+    <p class="lede">Zece categorii noi, verificate. Patru au trecut — și niciuna nu e destul de bună singură. Ce iese din ele adunate e mai bun decât oricare dintre ele, inclusiv decât espressorul care ți-a plăcut.</p>
+    <div class="byline">
+      <span>10 categorii verificate</span>
+      <span>3 trecute, 7 eliminate</span>
+      <span>Espressorul rămâne — ca ușă de intrare</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Verdictul</a></li>
+        <li><a href="#s1">Ce am căutat</a></li>
+        <li><a href="#s2">Cei patru care au trecut</a></li>
+        <li><a href="#s3">Niciunul nu ajunge singur</a></li>
+        <li><a href="#s4">Abonamentul de filtre</a></li>
+        <li><a href="#s5">Punctajul</a></li>
+        <li><a href="#s6">Cele șapte eliminate</a></li>
+        <li><a href="#s7">Economia</a></li>
+        <li><a href="#s8">Primele 30 de zile</a></li>
+        <li><a href="#s9">Capcanele</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Verdictul</h2>
+      <p>Rezultatul, înainte de argumente. Subiectele grele au fost scoase din start, cum ai cerut.</p>
+    </div>
+
+    <ul class="check">
+      <li><strong>Trei din cele zece categorii noi au trecut.</strong> Filtre HEPA pentru purificatoare de aer, filtre de apă pentru frigidere side-by-side, consumabile pentru aspiratoare verticale fără fir. La ele se adaugă espressorul, reportat din documentul precedent ca reper de comparație — deci patru candidați prezentați, din care trei sunt noi.</li>
+      <li><strong>Toate patru sunt aceeași afacere.</strong> Aparat pe care omul îl are deja, consumabil dictat de aparat, confuzie reală la potrivire, cumpărător care nu se ceartă pe preț fiindcă protejează ceva scump. Nu e o coincidență — e tiparul care a rămas după ce am scos tot ce cerea explicat.</li>
+      <li><strong>Și niciuna nu e destul de bună singură.</strong> Purificatorul aduce ~280 de lei pe an de client. Frigiderul ~200. Hota 75. La marjă bună, tot n-ai firmă din niciuna — ai un raion.</li>
+      <li><strong>Adunate, da.</strong> Un apartament din 2026 are între patru și șapte filtre. Nimeni nu ține minte când le-a schimbat pe toate. Însumat, întreținerea lor înseamnă <strong>600–1.200 lei pe an per gospodărie</strong> — de trei ori mai mult decât cea mai bună categorie luată separat.</li>
+      <li><strong>Espressorul nu iese din calcul, devine ușa.</strong> Aparatul are și el filtru de apă. E categoria cu cumpărătorul cel mai puțin sensibil la preț, deci cel mai ușor primul client. Restul filtrelor din casa aceluiași om sunt creșterea, fără niciun client nou.</li>
+      <li><strong>Nimeni în România nu vinde asta.</strong> Filtro, Aqualine, Ecosoft, LexService vând cartușe. Niciunul nu vinde „ți le trimit când trebuie schimbate”. Am căutat un abonament de filtre pentru casă — rezultatele sunt zero.</li>
+    </ul>
+
+    <div class="verdict">
+      <span class="tag">Recomandarea</span>
+      <p class="oneline">Un abonament de întreținere pentru filtrele din casă — pornit de la espressor, extins la restul aparatelor aceluiași client.</p>
+      <p>Vinzi evidența și potrivirea, nu cartușul. Omul știe deja că filtrele se schimbă; ce nu are e cineva care ține socoteala și care știe exact ce model i se potrivește. Zidul nu e produsul, ci baza de potrivire pe modele plus scadențarul — două lucruri pe care un magazin de cartușe nu le are și pe care o platformă nu le poate livra.</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Ce am căutat</h2>
+      <p>Criteriile duse mai departe, plus unul nou pe care l-ai cerut tu.</p>
+    </div>
+
+    <p>Am păstrat filtrele din documentul precedent — <strong>testul de 3 secunde</strong> și <strong>testul de calcul</strong> — și am adăugat o excludere: <strong>nimic greu emoțional</strong>. Boală, bătrânețe, sfârșit de viață, dizabilitate — au ieșit din listă înainte de punctare, nu după.</p>
+
+    <p>Restul criteriului de căutare a rămas cel care a produs espressorul, pentru că a funcționat: un aparat pe care omul îl are deja, un consumabil pe care aparatul îl cere singur, o confuzie reală la „care se potrivește la al meu?”, și un cumpărător care protejează un obiect scump — deci nu se tocmește pe cincizeci de lei.</p>
+
+    <div class="callout calm">
+      <h4>Reperul de comparație</h4>
+      <p>Espressorul a luat <strong>7 din 8</strong> în documentul precedent, cu jumătăți de punct pierdute la valoarea pe client și la zid. Orice candidat nou trebuia să bată asta ca să merite prezentat. Trei au ajuns la 6,5 — aproape, dar nu peste. Ce a trecut peste 7 nu e un produs nou, ci felul în care se leagă între ele. Argumentul e în secțiunea 03.</p>
+    </div>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>Cei patru care au trecut</h2>
+      <p>Doar candidații cu scor mare, cum ai cerut. Cei șase eliminați sunt la secțiunea 06, câte o linie fiecare.</p>
+    </div>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">6,5 / 8 · produs S2 · model S0</span>
+        <h3>Filtre HEPA pentru purificatoare de aer</h3>
+        <dl>
+          <dt>Propoziția de 3 secunde</dt>
+          <dd>Filtrul care se potrivește la purificatorul tău, livrat la fiecare șase luni.</dd>
+          <dt>Calculul</dt>
+          <dd>130–143 lei bucata, schimb la 6 luni, deci ~280 lei pe an. Aparatul a fost cumpărat pentru alergii sau pentru un copil — nimeni nu se tocmește pe filtrul lui, dar toată lumea uită să-l schimbe.</dd>
+          <dt>Ce am găsit în România</dt>
+          <dd>Flanco, evoMAG, PC Garage, Mi-Home și Levoit.ro vând filtrele. Niciunul nu le trimite singur.</dd>
+          <dt>Zidul</dt>
+          <dd>Potrivirea pe model — un filtru Xiaomi acoperă 2S, 2H, 2C, 3, 3H, 3C și Pro, iar cumpărătorul nu știe care e al lui.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">6,5 / 8 · produs S2 · model S0</span>
+        <h3>Filtre de apă pentru frigidere side-by-side</h3>
+        <dl>
+          <dt>Propoziția de 3 secunde</dt>
+          <dd>Filtrul de apă al frigiderului tău, schimbat la timp, fără să-l cauți.</dd>
+          <dt>Calculul</dt>
+          <dd>Schimb recomandat la 6 luni, ~200 lei pe an. Frigiderul a costat între 4.000 și 8.000 de lei, iar apa pe care o bei trece prin filtrul ăla.</dd>
+          <dt>Ce am găsit în România</dt>
+          <dd>ESDROM, Flanco, Filtro, StarAqua, BeWater, Aqualine. Șase magazine, zero abonamente.</dd>
+          <dt>Zidul</dt>
+          <dd>Confuzia dintre LG, Samsung, Bosch, Gorenje, Daewoo și Whirlpool, plus diferența între filtrul intern și cel extern. Aici se pierd oamenii.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">6,5 / 8 · produs S2 · model S0</span>
+        <h3>Consumabile pentru aspiratoare verticale fără fir</h3>
+        <dl>
+          <dt>Propoziția de 3 secunde</dt>
+          <dd>Filtrul și peria pentru aspiratorul tău vertical, la fiecare șase luni.</dd>
+          <dt>Calculul</dt>
+          <dd>~180 lei pe an. Aparatul costă între 1.500 și 4.000 de lei, iar aspirația scade vizibil cu filtrul înfundat — efectul se simte, nu trebuie explicat.</dd>
+          <dt>Ce am găsit în România</dt>
+          <dd>Mai ales prin canalele oficiale — Rowenta.ro, Dyson 360 — plus Altex și Media Galaxy. Piața de piese compatibile e vizibil mai subțire decât cea de la roboții de aspirare, unde există deja șase magazine specializate.</dd>
+          <dt>Zidul</dt>
+          <dd>Cel mai slab dintre cele patru. Compensează prin faptul că se leagă natural de restul aparatelor din aceeași casă.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">7 / 8 · reportat · ancoră</span>
+        <h3>Consumabile pentru espressor</h3>
+        <dl>
+          <dt>De ce rămâne</dt>
+          <dd>Are cel mai bun scor individual din toate documentele. Aparatul cere singur decalcifierea — afișează mesajul pe ecran — deci nu convingi pe nimeni de nimic.</dd>
+          <dt>Calculul</dt>
+          <dd>~425 lei pe an între decalcifiant, tablete de curățare și filtrul de apă. Șaizeci de lei protejează un aparat de 2.500–5.000.</dd>
+          <dt>Ce s-a schimbat față de documentul precedent</dt>
+          <dd>Nimic la produs. S-a schimbat rolul: nu mai e afacerea, e primul client. Espressorul e singurul aparat din casă care îți cere consumabilul de la sine — deci e cea mai ieftină ușă de intrare pe care o ai.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>Niciunul nu ajunge singur</h2>
+      <p>Argumentul central al documentului, în cifre.</p>
+    </div>
+
+    <p>Ia fiecare categorie și întreabă cât aduce, pe an, de la un singur client. Răspunsurile sunt dezamăgitoare una câte una — și interesante adunate.</p>
+
+    <div class="ladder">
+      <div class="row"><span class="lbl">Espressor — decalcifiant, tablete, filtru de apă</span><span class="val">~425 lei/an</span><span class="bar"><i style="width:34%"></i></span></div>
+      <div class="row"><span class="lbl">Purificator de aer — filtru HEPA, de două ori pe an</span><span class="val">~280 lei/an</span><span class="bar"><i style="width:22%"></i></span></div>
+      <div class="row"><span class="lbl">Frigider side-by-side — filtru de apă, la 6 luni</span><span class="val">~200 lei/an</span><span class="bar"><i style="width:16%"></i></span></div>
+      <div class="row"><span class="lbl">Aspirator vertical — filtru și perie</span><span class="val">~180 lei/an</span><span class="bar"><i style="width:14%"></i></span></div>
+      <div class="row"><span class="lbl">Aer condiționat — kit de igienizare, o dată pe an</span><span class="val">~90 lei/an</span><span class="bar"><i style="width:7%"></i></span></div>
+      <div class="row"><span class="lbl">Hotă — filtru de carbon, la 4 luni</span><span class="val">~75 lei/an</span><span class="bar"><i style="width:6%"></i></span></div>
+      <div class="row total"><span class="lbl">Aceeași gospodărie, toate la un loc</span><span class="val">~1.250 lei/an</span><span class="bar"><i style="width:100%"></i></span></div>
+    </div>
+
+    <p>Nicio gospodărie nu are toate șase. Media realistă e de trei sau patru aparate cu filtru, deci <strong>600–900 de lei pe an</strong> — tot de două-trei ori mai mult decât cea mai bună categorie izolată, și de la același client, cu același cost de achiziție, în aceleași colete.</p>
+
+    <div class="callout">
+      <h4>De ce contează atât de mult</h4>
+      <p>Toate documentele de până acum s-au blocat în același loc: categoriile care nu cer educație au valoare mică pe client, iar cele cu valoare mare pe client cer educație sau intră în teritoriu greu. Consolidarea rupe compromisul. Nu adaugi nicio explicație — omul știe deja că filtrele se schimbă — dar triplezi cât valorează un client.</p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>Abonamentul de filtre al casei</h2>
+      <p>Cum arată efectiv, și de ce nu-l poate copia un magazin de cartușe.</p>
+    </div>
+
+    <p>Oferta, într-o propoziție: <em>„Spune-mi ce aparate ai. Îți trimit filtrul potrivit fiecăruia, exact când trebuie schimbat, și țin eu socoteala.”</em></p>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Intrarea: espressorul</h4>
+        <p>Primul contact se face pe o singură categorie, cea mai ușoară. Omul caută „decalcifiant pentru espressorul X”, te găsește, primește exact ce trebuie. Prima comandă e simplă și nu cere niciun angajament.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Întrebarea din cutie</h4>
+        <p>În colet pui o singură întrebare, pe hârtie: <strong>ce alte aparate cu filtru ai în casă?</strong> Frigider cu apă, purificator, aspirator vertical, hotă, aer condiționat. Cine răspunde îți dublează sau triplează valoarea, fără să te coste un leu de achiziție. Ăsta e tot motorul de creștere.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Scadențarul</h4>
+        <p>Din momentul în care știi ce aparate are, știi și când vine următorul filtru. Îi scrii cu două săptămâni înainte: „la frigider urmează pe 12 martie, îl pun în livrarea următoare?”. Nu e marketing, e o notificare pe care omul o vrea.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Zidul</h4>
+        <p>Baza de potrivire pe modele. Nu e un produs, e o muncă de câteva sute de ore, făcută în serile în care oricum nu ai altceva de făcut. Cine vrea să te copieze trebuie să o refacă de la zero, iar clientul care are deja profilul aparatelor la tine nu are niciun motiv să plece.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout warn">
+      <h4>Chestiunea originalelor și a garanției</h4>
+      <p>La unele aparate aflate în garanție, folosirea consumabilelor neoriginale poate fi invocată de producător la o reclamație. E o problemă reală, nu o teorie — și se rezolvă simplu, dacă o rezolvi din prima zi: <strong>aparat în garanție → vinzi originalul</strong>, cu marjă mai mică; <strong>aparat ieșit din garanție → vinzi compatibilul</strong>, cu marjă mare. Întrebarea „din ce an e aparatul?” intră în formularul de configurare, alături de model.</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Punctajul</h2>
+      <p>Toate cele zece categorii noi, plus espressorul ca reper și ideea consolidată. Aceleași opt criterii ca în documentul precedent.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="score">
+        <thead>
+          <tr>
+            <th>Candidat</th>
+            <th class="rot">Zero<br>educație</th>
+            <th class="rot">Testul<br>de calcul</th>
+            <th class="rot">Marjă</th>
+            <th class="rot">Recu-<br>rență</th>
+            <th class="rot">Lei/client<br>pe an</th>
+            <th class="rot">Zid</th>
+            <th class="rot">Cerere<br>dovedită</th>
+            <th class="rot">Fit 15k<br>și 17h</th>
+            <th class="rot">Scor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="win">
+            <td>Abonamentul de filtre al casei (consolidat)</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">7,5/8</td>
+          </tr>
+          <tr>
+            <td>Consumabile pentru espressor <em>(reper)</em></td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">7/8</td>
+          </tr>
+          <tr>
+            <td>Filtre HEPA pentru purificatoare de aer</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">6,5/8</td>
+          </tr>
+          <tr>
+            <td>Filtre de apă pentru frigidere side-by-side</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">6,5/8</td>
+          </tr>
+          <tr>
+            <td>Consumabile pentru aspiratoare verticale</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">6,5/8</td>
+          </tr>
+          <tr>
+            <td>Kit de igienizare și filtre pentru aer condiționat</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">5,5/8</td>
+          </tr>
+          <tr>
+            <td>Filtre pentru ventilație cu recuperare de căldură</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">5,5/8</td>
+          </tr>
+          <tr>
+            <td>Consumabile pentru padel și tenis</td>
+            <td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">5,5/8</td>
+          </tr>
+          <tr>
+            <td>Consumabile pentru dedurizatoare de apă</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td>
+            <td class="tot">5/8</td>
+          </tr>
+          <tr>
+            <td>Consumabile pentru piscine supraterane</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m p">◐</span></td>
+            <td class="tot">5/8</td>
+          </tr>
+          <tr>
+            <td>Filtre de hotă de bucătărie</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">4,5/8</td>
+          </tr>
+          <tr>
+            <td>Lame pentru roboți de tuns iarba</td>
+            <td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m y">●</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m n">○</span></td><td class="mk"><span class="m p">◐</span></td><td class="mk"><span class="m y">●</span></td>
+            <td class="tot">4,5/8</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><span class="m y">●</span> trece</span>
+      <span><span class="m p">◐</span> parțial</span>
+      <span><span class="m n">○</span> nu trece</span>
+      <span>„Lei/client pe an” = <span class="m y">●</span> peste 600 · <span class="m p">◐</span> 150–600 · <span class="m n">○</span> sub 150</span>
+    </div>
+
+    <p>Primul rând nu e un produs nou. E aceleași categorii, vândute împreună — și e singurul lucru din cinci documente care trece de 7. Câștigă exact acolo unde fiecare pierdea separat: valoarea pe client și zidul.</p>
+  </section>
+
+  <section id="s6">
+    <div class="sechead"><div class="secnum">06</div><h2>Cele șapte eliminate</h2>
+      <p>Câte o linie fiecare. Le las aici ca să vezi ce a fost verificat, nu ca să le citești pe îndelete.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Categorie</th><th class="tr">Scor</th><th>De ce a picat</th></tr></thead>
+        <tbody>
+          <tr><td>Aer condiționat — kit de igienizare</td><td class="tr">5,5</td><td>O singură dată pe an, ~90 lei. Prea puțin ca produs principal — dar excelent ca adaos la un abonament care există deja.</td></tr>
+          <tr><td>Ventilație cu recuperare de căldură</td><td class="tr">5,5</td><td>Parcul instalat din România e prea mic, iar NovingAIR acoperă deja 26 de modele compatibile.</td></tr>
+          <tr><td>Padel și tenis</td><td class="tr">5,5</td><td>Categoria crește cu 15% pe an la nivel global, dar în România e „încă în dezvoltare”. Ai plăti tu formarea pieței — exact ce ai spus că nu vrei.</td></tr>
+          <tr><td>Dedurizatoare de apă</td><td class="tr">5</td><td>Sarea vine în saci de 25 de kilograme. Logistica omoară marja înainte să înceapă.</td></tr>
+          <tr><td>Piscine supraterane</td><td class="tr">5</td><td>Patru luni de vânzări pe an, opt de zero. Hornbach, Leroy și Depozitul de piscine acoperă deja sezonul.</td></tr>
+          <tr><td>Filtre de hotă</td><td class="tr">4,5</td><td>Filtrul universal costă 25 de lei la Dedeman. Nu există marjă de apărat și nici motiv de abonament.</td></tr>
+          <tr><td>Lame pentru roboți de tuns iarba</td><td class="tr">4,5</td><td>Sezonier, parc instalat mic, iar un set de lame costă sub 50 de lei. Sub 100 de lei pe an de client.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Două dintre ele merită ținute minte, chiar dacă au picat: <strong>aerul condiționat</strong> și <strong>hota</strong> sunt slabe ca afacere de sine stătătoare, dar sunt exact genul de adaos care ridică valoarea unui abonat care există deja. Nu le vinzi ca să faci bani din ele — le vinzi ca să nu aibă clientul motiv să comande de altundeva.</p>
+  </section>
+
+  <section id="s7">
+    <div class="sechead"><div class="secnum">07</div><h2>Economia</h2>
+      <p>Cifre pe abonatul consolidat. Estimări prudente, de confirmat cu ofertele reale.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Pe client</th><th class="tr">Anul 1 — doar espressor</th><th class="tr">Anul 2 — trei aparate</th></tr></thead>
+        <tbody>
+          <tr><td>Venit anual</td><td class="tr">425 lei</td><td class="tr">830 lei</td></tr>
+          <tr><td>Cost de achiziție a mărfii</td><td class="tr">−149 lei</td><td class="tr">−340 lei</td></tr>
+          <tr><td>Livrare (3, respectiv 5 colete mici)</td><td class="tr">−48 lei</td><td class="tr">−80 lei</td></tr>
+          <tr><td>Ambalaj, insert, etichete</td><td class="tr">−15 lei</td><td class="tr">−25 lei</td></tr>
+          <tr><td>Procesare plată</td><td class="tr">−11 lei</td><td class="tr">−21 lei</td></tr>
+          <tr class="sum"><td>Marjă netă pe an</td><td class="tr">202 lei</td><td class="tr">364 lei</td></tr>
+          <tr class="sum"><td>Marjă brută</td><td class="tr">65%</td><td class="tr">59%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Marja brută scade când adaugi categorii, pentru că filtrele de frigider și de purificator au adaos mai mic decât decalcifiantul. <strong>Marja în lei aproape se dublează</strong> — și asta contează, nu procentul.</p>
+
+    <div class="stats">
+      <div class="stat"><b>27</b><span>abonați acoperă cele ~800 lei de costuri fixe lunare, în anul 2</span></div>
+      <div class="stat"><b>~50</b><span>lei cost de achiziție per client, prin parteneriate și căutare organică</span></div>
+      <div class="stat"><b>150</b><span>abonați → ~4.500 lei marjă netă pe lună</span></div>
+      <div class="stat"><b>~300h</b><span>de construit baza de potrivire — costul real al zidului, plătit în timp, nu în bani</span></div>
+    </div>
+
+    <div class="callout warn">
+      <h4>Ce trebuie spus direct</h4>
+      <p>E o afacere care are nevoie de <strong>mai mulți clienți</strong> decât variantele cu valoare mare pe client din documentul precedent. La 364 de lei marjă pe an de abonat, 150 de clienți înseamnă ~4.500 de lei pe lună — bine pentru un business de seară, dar nu spectaculos. Avantajul nu e mărimea, e siguranța: clienții nu pleacă, produsul nu iese din modă, și fiecare aparat nou din casa lor te face mai mare fără să cauți pe nimeni.</p>
+    </div>
+
+    <div class="callout">
+      <h4>De unde vin primii clienți</h4>
+      <p>Nu din reclamă. Din <strong>service-urile de espressoare</strong> — fiecare oraș are două-trei, văd exact aparatele stricate din calcar și au tot interesul să recomande pe cineva care previne asta. Plus grupurile de cafea de pe Facebook, care sunt mari și active în România, și căutările de tip „decalcifiant pentru [model]”, care sunt exact intenția de cumpărare pe care nu trebuie s-o creezi tu.</p>
+    </div>
+  </section>
+
+  <section id="s8">
+    <div class="sechead"><div class="secnum">08</div><h2>Primele 30 de zile</h2>
+      <p>Costul până în ziua 14 rămâne zero. Diferența față de documentele precedente: aici prima săptămână produce zidul, nu o pagină.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">1–7</span><div>
+        <h4>Construiești baza de potrivire</h4>
+        <p>Iei cele mai vândute 20 de modele de espressoare automate din România și, pentru fiecare, notezi ce decalcifiant, ce tablete și ce filtru de apă acceptă, plus fiecare echivalent compatibil. E muncă de bibliotecar și nu costă un leu. La finalul săptămânii ai un tabel pe care nu-l are nimeni public în România — și care e, de fapt, produsul tău.</p>
+      </div></li>
+      <li><span class="n">8–14</span><div>
+        <h4>Cincisprezece conversații și o pagină</h4>
+        <p>În grupurile de cafea, nu întrebi „ai cumpăra un abonament?”. Întrebi: <em>„când ți-ai decalcifiat ultima oară aparatul și de unde ai luat soluția?”</em>. Răspunsurile îți spun dacă problema e prețul sau confuzia. În paralel, o pagină cu un singur câmp: <strong>ce model de espressor ai</strong> — și îi arăți exact ce-i trebuie.</p>
+        <p><strong>Prag:</strong> 20 de oameni care lasă modelul aparatului sau 5 comenzi plătite. Sub asta, nu comanzi stoc.</p>
+      </div></li>
+      <li><span class="n">15–30</span><div>
+        <h4>Furnizorii și service-urile</h4>
+        <p>Trei-cinci furnizori europeni de consumabile compatibile, cerere de ofertă cu cantitate minimă și preț unitar. În paralel, trei service-uri de espressoare din orașul tău, cu o propunere simplă: le trimiți clienților lor consumabilele potrivite, ei nu se mai ocupă. SRL, contabil, termeni și condiții, GDPR.</p>
+        <p><strong>Prag:</strong> o ofertă scrisă care încape în 8.000 de lei și un service care spune „hai să încercăm”.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s9">
+    <div class="sechead"><div class="secnum">09</div><h2>Capcanele</h2>
+      <p>Specifice modelului ăstuia, nu comerțului în general.</p>
+    </div>
+
+    <ul class="check">
+      <li><strong>O potrivire greșită costă mai mult decât marja pe un an.</strong> Un filtru care nu intră înseamnă retur, recenzie proastă și un client pierdut definitiv. Confirmă modelul în scris la prima comandă și păstrează confirmarea.</li>
+      <li><strong>Garanția aparatului.</strong> La aparatele aflate în garanție, vinde originalul chiar dacă marja e mai mică. Un client care rămâne fără garanție din cauza ta nu se mai întoarce și povestește tuturor.</li>
+      <li><strong>Dependența de o singură categorie.</strong> Dacă la luna 12 toți abonații tăi au doar espressor, nu ai construit abonamentul de filtre — ai un magazin de decalcifiant. Urmărește lunar câte aparate are în medie un client; dacă numărul nu urcă, întrebarea din cutie nu funcționează și trebuie schimbată.</li>
+      <li><strong>Renunțarea tăcută.</strong> Nimeni nu anulează cu scandal; pur și simplu refuză o livrare. Sună fiecare refuz — jumătate se rezolvă într-o conversație de trei minute, de obicei pentru că omul a plecat în concediu.</li>
+      <li><strong>Sezonalitatea ascunsă.</strong> Filtrele de aer condiționat se vând în mai și iunie, restul anului deloc. Nu-ți construi planul de cash pe categoriile sezoniere; ele sunt bonus, nu bază.</li>
+      <li><strong>Baza de potrivire ținută în cap.</strong> Dacă tabelul nu e scris undeva, nu e un zid, e o amintire. Scrie-l din prima săptămână, într-un fișier pe care l-ai putea da mâine cuiva să lucreze în locul tău.</li>
+    </ul>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Verificările de disponibilitate pentru cele zece categorii, august 2026.</p>
+    </div>
+    <div class="sources">
+      <a href="https://www.flanco.ro/filtru-hepa-pentru-purificatoare-de-aer-xiaomi-mi-air-purifier.html">Flanco — Filtru HEPA pentru purificatoare Xiaomi, verificare de preț și stadiu</a>
+      <a href="https://www.evomag.ro/electrocasnice-tratare-apa-aer-accesorii-tratare-aer/xiaomi-filtru-hepa-pentru-purificator-xiaomi-mi-air-compatibil-2s-2h-2c-3-3h-3c-pro-3779388.html">evoMAG — Filtru compatibil 2S/2H/2C/3/3H/3C/Pro, exemplul de confuzie la potrivire</a>
+      <a href="https://levoit.ro/filtre-purificatoare-aer/">Levoit România — Filtre pentru purificatoare, canal oficial</a>
+      <a href="https://shop.esdrom.ro/product/3285/filtru-apa-original-extern-pentru-frigider-lg-side-by-side.html">ESDROM — Filtru de apă pentru frigidere LG side-by-side</a>
+      <a href="https://filtro.ro/filtru-de-apa-pentru-frigider-side-by-side-kit-complet">Filtro — Kit complet pentru frigidere side-by-side, compatibilități multiple</a>
+      <a href="https://www.staraqua.ro/filtre-de-apa-pentru-frigider">StarAqua — Filtre pentru frigidere LG, Samsung, Bosch</a>
+      <a href="https://www.bewater.ro/filtru-apa-frigider-whirlpool-compatibil.html">BeWater — Filtru compatibil Whirlpool</a>
+      <a href="https://www.rowenta.ro/accessory/Produse/%C3%8Engrijirea-locuin%C8%9Bei/Aspirator-vertical-f%C4%83r%C4%83-fir/csc/CordlessHandstickCleaner">Rowenta România — Piese și accesorii pentru aspiratoare verticale, canal oficial</a>
+      <a href="https://dyson.360.ro/aspiratoare">Dyson 360 — Distribuitorul oficial din România</a>
+      <a href="https://www.kfea.ro/intretinere/decalcifiere">Kfea — Consumabile de decalcifiere pentru espressoare</a>
+      <a href="https://www.espressorul.ro/categorie-produs/accesorii-si-piese-aparate-cafea/solutii-lichide-granule-praf-pastile-etc-de-curatare-si-decalcifiere/">Espressorul.ro — Al doilea specialist pe consumabile de cafea</a>
+      <a href="https://ventilatie-recuperare.ro/categorie-produs/mentenanta-sisteme-de-ventilare/filtre-pentru-ventilatie/">NovingAIR — Filtre pentru ventilație cu recuperare, 26 de modele compatibile</a>
+      <a href="https://www.dedeman.ro/ro/filtru-hota-carbon-k-m-fw-1-universal-negru-47-x-57-cm/p/3034174">Dedeman — Filtru universal de hotă la 25 lei, motivul eliminării categoriei</a>
+      <a href="https://www.leroymerlin.ro/produse/accesorii-hote/843">Leroy Merlin — Filtre de hotă, verificare de stadiu</a>
+      <a href="https://www.hornbach.ro/c/gradina/piscine-accesorii/piscine-supraterane/S19927/">Hornbach — Piscine supraterane și accesorii</a>
+      <a href="https://www.depozituldepiscine.ro/cp/piscine-supraterane/">Depozitul de Piscine — Specialist pe categoria de piscine</a>
+      <a href="https://altex.ro/masini-tuns-iarba-trimmere-motocoase/cpl/filtru/tip-produs-7986/robot/">Altex — Roboți de tuns iarba, verificare de parc instalat</a>
+      <a href="https://ecosoft-romania.ro/">Ecosoft România — Consumabile pentru dedurizatoare și tratarea apei</a>
+      <a href="https://www.aqualine.ro/">Aqualine — Sisteme și consumabile de filtrare, fără abonament</a>
+      <a href="https://filtro.ro/consumabile">FILTRO — Consumabile pentru filtre de apă, fără abonament</a>
+      <a href="https://www.lexservice.ro/">LexService — Piese și accesorii pentru electrocasnice</a>
+      <a href="https://playtomic.com/global-padel-report">Playtomic — Global Padel Report 2026</a>
+      <a href="https://www.padelwithoutborders.com/padel-in-romania/">Padel Without Borders — Stadiul padelului în România</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Al cincilea document din serie, august 2026. Stadiile de disponibilitate au fost verificate prin căutare publică la data redactării și se schimbă în luni, nu în ani — reverifică-le înainte de orice decizie. Prețurile de raft citate provin din magazinele indicate în surse. Valorile anuale pe categorie sunt estimări construite pe intervalele de schimb recomandate de producători și pe prețurile publice; costurile de achiziție și marjele se confirmă doar cu ofertele reale primite de la furnizori. Media de trei-patru aparate cu filtru pe gospodărie este o ipoteză de lucru, nu o cifră măsurată — verific-o pe primii tăi clienți înainte să construiești pe ea.</p>
+  </footer>
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>

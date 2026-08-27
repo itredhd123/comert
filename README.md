@@ -3,8 +3,9 @@
 Research pe marketingul celor mai mari jucători din comerțul online — românesc și
 internațional — și playbook-ul organic derivat din el, pentru un magazin la început de drum.
 Plus documentul de decizie care aplică filtrele pe un profil concret de fondator, scanarea
-de produse care testează ipoteza „ce merge în afară și n-a ajuns încă la noi”, și selecția
-pe valoare evidentă — produse care nu au nevoie să fie explicate ca să se vândă.
+de produse care testează ipoteza „ce merge în afară și n-a ajuns încă la noi”, selecția
+pe valoare evidentă — produse care nu au nevoie să fie explicate ca să se vândă — și a doua
+rundă de zece, din care iese ideea consolidată a abonamentului de filtre.
 
 ## Fișiere
 
@@ -18,6 +19,8 @@ pe valoare evidentă — produse care nu au nevoie să fie explicate ca să se v
 | `vanatoarea-de-produse.html` | Aceeași versiune, ca pagină web |
 | `Nimic-de-explicat-raport.pdf` | Selecția pe valoare evidentă, 16 pagini |
 | `zece-produse-fara-explicatii.html` | Aceeași versiune, ca pagină web |
+| `Filtrele-casei-raport.pdf` | A doua rundă de zece, 12 pagini |
+| `filtrele-casei.html` | Aceeași versiune, ca pagină web |
 
 ## Raportul de research — structură
 
@@ -108,6 +111,26 @@ de vânzare pe abonament lipsește peste tot.
 | 10 | Ce se schimbă față de documentele precedente |
 | 11 | Capcanele modelului de abonament |
 
+## A doua rundă de zece — structură
+
+Zece categorii noi, pe aceleași criterii plus o excludere: nimic greu emoțional. Trei au trecut,
+șapte au picat. Concluzia nu e un produs nou, ci faptul că filtrele casei — espressor, frigider,
+purificator, aspirator, aer condiționat, hotă — valorează de trei ori mai mult vândute împreună
+decât oricare dintre ele separat.
+
+| # | Secțiune |
+|---|---|
+| 00 | Verdictul |
+| 01 | Ce am căutat — criteriile, plus excluderea subiectelor grele |
+| 02 | Cei patru care au trecut |
+| 03 | Niciunul nu ajunge singur — valoarea pe client, pe categorie și însumată |
+| 04 | Abonamentul de filtre al casei |
+| 05 | Punctajul — toate cele zece plus reperul și ideea consolidată |
+| 06 | Cele șapte eliminate, câte o linie |
+| 07 | Economia |
+| 08 | Primele 30 de zile |
+| 09 | Capcanele |
+
 ## Surse
 
 Raportul de research: peste 40 de surse, verificate în august 2026 — între altele MerchantPro
@@ -125,6 +148,9 @@ complete sunt la finalul fiecărui document.
 Selecția pe valoare evidentă adaugă datele demografice INS pentru ianuarie 2026, informațiile
 publice despre comisioanele eMAG Marketplace, și verificările de disponibilitate pentru cele
 nouă categorii scanate.
+
+A doua rundă de zece adaugă verificările de preț și disponibilitate pentru fiecare dintre cele
+zece categorii noi, cu link către listarea găsită.
 
 ## Cum au fost generate PDF-urile
 
