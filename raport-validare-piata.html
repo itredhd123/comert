@@ -1,0 +1,598 @@
+<meta charset="utf-8">
+<title>Recensământul site-urilor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Sinteză</a></li>
+      <li><a href="#s1"><span>01</span> Universul</a></li>
+      <li><a href="#s2"><span>02</span> Terenul e ocupat</a></li>
+      <li><a href="#s3"><span>03</span> Economia reală</a></li>
+      <li><a href="#s4"><span>04</span> Cifra care lipsește</a></li>
+      <li><a href="#s5"><span>05</span> Ce urmează</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Validare de piață · Etapa 1 din 2 · august 2026</div>
+    <h1>Cifra pe care n-o are nimeni</h1>
+    <p class="lede">Câte firme mici din România n-au site, pe verticală și pe oraș — și de ce răspunsul la întrebarea asta decide dacă merită sau nu să vinzi site-uri. Ce s-a putut afla din surse publice, plus instrumentul care măsoară restul.</p>
+    <div class="byline">
+      <span>~25.700 service-uri auto operaționale</span>
+      <span>~17.400 cabinete stomatologice</span>
+      <span>Concurența vinde deja abonamente</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Sinteză</a></li>
+        <li><a href="#s1">Universul</a></li>
+        <li><a href="#s2">Terenul e ocupat</a></li>
+        <li><a href="#s3">Economia reală</a></li>
+        <li><a href="#s4">Cifra care lipsește</a></li>
+        <li><a href="#s5">Ce urmează</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Sinteză</h2>
+      <p>Ce s-a stabilit până acum și ce rămâne de măsurat.</p>
+    </div>
+    <ul class="check">
+      <li><strong>Ideea „0 lei avans + abonament lunar” e deja pe piață.</strong> Netreach vinde exact asta: site, găzduire, domeniu, mentenanță și optimizare Google, cu implementare gratuită și 129 €/lună în primul an, apoi 89–109 €. Nu intri pe teren gol — intri peste cineva care a productizat deja modelul.</li>
+      <li><strong>Prețurile sunt mai mari decât se crede.</strong> Un freelancer cere 300–500 €, o agenție pornește de la 600 € și urcă până la 10.000 €, iar media pentru o firmă mică e în jur de 1.000 € (~5.000 lei). Marja există. Problema nu a fost niciodată prețul.</li>
+      <li><strong>Piața confirmă unde stă valoarea, și nu e în site.</strong> Mentenanța unui site mic se vinde cu 100–300 lei/lună. Administrarea Google Ads pentru aceeași firmă se vinde cu 1.300–5.000 lei/lună. Un raport de 5–10x, pentru o muncă lunară comparabilă. Diferența e că a doua se leagă de clienți, prima de fișiere.</li>
+      <li><strong>Universul e suficient de mare oriunde te-ai uita.</strong> ~25.700 de service-uri auto operaționale, ~17.400 de cabinete stomatologice, ~4.800 de firme de instalații electrice pe activitate principală. Nicio verticală nu pică testul de mărime, deci mărimea nu e criteriul care decide.</li>
+      <li><strong>Modelul suportă un cost de achiziție surprinzător de mare.</strong> La 500 lei/lună și 4% churn, un client valorează ~10.550 lei profit brut, deci îți poți permite să cheltui ~3.500 lei ca să-l câștigi. Concluzia e neplăcută dar utilă: business-ul nu moare din cost de achiziție, ci din incapacitatea de a închide vânzarea.</li>
+      <li><strong>Churnul decide totul, nu prețul.</strong> Diferența dintre 3% și 8% plecări lunare e diferența dintre 1,6 milioane lei/an și 600.000 lei/an — la aceeași ofertă, aceiași clienți, aceeași muncă.</li>
+      <li><strong>Există un plafon natural, și e mai jos decât pare.</strong> Cu un vânzător care închide 8 clienți pe lună și 4% churn, creșterea se oprește singură la 200 de clienți, adică 100.000 lei/lună. Ca să treci de acolo îți trebuie mai mulți vânzători sau churn mai mic — nu prețuri mai mari.</li>
+      <li><strong>Cifra care alege verticala încă lipsește.</strong> Nimeni nu publică penetrarea site-urilor pe cod CAEN și oraș. Instrumentul care o măsoară e construit și testat; îi lipsește doar o cheie Google Maps.</li>
+    </ul>
+    <div class="callout">
+      <h4>Concluzia de o frază</h4>
+      <p>Piața e reală, marja e reală și cererea e reală — dar <strong>ce se vinde nu e site-ul</strong>, iar modelul evident (abonament lunar în locul plății unice) e deja ocupat de concurenți care au ajuns acolo înaintea ta. Ce rămâne liber e mai jos, la nivelul verticalelor înguste, și exact acolo lipsesc datele.</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Universul</h2>
+      <p>Câte firme sunt, de fapt, în fiecare verticală candidată.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>25.669</b><span>service-uri auto operaționale (CAEN 4520), din 42.925 înregistrate vreodată</span></div>
+      <div class="stat"><b>17.419</b><span>cabinete stomatologice private; doar 31 publice în toată țara</span></div>
+      <div class="stat"><b>4.790</b><span>firme cu instalații electrice (CAEN 4321) ca activitate principală</span></div>
+      <div class="stat"><b>~3.200</b><span>cabinete stomatologice doar în București</span></div>
+      <div class="stat"><b>85%</b><span>din cabinetele stomatologice sunt la oraș — ruralul e gol</span></div>
+    </div>
+
+    <p>Prima concluzie e că <strong>testul de mărime nu elimină pe nimeni</strong>. Chiar și cea mai mică verticală de pe listă are mii de firme, iar la 500 lei/lună un business sănătos are nevoie de 200 de clienți. Vorbim despre a captura sub 1% dintr-o verticală. Mărimea pieței nu e constrângerea, deci nu ea trebuie să aleagă verticala.</p>
+
+    <div class="callout warn">
+      <h4>Avertisment metodologic — citește înainte să te bazezi pe cifrele astea</h4>
+      <p>De la 1 ianuarie 2025, România a trecut la <strong>CAEN Rev. 3</strong>, iar bucăți din vechiul cod 4520 au migrat spre codurile noi 9531 și 9540. Cifrele pe cod CAEN nu mai sunt comparabile între ani, iar o parte din firme sunt încă în tranziție.</p>
+      <p>În plus, sursele comerciale se contrazic între ele: pentru același cod 4520 am găsit atât 42.925, cât și ~18.950 de firme, în funcție de agregator și de definiția „activă”. <strong>Spread-ul ăsta e el însuși informația:</strong> numărătorile pe registrul comerțului sunt prea murdare ca să decizi pe baza lor. De aceea recensământul din Google Maps nu e un moft — e singura numărătoare care reflectă firme care chiar operează și pe care un client le-ar putea găsi.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Verticală</th><th>Firme</th><th>Ce o recomandă</th><th>Ce o încarcă</th></tr></thead>
+        <tbody>
+          <tr><td>Service auto</td><td class="num">~25.700</td><td>Nevoie recurentă: revizii, ITP, sezonul de anvelope. Motiv natural de recontactare.</td><td>Marjă mică pe manoperă, patroni greu de prins la telefon.</td></tr>
+          <tr><td>Stomatologie</td><td class="num">~17.400</td><td>Valoare mare pe pacient, buget de reclamă deja existent, plată integral privată.</td><td>Breaslă închisă, agenții specializate deja instalate, intrare scumpă pentru un outsider.</td></tr>
+          <tr><td>Instalatori / electricieni</td><td class="num">~4.800+</td><td>Nevoie urgentă — clientul caută acum și sună primul rezultat. Ideal pentru pay-per-lead.</td><td>Firme foarte mici, multe PFA, capacitate limitată de a absorbi lead-uri.</td></tr>
+          <tr><td>Construcții / amenajări</td><td class="num">mii</td><td>Bon mediu mare, deci un singur client câștigat justifică luni de abonament.</td><td>Ciclu de vânzare lung, sezonalitate, încasări impredictibile la client.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mono" style="font-size:13px; color:var(--muted)">Cifrele provin din agregatori comerciali de date ONRC/ANAF și din presa economică, prin căutare web. Nivel de încredere: mediu. Nu au putut fi verificate direct în Eurostat, INS sau data.gov.ro — vezi secțiunea 05.</p>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>Terenul e deja ocupat</h2>
+      <p>Ce se vinde azi în România, la ce preț, și de către cine.</p>
+    </div>
+
+    <p>Cea mai utilă descoperire a etapei nu e o cifră, ci un concurent. Modelul care pare cea mai bună idee — <em>renunți la plata unică, dai site-ul gratis și încasezi lunar</em> — e deja un produs de raft în România.</p>
+
+    <div class="callout warn">
+      <h4>Modelul „fără avans” e luat</h4>
+      <p>Netreach vinde site de prezentare cu <strong>0 lei implementare</strong> și abonament de la <strong>129 €/lună</strong> în primul an, care scade la 89 €/lună pentru pachetul standard sau 109 € pentru cel superior. Abonamentul include site, găzduire, domeniu, mentenanță și optimizare pentru Google.</p>
+      <p>Adică ~450–650 lei/lună — exact fereastra de preț în care ar cădea și oferta ta. Nu înseamnă că piața e închisă; înseamnă că <strong>nu poți intra cu „ideea” ca diferențiator</strong>, pentru că nu mai e o idee, e un produs pe care clientul îl poate compara.</p>
+    </div>
+
+    <h3>Harta prețurilor</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Ofertă</th><th>Preț de piață</th><th>Ce spune despre valoare</th></tr></thead>
+        <tbody>
+          <tr><td>Site, freelancer</td><td class="num">300–500 €</td><td>Podeaua. Ancora de preț din capul clientului.</td></tr>
+          <tr><td>Site, agenție</td><td class="num">de la 600 €</td><td>Până la 10.000 € pentru proiecte mari.</td></tr>
+          <tr><td>Prezentare, 5–10 pagini</td><td class="num">500–2.500 €</td><td>Media pentru o firmă mică: ~1.000 € (~5.000 lei).</td></tr>
+          <tr><td>Mentenanță site mic</td><td class="num">100–300 lei/lună</td><td>Marfă pură. Ține ușa deschisă, nu construiește business.</td></tr>
+          <tr><td>Mentenanță site business</td><td class="num">300–700 lei/lună</td><td>Peste 700 lei doar pentru magazine și platforme.</td></tr>
+          <tr><td>Abonament complet (Netreach)</td><td class="num">89–129 €/lună</td><td>Modelul productizat, deja pe piață.</td></tr>
+          <tr><td>Administrare Google Ads</td><td class="num">1.300–5.000 lei/lună</td><td><strong>De 5–10x mai mult decât mentenanța.</strong> Aici e banul.</td></tr>
+          <tr><td>Buget media, servicii locale</td><td class="num">1.500–4.000 lei/lună</td><td>Peste bugetul de administrare, plătit direct către Google.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Tabelul spune un singur lucru, dar îl spune răspicat. <strong>Aceeași firmă mică plătește 200 de lei pe lună ca să i se țină site-ul în viață și 3.000 de lei pe lună ca să i se aducă clienți.</strong> Nu pentru că a doua muncă e de cincisprezece ori mai grea, ci pentru că prima se leagă de un fișier, iar a doua de veniturile lui. Cine vinde întreținere concurează cu găzduirea la 5 lei pe lună. Cine vinde programări concurează cu costul de a nu avea clienți.</p>
+
+    <div class="hooks">
+      <div class="hook"><b>Regula agențiilor</b>Costul de administrare nu ar trebui să depășească 20–30% din bugetul total de reclamă. Dacă ceri 500 € administrare pentru 300 € buget, clientul o să observe.</div>
+      <div class="hook"><b>Pragul tehnic</b>Sub 300–500 € buget lunar, algoritmii Google nu au destule date ca să optimizeze. Sub pragul ăsta vinzi ceva ce nu poate funcționa.</div>
+      <div class="hook"><b>Costul unui clic</b>Între 0,05 € și 4,50 €, în funcție de industrie. Verticalele scumpe sunt scumpe fiindcă acolo clientul valorează mult.</div>
+      <div class="hook"><b>Ce înseamnă asta</b>CPC-ul e cel mai bun indiciu public despre valoarea unui client. Cât plătesc deja concurenții pentru unul îți spune cât poți cere tu.</div>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>Economia reală</h2>
+      <p>Ce trebuie să fie adevărat ca modelul să funcționeze. Cifrele vin din <span class="mono">scripts/economie.py</span>, cu ipotezele la vedere.</p>
+    </div>
+
+    <p>Ipoteze: abonament 500 lei/lună, fără taxă inițială, 4% plecări pe lună, ~450 lei costul de livrare al unui site productizat, 60 lei pe lună costul de a ține un client, 8 închideri pe lună per vânzător.</p>
+
+    <div class="stats">
+      <div class="stat up"><b>10.550 lei</b><span>profit brut adus de un client pe toată durata relației</span></div>
+      <div class="stat"><b>25 luni</b><span>cât stă un client, la 4% plecări lunare</span></div>
+      <div class="stat up"><b>3.517 lei</b><span>cât îți poți permite să cheltui ca să câștigi un client (regula 3:1)</span></div>
+      <div class="stat down"><b>200</b><span>plafonul natural de clienți: acolo plecările egalează închiderile</span></div>
+    </div>
+
+    <div class="callout calm">
+      <h4>Cifra care schimbă strategia</h4>
+      <p>Un cost de achiziție permis de <strong>3.500 lei per client</strong> e enorm pentru o vânzare de 500 lei pe lună. Înseamnă că îți permiți deplasări, demonstrații construite în avans, comisioane grase și zeci de apeluri per client câștigat.</p>
+      <p>Deci modelul nu moare din cheltuială. Moare din altceva: <strong>din a nu reuși să închizi deloc.</strong> Toată atenția trebuie să meargă în rata de conversie a vânzării, nu în reducerea costurilor.</p>
+    </div>
+
+    <h3>De ce atârnă totul de churn</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Plecări / lună</th><th>Durata unui client</th><th>Valoarea unui client</th><th>Plafon de clienți</th><th>Venit lunar la plafon</th></tr></thead>
+        <tbody>
+          <tr><td>2%</td><td class="num">50 luni</td><td class="num">21.550 lei</td><td class="num">400</td><td class="num">200.000 lei</td></tr>
+          <tr><td>3%</td><td class="num">33 luni</td><td class="num">14.217 lei</td><td class="num">267</td><td class="num">133.333 lei</td></tr>
+          <tr><td>4%</td><td class="num">25 luni</td><td class="num">10.550 lei</td><td class="num">200</td><td class="num">100.000 lei</td></tr>
+          <tr><td>6%</td><td class="num">17 luni</td><td class="num">6.883 lei</td><td class="num">133</td><td class="num">66.667 lei</td></tr>
+          <tr><td>8%</td><td class="num">12 luni</td><td class="num">5.050 lei</td><td class="num">100</td><td class="num">50.000 lei</td></tr>
+          <tr><td>10%</td><td class="num">10 luni</td><td class="num">3.950 lei</td><td class="num">80</td><td class="num">40.000 lei</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Între 3% și 8% plecări lunare stau <strong>1,6 milioane de lei pe an și 600.000</strong>. Aceeași ofertă, aceiași clienți, aceeași muncă de vânzare — doar că unii rămân și alții pleacă. Nicio altă variabilă din model nu are efectul ăsta la un cost atât de mic.</p>
+
+    <h3>Cum arată primii trei ani, cu un singur vânzător</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Luna</th><th>Clienți</th><th>Pleacă pe lună</th><th>Venit lunar</th><th>Profit lunar</th></tr></thead>
+        <tbody>
+          <tr><td>3</td><td class="num">23</td><td class="num">0,6</td><td class="num">11.526 lei</td><td class="num">4.143 lei</td></tr>
+          <tr><td>6</td><td class="num">43</td><td class="num">1,5</td><td class="num">21.724 lei</td><td class="num">13.117 lei</td></tr>
+          <tr><td>12</td><td class="num">77</td><td class="num">2,9</td><td class="num">38.729 lei</td><td class="num">28.082 lei</td></tr>
+          <tr><td>24</td><td class="num">125</td><td class="num">4,9</td><td class="num">62.459 lei</td><td class="num">48.964 lei</td></tr>
+          <tr><td>36</td><td class="num">154</td><td class="num">6,1</td><td class="num">76.998 lei</td><td class="num">61.758 lei</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Business-ul e profitabil din prima lună și nu cere capital. Dar observă panta: între luna 24 și luna 36 adaugi doar 29 de clienți neți, deși vinzi în continuare 8 pe lună. <strong>Aproape toată munca de vânzare se duce în înlocuirea celor care pleacă.</strong> Ăsta e momentul în care agențiile mici se blochează și încep să pară că muncesc degeaba.</p>
+
+    <h3>Ce mută ordinul de mărime</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Scenariu</th><th>Clienți la plafon</th><th>Venit lunar</th><th>Venit anual</th></tr></thead>
+        <tbody>
+          <tr><td>De bază</td><td class="num">200</td><td class="num">100.000 lei</td><td class="num">1.200.000 lei</td></tr>
+          <tr><td>Preț dublu (1.000 lei)</td><td class="num">200</td><td class="num">200.000 lei</td><td class="num">2.400.000 lei</td></tr>
+          <tr><td>Churn înjumătățit (2%)</td><td class="num">400</td><td class="num">200.000 lei</td><td class="num">2.400.000 lei</td></tr>
+          <tr><td>Trei vânzători</td><td class="num">600</td><td class="num">300.000 lei</td><td class="num">3.600.000 lei</td></tr>
+          <tr><td>Trei vânzători + churn 2%</td><td class="num">1.200</td><td class="num">600.000 lei</td><td class="num">7.200.000 lei</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <h4>Ce arată tabelul</h4>
+      <p>Prețul dublu și churnul înjumătățit dau exact același rezultat pe hârtie. Diferența e că prețul dublu îi cere ceva clientului, iar churnul redus nu-i cere nimic — doar ca serviciul să merite ținut.</p>
+      <p>De aceea produsul corect nu e „un site”. Un site nu are cum să genereze atașament: odată livrat, e un fișier care stă acolo, iar abonamentul devine o linie de cost pe care contabilul o taie la prima strângere de curea. Produsul corect e ceva de care clientul <strong>nu se poate desprinde fără să piardă programări</strong> — calendarul lui, recenziile lui, numărul de telefon prin care sună clienții lui.</p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>Cifra care lipsește</h2>
+      <p>De ce nu se poate răspunde din surse publice și cum se măsoară.</p>
+    </div>
+
+    <p>Toate cifrele de până aici descriu piața <em>în general</em>. Niciuna nu răspunde la întrebarea care alege verticala: <strong>din cele ~25.700 de service-uri auto, câte n-au site — și în ce oraș?</strong></p>
+
+    <p>Am căutat răspunsul și nu există. Statisticile europene și naționale se opresc la nivelul agregat „IMM-urile din România”: rapoartele arată că în jur de 22% dintre IMM-uri vând online și că ~71% nu depășesc digitalizarea de bază, dar nimeni nu defalcă pe cod CAEN și județ. Datele de la Registrul Comerțului conțin firme și adrese, nu site-uri. Rămâne o singură cale: <strong>numărătoarea directă</strong>.</p>
+
+    <h3>Instrumentul</h3>
+    <p>E construit și testat, în <span class="mono">scripts/</span>. Folosește Google Places API — nu scraping pe Google Maps, care încalcă termenii și dă date murdare.</p>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Problema plafonului de 60</h4>
+        <p>Text Search întoarce maximum 60 de rezultate per interogare. În București sunt mult mai multe service-uri auto decât atât, deci o interogare simplă ar returna un eșantion arbitrar și ar subestima piața <em>fără niciun semnal că o face</em>. E genul de eroare care nu dă mesaj de eroare, doar cifre greșite.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Subdiviziunea adaptivă</h4>
+        <p>Pornim cu un dreptunghi peste tot orașul. Ori de câte ori o zonă întoarce numărul maxim de rezultate — semn că mai sunt firme pe care nu le vedem — o împărțim în patru și reluăm. Zonele rare nu se subdivid, deci nu se plătesc apeluri degeaba. Testul arată că metoda găsește <strong>400 din 400</strong> de firme acolo unde o interogare simplă s-ar fi oprit la 60.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Deduplicare pe două niveluri</h4>
+        <p>Întâi după identificatorul Google, apoi după numărul de telefon normalizat — pentru că aceeași firmă apare uneori de două ori, cu puncte de lucru înregistrate separat. Firmele marcate închise definitiv sunt scoase, altfel umflă numitorul și fac penetrarea să pară mai mică decât e.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Împărțirea în trei, nu în două</h4>
+        <p>Pentru fiecare firmă care are totuși un site, o a doua trecere verifică dacă acesta răspunde, dacă are HTTPS, dacă e utilizabil pe telefon, dacă are vreo cale de contact și dacă nu e cumva o pagină parcată sau un redirect spre Facebook. Rezultatul e o împărțire în <strong>fără site / site mort / site funcțional</strong>.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout calm">
+      <h4>Ipoteza pe care merită s-o testezi în primul rând</h4>
+      <p>Bănuiala mea e că <strong>„site mort” va fi categoria cea mai mare</strong> — mai mare decât „fără site”. Și e categoria care se vinde de câteva ori mai ușor, pentru un motiv simplu: omul a plătit deja o dată pentru un site. A acceptat premisa. Nu mai trebuie convins că are nevoie de unul, ci doar arătat că al lui nu funcționează — ceea ce se demonstrează în zece secunde, pe telefonul lui, în fața lui.</p>
+      <p>Dacă ipoteza se confirmă, ea schimbă și pitch-ul, și lista de contactat, și rata de conversie. Dacă nu se confirmă, am aflat ieftin.</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Ce urmează</h2>
+      <p>Ce lipsește, ce deblochează, și ce s-a lovit de pereți.</p>
+    </div>
+
+    <h3>Ce deblochează măsurătoarea</h3>
+    <p>O singură cheie <strong>Google Maps Platform</strong>, cu Places API (New) activat. Recensământul pe cele 4 verticale × 7 orașe înseamnă între câteva sute și câteva mii de apeluri, adică de ordinul zecilor de dolari — posibil zero, fiindcă Google are o cotă lunară gratuită. Comanda <span class="mono">--dry-run</span> arată estimarea exactă înainte de a cheltui ceva.</p>
+
+    <div class="callout warn">
+      <h4>Limite de mediu, spuse pe față</h4>
+      <p>Raportul ăsta a fost scris într-un container cu acces la internet restricționat la câteva domenii. Consecințe reale asupra a ce citești:</p>
+      <ul class="plain">
+        <li>Eurostat, INS, data.gov.ro și mfinante.ro <strong>nu au putut fi interogate direct</strong>. Cifrele din secțiunea 01 vin din agregatori comerciali și presă economică, prin căutare web — nivel de încredere mediu, nu ridicat.</li>
+        <li>Verificarea site-urilor (pasul „site mort”) <strong>nu poate rula de aici</strong>, fiindcă site-urile firmelor sunt domenii arbitrare, blocate. Scriptul e scris și testat pe logica de clasificare, dar trebuie rulat de pe o mașină cu acces normal la internet.</li>
+        <li>Recensământul propriu-zis <strong>poate rula de aici</strong> — domeniile Google sunt accesibile. Asta e partea cu date originale, și e la un pas distanță.</li>
+      </ul>
+    </div>
+
+    <h3>Ordinea corectă a pașilor</h3>
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Recensământul, pe o singură celulă</h4>
+        <p>O verticală într-un oraș, ca probă. Costă cenți și confirmă că field mask-ul, paginarea și deduplicarea se comportă pe date reale așa cum se comportă pe cele de test.</p>
+      </div></li>
+      <li><span class="n">02</span><div>
+        <h4>Verificarea manuală a 30 de linii</h4>
+        <p>Alese la întâmplare din CSV și confruntate de mână cu Google Maps. Dacă rata de eroare trece de 5%, ceva e greșit în filtre și se reia. Fără pasul ăsta, tot ce urmează stă pe nisip.</p>
+      </div></li>
+      <li><span class="n">03</span><div>
+        <h4>Recensământul complet și clasificarea site-urilor</h4>
+        <p>Cele 28 de celule, plus a doua trecere peste site-urile găsite. De aici ies procentele reale, pe verticală și pe oraș.</p>
+      </div></li>
+      <li><span class="n">04</span><div>
+        <h4>Scorecardul și decizia</h4>
+        <p>Verticalele punctate pe mărime, penetrare, procent de site-uri moarte, valoarea unui client, concurență și ușurința de a intra la rece. Cu o recomandare — și cu condiția explicită în care recomandarea se schimbă.</p>
+      </div></li>
+    </ol>
+
+    <div class="callout">
+      <h4>Ce se poate spune deja, înainte de măsurătoare</h4>
+      <p>Dacă din tot raportul rămâne un singur lucru, e acesta: <strong>marfa pe care crezi că o vinzi are un preț de podea și un concurent care o dă pe gratis ca să încaseze abonamentul.</strong> Cifrele arată consecvent că valoarea nu stă în site, ci în ce se întâmplă după el — clienți care sună, programări care se onorează, recenzii care se adună.</p>
+      <p>Recensământul nu e acolo ca să-ți spună dacă merită. E acolo ca să-ți spună <em>pe cine</em> ataci primul, cu ce argument, și în ce oraș rezistența e cea mai mică.</p>
+    </div>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Consultate în august 2026, prin căutare web. Vezi limitele din secțiunea 05.</p>
+    </div>
+    <div class="sources">
+      <a href="https://termene.ro/cod_caen/4520-intretinerea+si+repararea+autovehiculelor/">Termene.ro — firme pe codul CAEN 4520</a>
+      <a href="https://www.confidas.ro/catalog-firme-domenii/caen/4321">Confidas — firme pe CAEN 4321, instalații electrice</a>
+      <a href="https://www.confidas.ro/catalog-firme-domenii/caen/4322">Confidas — firme pe CAEN 4322, instalații sanitare</a>
+      <a href="https://www.zf.ro/companii/romania-peste-17-400-cabinete-stomatologice-dintre-85-oras-31-22882216">ZF — peste 17.400 de cabinete stomatologice, 85% la oraș</a>
+      <a href="https://www.zf.ro/companii/magnetul-din-sanatate-stomatologia-din-romania-are-peste-21-000-de-22473161">ZF — stomatologia are peste 21.000 de medici</a>
+      <a href="https://www.zf.ro/companii/cum-arata-piata-stomatologica-la-nivel-national-diferente-de-ordinul-20231408">ZF — piața stomatologică pe județe</a>
+      <a href="https://netreach.ro/site-abonament/">Netreach — site de prezentare cu abonament, 0 lei implementare</a>
+      <a href="https://cyberfolks.ro/blog/cat-costa-un-site-web/">CyberFolks — cât costă un site web, prețuri de piață</a>
+      <a href="https://sergiumarcu.ro/cost-website-firma">Sergiu Marcu — cost website firmă, pachete</a>
+      <a href="https://www.webdynamicx.ro/blog/cat-cost-un-site-de-prezentare-ghid-complet-pentru-2025">WebDynamicX — cât costă un site de prezentare</a>
+      <a href="https://www.webet.ro/preturi-administrare-site/">Webet — prețuri administrare site</a>
+      <a href="https://webdesigngiurgiu.ro/cat-costa-mentenanta-site-lunar/">Web Design Giurgiu — mentenanța lunară a site-ului</a>
+      <a href="https://www.carpathian-marketing-agency.ro/insights/cat-costa-google-ads-romania">Carpathian Marketing — CPC-uri reale pe industrii și bugete minime</a>
+      <a href="https://brig.ro/blog/cat-costa-cu-adevarat-google-ads-in-romania-in-2026-ghid-transparent-de-preturi">Brig — costuri Google Ads în România, ghid de prețuri</a>
+      <a href="https://www.cristinne.ro/servicii-google-adwords/">Cristinne — costul serviciilor Google Ads</a>
+      <a href="https://webdesigngiurgiu.ro/cat-te-costa-google-ads-pe-luna-realist/">Web Design Giurgiu — bugete Google Ads realiste pe lună</a>
+      <a href="https://digitalpolicy.ro/2025/01/26/digitalizarea-imm-urilor-in-romania-cum-stam-in-2025/">Digital Policy — digitalizarea IMM-urilor în 2025</a>
+      <a href="https://webactiv.ro/digitalizarea-economiei-romaniei-raport-ce-desi-2025/">WebActiv — raportul DESI 2025 pentru România</a>
+      <a href="https://www.mediafax.ro/economic/doar-22-dintre-imm-urile-din-romania-vand-online-digitalizarea-ramane-blocata-la-nivel-de-facebook-si-site-uri-simple-23677432">Mediafax — doar 22% dintre IMM-uri vând online</a>
+      <a href="https://www.eib.org/attachments/lucalli/20230198_digitalisation_of_smes_in_romania_ro.pdf">BEI — digitalizarea IMM-urilor din România</a>
+      <a href="https://www.economica.net/cat-mai-costa-sa-i-i-repari-ma-ina-in-func-ie-de-vechime-pre-urile-au-crescut-semnificativ-in-ultima-perioada-studiu-pe-500-000-de-cazuri_184598.html">Economica — costul reparațiilor auto, studiu pe 500.000 de cazuri</a>
+      <a href="https://developers.google.com/maps/documentation/places/web-service/text-search">Google — Places API, Text Search</a>
+      <a href="https://developers.google.com/maps/documentation/places/web-service/data-fields">Google — Places API, câmpuri de date și tieruri</a>
+      <a href="https://www.portalcontabilitate.ro/tags/cod-caen-4520/">Portal Contabilitate — tranziția la CAEN Rev. 3</a>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Etapa 1 din 2.</strong> Ce urmează are nevoie de o cheie Google Maps Platform. Instrumentele sunt în <span class="mono">scripts/</span>, testele trec, iar <span class="mono">--dry-run</span> arată costul înainte de orice cheltuială.</p>
+    <p>Cifrele din secțiunea 03 se regenerează cu <span class="mono">python3 scripts/economie.py</span>. Ipotezele sunt în capul fișierului și se schimbă într-un singur loc.</p>
+  </footer>
+
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>
