@@ -1,0 +1,522 @@
+<meta charset="utf-8">
+<title>Ordinea corectă</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Principiul</a></li>
+      <li><a href="#s1"><span>01</span> Ce să nu înveți</a></li>
+      <li><a href="#s2"><span>02</span> Cele șase abilități</a></li>
+      <li><a href="#s3"><span>03</span> Calendarul</a></li>
+      <li><a href="#s4"><span>04</span> Operaționalul RO</a></li>
+      <li><a href="#s5"><span>05</span> Cu ce te ajut</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Curriculum · 12 săptămâni · august 2026</div>
+    <h1>Ordinea corectă</h1>
+    <p class="lede">Ce trebuie învățat ca să vinzi prezență online firmelor mici, în ce ordine, din ce surse — și, mai important, ce merită lăsat deliberat neînvățat.</p>
+    <div class="byline">
+      <span>6 abilități, ordonate după preț</span>
+      <span>Surse gratuite, verificate</span>
+      <span>Criteriu de „gata” pe fiecare</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Principiul</a></li>
+        <li><a href="#s1">Ce să nu înveți</a></li>
+        <li><a href="#s2">Cele șase abilități</a></li>
+        <li><a href="#s3">Calendarul</a></li>
+        <li><a href="#s4">Operaționalul RO</a></li>
+        <li><a href="#s5">Cu ce te ajut</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Principiul</h2>
+      <p>De ce ordinea obișnuită e greșită.</p>
+    </div>
+
+    <p>Aproape toată lumea care intră în business-ul ăsta începe prin a învăța să facă site-uri. E alegerea intuitivă și e cea proastă, iar datele de piață o arată fără echivoc:</p>
+
+    <div class="stats">
+      <div class="stat down"><b>100–300 lei</b><span>pe lună, cât se vinde mentenanța unui site mic</span></div>
+      <div class="stat up"><b>1.300–5.000 lei</b><span>pe lună, cât se vinde administrarea Google Ads pentru aceeași firmă</span></div>
+      <div class="stat"><b>32%</b><span>din factorii de ranking local vin din profilul Google, nu din site</span></div>
+      <div class="stat"><b>+266%</b><span>șanse de apariție în local pack la 50+ recenzii față de sub 10</span></div>
+    </div>
+
+    <p>Aceeași firmă, aceeași lună de muncă, de cinci până la zece ori diferență de preț. Ai învățat abilitatea cea mai prost plătită din tot stack-ul și ai investit în ea primele luni.</p>
+
+    <div class="callout">
+      <h4>Regula de alocare</h4>
+      <p><strong>70% din timp în vânzare și reclamă, 30% în producție.</strong> Nu invers. Producția se rezolvă cu un template și cu AI; distribuția nu se rezolvă cu nimic în afară de tine.</p>
+    </div>
+
+    <p>Mai e o constrângere, personală de data asta: <strong>nu ai rețea în nicio verticală</strong>. Intri la rece peste tot. Asta contează la ordonare, pentru că schimbă ce se vinde ușor. Un abonament cere încredere — omul plătește lunar înainte să vadă rezultatul. Un lead nu cere nimic: ori a sunat clientul, ori n-a sunat. Fără portofoliu, oferta bazată pe rezultat e singura care nu-ți cere să fii crezut pe cuvânt, iar asta ridică Google Ads mult mai sus în listă decât ar sta în mod normal.</p>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Ce să nu înveți</h2>
+      <p>Lista asta îți economisește luni. Citește-o înainte de cealaltă.</p>
+    </div>
+
+    <div class="hooks">
+      <div class="hook"><b>Programare front-end</b>React, framework-uri, arhitectură. Dacă scrii cod de mână pentru al treilea client, ai greșit drumul. Template plus AI, 2–3 ore per site.</div>
+      <div class="hook"><b>Teorie de design</b>Tipografie, grile, teoria culorii. Un template bun le are deja rezolvate, iar clientul nu observă diferența.</div>
+      <div class="hook"><b>SEO tehnic avansat</b>Crawl budget, log analysis, schema complexă. SEO-ul local e un subset îngust și practic din tot domeniul.</div>
+      <div class="hook"><b>Dezvoltare de plugin-uri</b>WordPress la nivel de cod. Rezolvi 100% din cazurile tale cu ce există deja.</div>
+      <div class="hook"><b>Conținutul de tip „agenție"</b>Cursurile și canalele care promit o agenție în 90 de zile. Vând visul, nu meseria — și îți iau exact timpul de care ai nevoie pentru apeluri.</div>
+      <div class="hook"><b>Certificări decorative</b>Orice diplomă care nu se traduce într-o campanie pornită sau un client sunat. Clientul nu întreabă niciodată.</div>
+    </div>
+
+    <p>Regula de filtrare, dacă apare ceva ce nu e pe listă: <strong>întreabă-te dacă abilitatea aia apare pe o factură.</strong> Google Ads apare — se facturează 1.300–5.000 lei pe lună. „Design responsive” nu apare niciodată separat; e presupus, inclus, invizibil.</p>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>Cele șase abilități</h2>
+      <p>Ordonate după raportul dintre preț și efortul de învățare.</p>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">01</span><div>
+        <h4>Google Business Profile și SEO local — 2 săptămâni</h4>
+        <p>Cel mai bun raport valoare/efort din tot stack-ul. Semnalele din profilul Google reprezintă circa o treime din factorii de ranking în local pack, mai mult decât on-page, recenzii și linkuri la un loc. Categoria principală e cel mai important factor individual. Un profil complet primește de șapte ori mai multe clicuri decât unul incomplet.</p>
+        <p>Pentru un client local, <strong>profilul contează mai mult decât site-ul</strong> — ceea ce înseamnă că poți produce rezultat vizibil înainte să livrezi orice altceva.</p>
+        <p><em>Gata când:</em> ai urcat un profil real în local pack pe cel puțin o căutare relevantă, și poți arăta creșterea de apeluri în statisticile profilului.</p>
+      </div></li>
+
+      <li><span class="n">02</span><div>
+        <h4>Google Ads Search și campanii locale — 2 săptămâni</h4>
+        <p>Abilitatea cea mai bine plătită și motorul strategiei „intri pe performanță”. Certificarea oficială e gratuită: 3–5 ore de studiu, examen de 75 de întrebări, prag de trecere 80%, expiră după 12 luni.</p>
+        <p>Concentrează-te pe partea îngustă care contează pentru servicii locale: cercetare de cuvinte cheie cu intenție de cumpărare, cuvinte negative (aici se pierd cei mai mulți bani), anunțuri call-only, extensii de locație, urmărirea conversiilor. Ignoră Display, Shopping, YouTube — nu-ți folosesc.</p>
+        <p><em>Gata când:</em> ai o campanie pornită pe banii tăi care produce lead-uri la un cost pe care îl cunoști. Nu „am luat certificarea” — <strong>certificarea nu e criteriul</strong>.</p>
+      </div></li>
+
+      <li><span class="n">03</span><div>
+        <h4>Măsurarea — 2 săptămâni</h4>
+        <p>Cea mai subestimată abilitate din listă, și cea care decide dacă ai business sau nu. Call tracking cu număr separat per campanie, urmărirea conversiilor, GA4 la nivel de bază.</p>
+        <p>Motivul e în model: churnul, nu prețul, decide ordinul de mărime. Între 3% și 8% plecări lunare stau 1,6 milioane de lei pe an și 600.000, la aceeași muncă. Iar singurul lucru care ține un client e dovada lunară că a primit ceva. <strong>Fără măsurare ești o linie de cost pe care contabilul o taie la prima strângere de curea.</strong></p>
+        <p><em>Gata când:</em> poți trimite un raport lunar de o pagină care spune câte apeluri au venit, de unde, și cât a costat fiecare.</p>
+      </div></li>
+
+      <li><span class="n">04</span><div>
+        <h4>Producția rapidă de pagini — 2 săptămâni</h4>
+        <p>Nu „web development”. Un singur template, refolosit fără milă, plus AI pentru text și structură. Ținta e 2–3 ore per site, cu zero cod scris de mână.</p>
+        <p>Ce trebuie să știi de fapt: ce face o pagină locală să convertească (telefon vizibil sus, dovadă socială, o singură acțiune clară), cum se instalează rapid, și cum spui „nu” la personalizări. Fiecare „doar o mică modificare” gratis îți taie marja pe un an.</p>
+        <p><em>Gata când:</em> al zecelea site îți ia sub trei ore, de la intake la publicare.</p>
+      </div></li>
+
+      <li><span class="n">05</span><div>
+        <h4>Vânzarea outbound — continuu</h4>
+        <p>Gâtul de sticlă real, și singura de pe listă care nu se învață citind. Structura se învață din cărți — cum se construiește o ofertă, cum se deschide un apel la rece, cum se tratează obiecțiile. Restul se învață din o sută de apeluri, și nu există scurtătură.</p>
+        <p>Tehnica specifică pe care aș exersa-o: <strong>demo-ul construit înainte de apel.</strong> Îi trimiți omului linkul site-ului lui, deja live, și întrebi dacă îl vrea. Conversia sare de câteva ori față de un pitch abstract, pentru că nu-i mai ceri să-și imagineze nimic.</p>
+        <p><em>Gata când:</em> din 100 de apeluri închizi 5–8. Sub pragul ăsta, problema e în ofertă sau în pitch și se repară acolo, nu prin mai multe apeluri.</p>
+      </div></li>
+
+      <li><span class="n">06</span><div>
+        <h4>Operaționalul românesc — 1 săptămână</h4>
+        <p>Plictisitor, obligatoriu, și cu o surpriză neplăcută înăuntru. Detaliile în secțiunea următoare.</p>
+        <p><em>Gata când:</em> poți încasa recurent cu cardul, emiți facturi conforme și ai un contract semnat care spune clar ce livrezi și în cât timp se poate renunța.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>Calendarul</h2>
+      <p>Douăsprezece săptămâni. Totul se învață pe o firmă reală, nu în abstract.</p>
+    </div>
+
+    <div class="callout calm">
+      <h4>Condiția care face planul să funcționeze</h4>
+      <p>Ai nevoie de <strong>o firmă reală pe care să exersezi</strong> — a ta, a unui prieten, a unui vecin, oricare, chiar gratis. Fără ea înveți teorie și nu ai ce arăta la primul apel. Cu ea, la finalul săptămânii 6 ai deja un studiu de caz cu cifre, care valorează mai mult decât orice certificare.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Săptămâni</th><th>Ce faci</th><th>Când e gata</th></tr></thead>
+        <tbody>
+          <tr><td>1–2</td><td>Profil Google complet și SEO local, pe firma-cobai. Categorii, poze, program, recenzii, postări.</td><td>Profilul urcă în local pack și apar apeluri măsurabile în statistici.</td></tr>
+          <tr><td>3–4</td><td>Certificarea Google Ads, apoi prima campanie locală pe banii tăi. Buget mic, cuvinte cu intenție, negative agresive.</td><td>Primul lead plătit, cu cost pe lead cunoscut.</td></tr>
+          <tr><td>5–6</td><td>Tracking complet: număr de call tracking, conversii, GA4. Primul raport lunar.</td><td>Poți arăta pe o pagină câte apeluri ai adus și cât au costat.</td></tr>
+          <tr><td>7–8</td><td>Productizarea: un template, un proces, scope fix. Zece demo-uri construite în avans.</td><td>Al zecelea site îți ia sub trei ore.</td></tr>
+          <tr><td>9–12</td><td>O sută de apeluri, cu demo-ul trimis înainte. Măsori rata de răspuns și rata de închidere.</td><td>Știi rata reală de conversie — și dacă ai business sau nu.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <h4>Ce faci dacă cifrele nu ies</h4>
+      <p>Dacă din 100 de apeluri închizi sub 5, <strong>nu suna mai mult</strong>. Problema e în ofertă sau în pitch, iar mai mult volum doar înmulțește o eroare. Schimbi oferta, nu efortul: alt segment, alt preț, alt mod de a formula rezultatul. Ai cheltuit trei săptămâni și ai aflat ieftin — asta era ideea.</p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>Operaționalul românesc</h2>
+      <p>Puțin, dar obligatoriu — și cu o cifră care schimbă modelul.</p>
+    </div>
+
+    <div class="callout warn">
+      <h4>Impozitul e 3%, nu 1%</h4>
+      <p>Marketingul și consultanța sunt pe lista de activități „sensibile”, excluse de la cota redusă a microîntreprinderii. Impozitul se aplică pe <strong>venitul brut, nu pe profit</strong>, deci nu se reduce cu cheltuielile. Împreună cu comisionul de procesare, din 500 de lei încasați rămân 477 înainte de orice cost.</p>
+      <p>Verifică cu un contabil înainte să te bazezi pe cifră: regimul micro s-a schimbat aproape anual în ultimii ani, iar sursele publice rămân în urmă.</p>
+    </div>
+
+    <ul class="check">
+      <li><strong>e-Factura</strong> — obligatorie, inclusiv pentru facturile către persoane fizice din ianuarie 2025. Nu e opțional și nu depinde de mărimea firmei.</li>
+      <li><strong>SAF-T (declarația 406)</strong> — se extinde către contribuabilii mici și micro din 2026. Contabilul o rezolvă, dar trebuie bugetată.</li>
+      <li><strong>GDPR</strong> — ai nevoie de acord de prelucrare cu fiecare furnizor care atinge datele clienților tăi, și de notificare în 72 de ore în caz de breșă. Pentru site-urile pe care le faci: banner de cookie-uri și politică de confidențialitate, de fiecare dată.</li>
+      <li><strong>Încasarea recurentă</strong> — asta e decizia care contează. Netopia e cel mai simplu de pornit în România, cu comisioane în jur de 1,4% + 0,6 lei și decontare în lei. Stripe Billing e semnificativ mai bun pentru abonamente propriu-zise — reîncearcă automat cardurile expirate și dă clientului un portal — dar costă mai mult, mai ales pe carduri internaționale.</li>
+    </ul>
+
+    <div class="callout">
+      <h4>Regula care îți salvează încasările</h4>
+      <p><strong>Card recurent, nu factură la 30 de zile.</strong> Micro-firmele din România plătesc târziu sau deloc, iar un abonament pe factură se transformă în muncă de recuperare de creanțe. Niciodată nu construiești și apoi facturezi: semnezi, iei cardul, livrezi.</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Cu ce te ajut</h2>
+      <p>Împărțeala corectă a muncii, inclusiv partea pe care n-o pot face.</p>
+    </div>
+
+    <div class="cards two">
+      <div class="card">
+        <span class="tag">Ce pot face</span>
+        <dl>
+          <dt>Producție</dt>
+          <dd>Template-ul productizat de site și generatorul de demo-uri — site construit automat înainte de apel, gata de trimis pe WhatsApp.</dd>
+          <dt>Reclamă</dt>
+          <dd>Cercetarea de cuvinte cheie pe verticală și oraș, structura campaniilor, lista de cuvinte negative.</dd>
+          <dt>Retenție</dt>
+          <dd>Sistemul de raportare lunară — ucigașul de churn, și deci variabila care decide ordinul de mărime.</dd>
+          <dt>Comercial</dt>
+          <dd>Contractul, grila de prețuri, scripturile de apel și de WhatsApp, tratarea obiecțiilor.</dd>
+          <dt>Date</dt>
+          <dd>Recensământul, când apare cheia Google Maps. Și analiza cifrelor tale reale pe măsură ce intră.</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <span class="tag">Ce nu pot face</span>
+        <dl>
+          <dt>Apelurile</dt>
+          <dd class="steal">Îți scriu scriptul, nu-l pot rosti. Și exact aici e gâtul de sticlă al întregului business.</dd>
+          <dt>Relația</dt>
+          <dd>Întâlnirile, negocierea, încrederea pe care ți-o construiești în timp cu un client. Nimic din ce contează în vânzare nu se delegă.</dd>
+          <dt>Judecata pe teren</dt>
+          <dd>Dacă un patron e serios sau îți pierde timpul. Se învață din experiență, nu din date.</dd>
+          <dt>Răbdarea</dt>
+          <dd>Lunile 1–5 sunt aproape pe zero în model. Nimeni nu poate face partea asta în locul tău.</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h4>Cum împărțim practic</h4>
+      <p>Tot ce e sistem, text, cod, analiză și structură — la mine. Tot ce e contact uman — la tine. Dacă ajungi să petreci mai mult de 30% din timp pe producție, ceva e greșit: adu-mi partea aia și întoarce-te la telefon.</p>
+    </div>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Verificate în august 2026. Toate cele de învățare sunt gratuite.</p>
+    </div>
+    <div class="sources">
+      <a href="https://skillshop.withgoogle.com/">Skillshop — certificările oficiale Google, gratuite</a>
+      <a href="https://skillshop.withgoogle.com/googleads/">Skillshop — training Google Ads</a>
+      <a href="https://support.google.com/google-ads/answer/7539883">Google Ads Help — despre training și certificare</a>
+      <a href="https://www.brightlocal.com/learn/google-local-algorithm-and-ranking-factors/">BrightLocal — algoritmul local și factorii de ranking</a>
+      <a href="https://searchlab.nl/en/statistics/google-business-profile-statistics-2026">Statistici Google Business Profile 2026</a>
+      <a href="https://searchlab.nl/en/statistics/local-seo-statistics-2026">Statistici SEO local 2026</a>
+      <a href="https://developers.google.com/search/docs">Google Search Central — documentația primară</a>
+      <a href="https://www.classcentral.com/subject/local-seo">Class Central — cursuri de SEO local</a>
+      <a href="https://startupcafe.ro/microintreprinderea-in-2026-conditii-reguli-termene-anaf-93666">StartupCafe — regimul microîntreprinderii în 2026</a>
+      <a href="https://alfasign.ro/ghid-complet-e-factura-pentru-antreprenori/">AlfaSign — ghid complet e-Factura</a>
+      <a href="https://isoft-consulting.ro/blog/gdpr-firme-mici-ghid-practic.html">iSoft — GDPR pentru firme mici, ghid practic</a>
+      <a href="https://dataconsulting.ro/blog/gdpr-protectia-datelor-ce-trebuie-sa-stie-orice-firma">DataConsulting — ce trebuie să știe orice firmă despre GDPR</a>
+      <a href="https://www.webhustler.ro/blog/ghid-procesatori-plati-online-romania-2026">WebHustler — procesatori de plăți online, România 2026</a>
+      <a href="https://webghid.ro/articole/plata-online-romania">WebGhid — comparativ Netopia, EuPlatesc, Stripe</a>
+    </div>
+    <p style="margin-top:22px">Cărți, pentru partea de ofertă și vânzare: Alex Hormozi, <em>$100M Offers</em>, pentru cum se construiește o ofertă greu de refuzat. Jeb Blount, <em>Fanatical Prospecting</em>, pentru disciplina apelului la rece. Chris Voss, <em>Never Split the Difference</em>, pentru obiecții și negociere.</p>
+  </section>
+
+  <footer>
+    <p><strong>Criteriul unic de progres:</strong> la finalul săptămânii 12 știi rata reală de închidere din 100 de apeluri. Restul — certificări, template-uri, cunoștințe — sunt mijloace pentru cifra aia, nu rezultate în sine.</p>
+    <p>Cifrele economice citate aici vin din <span class="mono">scripts/economie.py</span> și din <span class="mono">raport-validare-piata.html</span>, secțiunea 03.</p>
+  </footer>
+
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>

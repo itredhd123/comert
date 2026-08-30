@@ -286,7 +286,8 @@ html{scroll-behavior:smooth}
       <li><strong>Prețurile sunt mai mari decât se crede.</strong> Un freelancer cere 300–500 €, o agenție pornește de la 600 € și urcă până la 10.000 €, iar media pentru o firmă mică e în jur de 1.000 € (~5.000 lei). Marja există. Problema nu a fost niciodată prețul.</li>
       <li><strong>Piața confirmă unde stă valoarea, și nu e în site.</strong> Mentenanța unui site mic se vinde cu 100–300 lei/lună. Administrarea Google Ads pentru aceeași firmă se vinde cu 1.300–5.000 lei/lună. Un raport de 5–10x, pentru o muncă lunară comparabilă. Diferența e că a doua se leagă de clienți, prima de fișiere.</li>
       <li><strong>Universul e suficient de mare oriunde te-ai uita.</strong> ~25.700 de service-uri auto operaționale, ~17.400 de cabinete stomatologice, ~4.800 de firme de instalații electrice pe activitate principală. Nicio verticală nu pică testul de mărime, deci mărimea nu e criteriul care decide.</li>
-      <li><strong>Modelul suportă un cost de achiziție surprinzător de mare.</strong> La 500 lei/lună și 4% churn, un client valorează ~10.550 lei profit brut, deci îți poți permite să cheltui ~3.500 lei ca să-l câștigi. Concluzia e neplăcută dar utilă: business-ul nu moare din cost de achiziție, ci din incapacitatea de a închide vânzarea.</li>
+      <li><strong>Modelul suportă un cost de achiziție surprinzător de mare.</strong> La 500 lei/lună și 4% churn, un client valorează ~9.970 lei după taxe, deci îți poți permite să cheltui ~3.300 lei ca să-l câștigi. Concluzia e neplăcută dar utilă: business-ul nu moare din cost de achiziție, ci din incapacitatea de a închide vânzarea.</li>
+      <li><strong>Impozitul e 3%, nu 1%.</strong> Marketingul și consultanța sunt activități „sensibile”, excluse de la cota redusă a microîntreprinderii, iar impozitul se aplică pe venit brut, nu pe profit. Împreună cu comisionul de procesare, din 500 de lei încasați rămân 477 înainte de orice cost.</li>
       <li><strong>Churnul decide totul, nu prețul.</strong> Diferența dintre 3% și 8% plecări lunare e diferența dintre 1,6 milioane lei/an și 600.000 lei/an — la aceeași ofertă, aceiași clienți, aceeași muncă.</li>
       <li><strong>Există un plafon natural, și e mai jos decât pare.</strong> Cu un vânzător care închide 8 clienți pe lună și 4% churn, creșterea se oprește singură la 200 de clienți, adică 100.000 lei/lună. Ca să treci de acolo îți trebuie mai mulți vânzători sau churn mai mic — nu prețuri mai mari.</li>
       <li><strong>Cifra care alege verticala încă lipsește.</strong> Nimeni nu publică penetrarea site-urilor pe cod CAEN și oraș. Instrumentul care o măsoară e construit și testat; îi lipsește doar o cheie Google Maps.</li>
@@ -377,18 +378,23 @@ html{scroll-behavior:smooth}
       <p>Ce trebuie să fie adevărat ca modelul să funcționeze. Cifrele vin din <span class="mono">scripts/economie.py</span>, cu ipotezele la vedere.</p>
     </div>
 
-    <p>Ipoteze: abonament 500 lei/lună, fără taxă inițială, 4% plecări pe lună, ~450 lei costul de livrare al unui site productizat, 60 lei pe lună costul de a ține un client, 8 închideri pe lună per vânzător.</p>
+    <p>Ipoteze: abonament 500 lei/lună, fără taxă inițială, 4% plecări pe lună, ~450 lei costul de livrare al unui site productizat, 60 lei pe lună costul de a ține un client, 8 închideri pe lună per vânzător. Peste toate astea, <strong>3% impozit pe venit</strong> și <strong>1,5% + 0,60 lei</strong> comision de procesare — din 500 de lei încasați rămân 477 înainte de orice cost.</p>
+
+    <div class="callout warn">
+      <h4>Impozitul nu e 1%, e 3%</h4>
+      <p>Marketingul și consultanța sunt pe lista de activități „sensibile”, excluse de la cota redusă a microîntreprinderii. Impozitul se aplică pe <strong>venitul brut, nu pe profit</strong>, deci nu se reduce cu cheltuielile. Verifică cu un contabil înainte să te bazezi pe cifră — regimul micro s-a schimbat aproape anual în ultimii ani.</p>
+    </div>
 
     <div class="stats">
-      <div class="stat up"><b>10.550 lei</b><span>profit brut adus de un client pe toată durata relației</span></div>
+      <div class="stat up"><b>9.972 lei</b><span>profitul adus de un client pe toată durata relației, după taxe</span></div>
       <div class="stat"><b>25 luni</b><span>cât stă un client, la 4% plecări lunare</span></div>
-      <div class="stat up"><b>3.517 lei</b><span>cât îți poți permite să cheltui ca să câștigi un client (regula 3:1)</span></div>
+      <div class="stat up"><b>3.324 lei</b><span>cât îți poți permite să cheltui ca să câștigi un client (regula 3:1)</span></div>
       <div class="stat down"><b>200</b><span>plafonul natural de clienți: acolo plecările egalează închiderile</span></div>
     </div>
 
     <div class="callout calm">
       <h4>Cifra care schimbă strategia</h4>
-      <p>Un cost de achiziție permis de <strong>3.500 lei per client</strong> e enorm pentru o vânzare de 500 lei pe lună. Înseamnă că îți permiți deplasări, demonstrații construite în avans, comisioane grase și zeci de apeluri per client câștigat.</p>
+      <p>Un cost de achiziție permis de <strong>3.300 lei per client</strong> e enorm pentru o vânzare de 500 lei pe lună. Înseamnă că îți permiți deplasări, demonstrații construite în avans, comisioane grase și zeci de apeluri per client câștigat.</p>
       <p>Deci modelul nu moare din cheltuială. Moare din altceva: <strong>din a nu reuși să închizi deloc.</strong> Toată atenția trebuie să meargă în rata de conversie a vânzării, nu în reducerea costurilor.</p>
     </div>
 
@@ -397,12 +403,12 @@ html{scroll-behavior:smooth}
       <table>
         <thead><tr><th>Plecări / lună</th><th>Durata unui client</th><th>Valoarea unui client</th><th>Plafon de clienți</th><th>Venit lunar la plafon</th></tr></thead>
         <tbody>
-          <tr><td>2%</td><td class="num">50 luni</td><td class="num">21.550 lei</td><td class="num">400</td><td class="num">200.000 lei</td></tr>
-          <tr><td>3%</td><td class="num">33 luni</td><td class="num">14.217 lei</td><td class="num">267</td><td class="num">133.333 lei</td></tr>
-          <tr><td>4%</td><td class="num">25 luni</td><td class="num">10.550 lei</td><td class="num">200</td><td class="num">100.000 lei</td></tr>
-          <tr><td>6%</td><td class="num">17 luni</td><td class="num">6.883 lei</td><td class="num">133</td><td class="num">66.667 lei</td></tr>
-          <tr><td>8%</td><td class="num">12 luni</td><td class="num">5.050 lei</td><td class="num">100</td><td class="num">50.000 lei</td></tr>
-          <tr><td>10%</td><td class="num">10 luni</td><td class="num">3.950 lei</td><td class="num">80</td><td class="num">40.000 lei</td></tr>
+          <tr><td>2%</td><td class="num">50 luni</td><td class="num">20.395 lei</td><td class="num">400</td><td class="num">200.000 lei</td></tr>
+          <tr><td>3%</td><td class="num">33 luni</td><td class="num">13.447 lei</td><td class="num">267</td><td class="num">133.333 lei</td></tr>
+          <tr><td>4%</td><td class="num">25 luni</td><td class="num">9.972 lei</td><td class="num">200</td><td class="num">100.000 lei</td></tr>
+          <tr><td>6%</td><td class="num">17 luni</td><td class="num">6.498 lei</td><td class="num">133</td><td class="num">66.667 lei</td></tr>
+          <tr><td>8%</td><td class="num">12 luni</td><td class="num">4.761 lei</td><td class="num">100</td><td class="num">50.000 lei</td></tr>
+          <tr><td>10%</td><td class="num">10 luni</td><td class="num">3.719 lei</td><td class="num">80</td><td class="num">40.000 lei</td></tr>
         </tbody>
       </table>
     </div>
@@ -414,16 +420,17 @@ html{scroll-behavior:smooth}
       <table>
         <thead><tr><th>Luna</th><th>Clienți</th><th>Pleacă pe lună</th><th>Venit lunar</th><th>Profit lunar</th></tr></thead>
         <tbody>
-          <tr><td>3</td><td class="num">23</td><td class="num">0,6</td><td class="num">11.526 lei</td><td class="num">4.143 lei</td></tr>
-          <tr><td>6</td><td class="num">43</td><td class="num">1,5</td><td class="num">21.724 lei</td><td class="num">13.117 lei</td></tr>
-          <tr><td>12</td><td class="num">77</td><td class="num">2,9</td><td class="num">38.729 lei</td><td class="num">28.082 lei</td></tr>
-          <tr><td>24</td><td class="num">125</td><td class="num">4,9</td><td class="num">62.459 lei</td><td class="num">48.964 lei</td></tr>
-          <tr><td>36</td><td class="num">154</td><td class="num">6,1</td><td class="num">76.998 lei</td><td class="num">61.758 lei</td></tr>
+          <tr><td>3</td><td class="num">23</td><td class="num">0,6</td><td class="num">11.526 lei</td><td class="num">11 lei</td></tr>
+          <tr><td>6</td><td class="num">43</td><td class="num">1,5</td><td class="num">21.724 lei</td><td class="num">8.514 lei</td></tr>
+          <tr><td>12</td><td class="num">77</td><td class="num">2,9</td><td class="num">38.729 lei</td><td class="num">22.692 lei</td></tr>
+          <tr><td>24</td><td class="num">125</td><td class="num">4,9</td><td class="num">62.459 lei</td><td class="num">42.478 lei</td></tr>
+          <tr><td>36</td><td class="num">154</td><td class="num">6,1</td><td class="num">76.998 lei</td><td class="num">54.601 lei</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p>Business-ul e profitabil din prima lună și nu cere capital. Dar observă panta: între luna 24 și luna 36 adaugi doar 29 de clienți neți, deși vinzi în continuare 8 pe lună. <strong>Aproape toată munca de vânzare se duce în înlocuirea celor care pleacă.</strong> Ăsta e momentul în care agențiile mici se blochează și încep să pară că muncesc degeaba.</p>
+    <p>Două lucruri de citit în tabelul ăsta. Primul: <strong>primele luni sunt pe zero, nu profitabile.</strong> La luna 3 profitul e 11 lei — pentru că opt livrări noi pe lună costă 3.600 de lei, iar portofoliul e încă prea mic ca să-i acopere. Business-ul nu cere capital, dar nici nu te hrănește până pe la luna 5–6.</p>
+    <p>Al doilea: observă panta. Între luna 24 și luna 36 adaugi doar 29 de clienți neți, deși vinzi în continuare 8 pe lună. <strong>Aproape toată munca de vânzare se duce în înlocuirea celor care pleacă.</strong> Ăsta e momentul în care agențiile mici se blochează și încep să pară că muncesc degeaba.</p>
 
     <h3>Ce mută ordinul de mărime</h3>
     <div class="tablewrap">

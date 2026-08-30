@@ -23,17 +23,38 @@ class Ipoteze:
     inchideri_pe_luna: int = 8         # per om de vânzări
     cost_vanzator_lunar: float = 6000.0  # lei, salariu complet + taxe
 
+    # Impozitul pe veniturile microîntreprinderii. Marketingul și consultanța sunt
+    # pe lista de activități „sensibile", excluse de la cota redusă de 1% — deci 3%,
+    # aplicat pe venit brut, nu pe profit. VERIFICĂ CU CONTABILUL înainte să te bazezi
+    # pe cifră: regimul micro s-a schimbat aproape anual în ultimii ani.
+    impozit_venit: float = 0.03
+    # Comision de procesare pe încasarea recurentă cu cardul. ~1,4% + 0,6 lei la
+    # procesatorii români, mai mult la Stripe pentru carduri internaționale.
+    comision_procent: float = 0.015
+    comision_fix: float = 0.60
+
 
 def durata_medie_luni(churn: float) -> float:
     """Un client cu 4% șansă lunară de plecare stă în medie 1/0,04 = 25 de luni."""
     return 1 / churn if churn > 0 else float("inf")
 
 
+def incasare_neta(suma: float, ip: Ipoteze) -> float:
+    """Ce rămâne dintr-o încasare după impozit și comisionul procesatorului.
+
+    Impozitul micro se aplică pe venitul brut, nu pe profit — nu se reduce cu
+    cheltuielile, deci se scade direct din fiecare încasare.
+    """
+    if suma <= 0:
+        return 0.0
+    return suma * (1 - ip.impozit_venit - ip.comision_procent) - ip.comision_fix
+
+
 def ltv(ip: Ipoteze) -> float:
-    """Profitul brut adus de un client pe toată durata relației."""
+    """Profitul adus de un client pe toată durata relației, după taxe."""
     luni = durata_medie_luni(ip.churn_lunar)
-    marja_lunara = ip.abonament_lunar - ip.cost_lunar_client
-    return ip.taxa_initiala + marja_lunara * luni - ip.cost_livrare
+    marja_lunara = incasare_neta(ip.abonament_lunar, ip) - ip.cost_lunar_client
+    return incasare_neta(ip.taxa_initiala, ip) + marja_lunara * luni - ip.cost_livrare
 
 
 def cac_maxim(ip: Ipoteze, raport: float = 3.0) -> float:
@@ -53,13 +74,18 @@ def proiectie(ip: Ipoteze, luni: int, vanzatori: int = 1) -> list[dict]:
         plecati = clienti * ip.churn_lunar
         clienti = clienti - plecati + ip.inchideri_pe_luna * vanzatori
         mrr = clienti * ip.abonament_lunar
-        costuri = clienti * ip.cost_lunar_client + vanzatori * ip.cost_vanzator_lunar
+        # Livrarea se plătește o singură dată, la semnare — deci pentru clienții noi
+        # din luna asta, nu pentru tot portofoliul.
+        cost_livrari = ip.inchideri_pe_luna * vanzatori * ip.cost_livrare
+        costuri = (clienti * ip.cost_lunar_client
+                   + vanzatori * ip.cost_vanzator_lunar
+                   + cost_livrari)
         randuri.append({
             "luna": luna,
             "clienti": clienti,
             "plecati": plecati,
             "mrr": mrr,
-            "profit": mrr - costuri,
+            "profit": clienti * incasare_neta(ip.abonament_lunar, ip) - costuri,
         })
     return randuri
 
@@ -87,9 +113,15 @@ def main() -> None:
     print(f"  cost livrare            {lei(ip.cost_livrare)} o singură dată")
     print(f"  cost lunar per client   {lei(ip.cost_lunar_client)}")
     print(f"  închideri               {ip.inchideri_pe_luna}/lună/vânzător")
+    print(f"  impozit pe venit        {ip.impozit_venit * 100:.0f}% "
+          f"(microîntreprindere, activitate „sensibilă”)")
+    print(f"  comision procesare      {ip.comision_procent * 100:.1f}% + "
+          f"{ip.comision_fix:.2f} lei per încasare")
+    print(f"  → din {lei(ip.abonament_lunar)} încasați rămân "
+          f"{lei(incasare_neta(ip.abonament_lunar, ip))} înainte de costuri")
 
     print("\nVALOAREA UNUI CLIENT")
-    print(f"  LTV (profit brut)       {lei(ltv(ip))}")
+    print(f"  LTV (după taxe)         {lei(ltv(ip))}")
     print(f"  CAC maxim la 3:1        {lei(cac_maxim(ip))}")
     print("  ↑ atât îți poți permite să cheltui ca să câștigi un client.")
     print("    E mult. Concluzia: modelul nu moare din cost de achiziție,")

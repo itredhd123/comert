@@ -23,11 +23,12 @@ Cifra aia nu e publicată nicăieri. Statisticile publice se opresc la nivelul a
 | Fișier | Ce conține |
 |---|---|
 | `raport-validare-piata.html` | Raportul, etapa 1: ce s-a putut afla din surse publice |
-| `raport-validare-piata.pdf` | Aceeași versiune, 11 pagini, pentru citit sau printat |
+| `raport-validare-piata.pdf` | Aceeași versiune, 12 pagini, pentru citit sau printat |
+| `plan-invatare.html` / `.pdf` | Curriculumul de 12 săptămâni: ce skill-uri, în ce ordine, din ce surse |
 | `scripts/config.py` | Verticalele candidate și orașele din eșantion |
 | `scripts/recensamant.py` | Numărătoarea propriu-zisă, prin Google Places API |
 | `scripts/verifica_site.py` | Clasificarea site-urilor găsite: mort sau funcțional |
-| `scripts/economie.py` | Modelul de unit economics, cu ipotezele la vedere |
+| `scripts/economie.py` | Modelul de unit economics, cu ipotezele la vedere — impozit și comisioane incluse |
 | `scripts/test_scripturi.py` | Teste offline, fără apeluri de rețea |
 | `scripts/build_pdf.py` | Randarea PDF-ului, cu fonturile încorporate |
 
