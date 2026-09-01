@@ -1,0 +1,950 @@
+<title>Persona Sintetică</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F8; --surface:#FFFFFF; --surface-2:#EAEFF3;
+  --ink:#101820; --ink-2:#3B4754; --muted:#65737F;
+  --line:#DBE2E9; --line-strong:#C3CED8;
+  --signal:#B07C10; --signal-ink:#8A5F06; --signal-soft:#FAF1DA;
+  --teal:#0C6663; --teal-soft:#DFEDEC;
+  --danger:#9E3524; --danger-soft:#F9E7E3;
+  --ok:#276B4C;
+  --shadow:0 1px 2px rgba(16,24,32,.05), 0 8px 24px -14px rgba(16,24,32,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+    --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+    --line:#25303A; --line-strong:#33414D;
+    --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+    --teal:#57C3BA; --teal-soft:#10272A;
+    --danger:#E28C7A; --danger-soft:#2A1714;
+    --ok:#6DC79A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1116; --surface:#141B22; --surface-2:#1B242C;
+  --ink:#E9EEF3; --ink-2:#BAC5D0; --muted:#8796A3;
+  --line:#25303A; --line-strong:#33414D;
+  --signal:#E9B455; --signal-ink:#F2CB77; --signal-soft:#241E11;
+  --teal:#57C3BA; --teal-soft:#10272A;
+  --danger:#E28C7A; --danger-soft:#2A1714;
+  --ok:#6DC79A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:18px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--signal-soft); color:var(--ink)}
+
+#progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--signal); z-index:50}
+
+.wrap{max-width:1200px; margin:0 auto; padding:0 24px}
+.grid{display:grid; grid-template-columns:1fr; gap:0}
+@media (min-width:1080px){
+  .grid{grid-template-columns:210px minmax(0,1fr); gap:56px; align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1080px){
+  .rail{
+    display:block; position:sticky; top:0; max-height:100vh; overflow-y:auto;
+    padding:96px 0 48px; font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px; line-height:1.5;
+  }
+  .rail ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+  .rail a{
+    display:grid; grid-template-columns:26px 1fr; gap:6px; padding:5px 8px 5px 0;
+    color:var(--muted); text-decoration:none; border-left:2px solid transparent; padding-left:10px;
+  }
+  .rail a:hover{color:var(--ink)}
+  .rail a.on{color:var(--ink); border-left-color:var(--signal)}
+  .rail a span{color:var(--signal); font-weight:600}
+  .rail h6{
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 12px; padding-left:10px; font-weight:500;
+  }
+}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Archivo",system-ui,sans-serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(38px,6.4vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+h2{font-size:clamp(26px,3.4vw,36px); font-weight:700; letter-spacing:-.022em; line-height:1.12}
+h3{font-size:20px; font-weight:700; letter-spacing:-.012em; line-height:1.25}
+h4{font-size:15px; font-weight:600; letter-spacing:-.005em}
+p{margin:0 0 1.05em; max-width:66ch; color:var(--ink-2)}
+a{color:inherit}
+strong{color:var(--ink); font-weight:600}
+em{font-style:italic}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.lede{font-size:21px; line-height:1.55; color:var(--ink-2); max-width:60ch}
+
+/* ---------- header ---------- */
+header.masthead{padding:80px 0 0}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--signal-ink); margin-bottom:22px;
+}
+:root[data-theme="dark"] .kicker{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .kicker{color:var(--signal)}}
+.masthead h1{margin-bottom:20px; max-width:15ch}
+.byline{
+  display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted);
+}
+
+/* ---------- sections ---------- */
+section{padding:64px 0; border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.sechead{display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:14px; margin-bottom:28px; align-items:baseline}
+.secnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; font-weight:600;
+  color:var(--signal); letter-spacing:.08em; padding-top:6px;
+}
+.sechead p{grid-column:2; margin:10px 0 0; font-size:16.5px; color:var(--muted); max-width:62ch}
+
+/* ---------- stats ---------- */
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); margin:28px 0;
+}
+.stat{background:var(--surface); padding:18px 18px 16px}
+.stat b{
+  display:block; font-family:"Archivo",sans-serif; font-size:30px; font-weight:700;
+  letter-spacing:-.03em; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.05;
+}
+.stat span{
+  display:block; margin-top:7px; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  line-height:1.45; color:var(--muted);
+}
+.stat.up b{color:var(--ok)} .stat.down b{color:var(--danger)}
+
+/* ---------- cards ---------- */
+.cards{display:grid; gap:14px; margin:26px 0}
+@media (min-width:760px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); padding:20px 22px 18px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:4px}
+.card .tag{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:12px;
+}
+.card dl{margin:0; display:flex; flex-direction:column; gap:10px}
+.card dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
+}
+.card dd{margin:0; font-size:16.5px; line-height:1.5; color:var(--ink-2)}
+.card dd.steal{color:var(--ink); border-left:2px solid var(--signal); padding-left:12px}
+
+/* ---------- lists ---------- */
+ul.plain,ol.plain{margin:0 0 1.1em; padding-left:1.2em; max-width:66ch; color:var(--ink-2)}
+ul.plain li,ol.plain li{margin-bottom:.5em}
+ul.check{list-style:none; padding:0; margin:0 0 1.1em; max-width:66ch}
+ul.check li{
+  position:relative; padding-left:26px; margin-bottom:.6em; color:var(--ink-2);
+}
+ul.check li::before{
+  content:""; position:absolute; left:4px; top:.62em; width:7px; height:7px;
+  background:var(--signal);
+}
+.numlist{list-style:none; padding:0; margin:26px 0; display:flex; flex-direction:column; gap:0}
+.numlist li{
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:18px;
+  padding:18px 0; border-top:1px solid var(--line);
+}
+.numlist li:last-child{border-bottom:1px solid var(--line)}
+.numlist .n{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--signal);
+  padding-top:3px; font-variant-numeric:tabular-nums;
+}
+.numlist h4{margin-bottom:5px; font-size:17px}
+.numlist p{margin:0; font-size:16.5px}
+
+/* ---------- callouts ---------- */
+.callout{
+  border-left:3px solid var(--signal); background:var(--signal-soft);
+  padding:16px 20px; margin:24px 0; max-width:70ch;
+}
+.callout.warn{border-left-color:var(--danger); background:var(--danger-soft)}
+.callout.calm{border-left-color:var(--teal); background:var(--teal-soft)}
+.callout h4{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:8px; color:var(--ink);
+}
+.callout p:last-child{margin-bottom:0}
+.callout p{color:var(--ink-2)}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:26px 0; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:15.5px}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top}
+th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted); font-weight:500;
+  background:var(--surface-2); white-space:nowrap;
+}
+td{color:var(--ink-2); font-family:"Newsreader",serif}
+td:first-child{color:var(--ink); font-weight:500}
+tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:14px}
+tr.total td{background:var(--surface-2); font-weight:600; color:var(--ink)}
+
+/* ---------- hooks ---------- */
+.hooks{display:grid; gap:1px; background:var(--line); border:1px solid var(--line); margin:24px 0}
+@media (min-width:700px){.hooks{grid-template-columns:1fr 1fr}}
+.hook{background:var(--surface); padding:13px 16px; font-size:16px; color:var(--ink-2)}
+.hook b{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--signal); margin-bottom:5px; font-weight:600;
+}
+
+/* ---------- grile de încredere ---------- */
+.grade{
+  font-family:"IBM Plex Mono",monospace; font-size:9.5px; font-weight:600; letter-spacing:.08em;
+  padding:1px 5px; border:1px solid; margin-left:4px; white-space:nowrap;
+  vertical-align:2px; text-transform:uppercase;
+}
+.g-a{color:var(--ok); border-color:var(--ok)}
+.g-b{color:var(--signal-ink); border-color:var(--signal)}
+.g-c{color:var(--danger); border-color:var(--danger)}
+:root[data-theme="dark"] .g-b{color:var(--signal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .g-b{color:var(--signal)}}
+
+/* ---------- sources ---------- */
+.sources{columns:2 260px; column-gap:36px; font-size:14px; line-height:1.5}
+.sources a{
+  display:block; margin-bottom:9px; color:var(--muted); text-decoration:none;
+  break-inside:avoid; border-bottom:1px solid transparent;
+}
+.sources a:hover{color:var(--ink); border-bottom-color:var(--line-strong)}
+.sources h4{margin:18px 0 10px; font-family:"IBM Plex Mono",monospace; font-size:10.5px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--signal); break-after:avoid}
+.sources h4:first-child{margin-top:0}
+footer{padding:44px 0 80px; border-top:1px solid var(--line); color:var(--muted); font-size:14px}
+footer p{color:var(--muted); font-size:14px}
+
+a:focus-visible,summary:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
+details.toc-m{margin:28px 0 0; border:1px solid var(--line); background:var(--surface); padding:12px 16px}
+@media (min-width:1080px){details.toc-m{display:none}}
+details.toc-m summary{
+  cursor:pointer; font-family:"IBM Plex Mono",monospace; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+}
+details.toc-m ol{margin:12px 0 4px; padding-left:1.3em; font-size:15px}
+details.toc-m a{color:var(--ink-2); text-decoration:none}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+</style>
+
+<div id="progress"></div>
+
+<div class="wrap">
+<div class="grid">
+
+  <nav class="rail" aria-label="Cuprins">
+    <h6>Cuprins</h6>
+    <ol id="toc">
+      <li><a href="#s0"><span>00</span> Verdict</a></li>
+      <li><a href="#s1"><span>01</span> Cum citești cifrele</a></li>
+      <li><a href="#s2"><span>02</span> Terenul de joc</a></li>
+      <li><a href="#s3"><span>03</span> De unde vin banii</a></li>
+      <li><a href="#s4"><span>04</span> Cine face asta</a></li>
+      <li><a href="#s5"><span>05</span> Distribuția reală</a></li>
+      <li><a href="#s6"><span>06</span> Trei scenarii</a></li>
+      <li><a href="#s7"><span>07</span> Costul în timp</a></li>
+      <li><a href="#s8"><span>08</span> Banii în mână</a></li>
+      <li><a href="#s9"><span>09</span> Cele 7 amenințări</a></li>
+      <li><a href="#s10"><span>10</span> Conformitate</a></li>
+      <li><a href="#s11"><span>11</span> Traficul</a></li>
+      <li><a href="#s12"><span>12</span> Praguri de decizie</a></li>
+      <li><a href="#surse"><span>—</span> Surse</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <header class="masthead">
+    <div class="kicker">Research · model AI pe Fanvue · septembrie 2026</div>
+    <h1>Persona sintetică</h1>
+    <p class="lede">Cât de sustenabil e businessul cu un model AI pe Fanvue, câți bani se pot face realist de unul singur, și de ce aproape tot ce vei citi despre asta online e reclamă la cursuri.</p>
+    <div class="byline">
+      <span>Scenariu: NSFW, operator solo, România</span>
+      <span>Aritmetica dusă până la lei în mână</span>
+      <span>7 amenințări datate</span>
+    </div>
+    <details class="toc-m">
+      <summary>Cuprins</summary>
+      <ol>
+        <li><a href="#s0">Verdict în opt puncte</a></li>
+        <li><a href="#s1">Cum citești cifrele din nișa asta</a></li>
+        <li><a href="#s2">Terenul de joc: Fanvue</a></li>
+        <li><a href="#s3">De unde vin banii de fapt</a></li>
+        <li><a href="#s4">Oameni care chiar fac asta</a></li>
+        <li><a href="#s5">Distribuția reală a câștigurilor</a></li>
+        <li><a href="#s6">Trei scenarii pe 12 luni</a></li>
+        <li><a href="#s7">Costul real: timpul</a></li>
+        <li><a href="#s8">Banii în mână: aritmetica ANAF</a></li>
+        <li><a href="#s9">Cele 7 amenințări</a></li>
+        <li><a href="#s10">Conformitate</a></li>
+        <li><a href="#s11">Traficul după 31 august 2026</a></li>
+        <li><a href="#s12">Praguri de decizie</a></li>
+        <li><a href="#surse">Surse</a></li>
+      </ol>
+    </details>
+  </header>
+
+  <section id="s0">
+    <div class="sechead"><div class="secnum">00</div><h2>Verdict în opt puncte</h2>
+      <p>Dacă citești o singură pagină, citește-o pe asta.</p>
+    </div>
+    <ul class="check">
+      <li><strong>Nu e un business cu imagini. E un business cu vânzare în chat.</strong> Între 60% și 70% din veniturile de pe Fanvue vin din mesaje cu plată și bacșișuri, nu din abonamente<span class="grade g-a">A</span>. Pe conturile de top din industrie proporția merge spre 95%. Partea de „generez poze cu AI” e cea mai ușoară și cea mai puțin valoroasă din tot lanțul.</li>
+      <li><strong>Fiindcă tu faci chatul, cumperi un job, nu construiești un activ.</strong> Un creator solo lucrează 6–10 ore pe zi, 7 zile pe săptămână: 3–6 ore doar conversații, restul producție și promovare<span class="grade g-b">B</span>. Modelul e AI, munca nu.</li>
+      <li><strong>Scenariul median îți dă sub salariul minim pe oră în primul an.</strong> Calculul complet din secțiunea 08: ~22.500 lei net după comision, unelte și ANAF, împărțit la ~2.450 de ore lucrate, înseamnă <strong>~9 lei pe oră</strong>. Salariul minim net e în jur de 15 lei pe oră.</li>
+      <li><strong>Scenariul pesimist nu e „câștigi puțin”, e „pierzi bani”.</strong> La un venit de 200 $/lună în luna 12, uneltele te costă mai mult decât încasezi. Și e cel mai probabil rezultat individual.</li>
+      <li><strong>Sustenabilitatea s-a înrăutățit vizibil în ultimele nouă luni</strong>, nu în ultimii ani. Trei date contează: <strong>27 februarie 2026</strong> — Mastercard extinde regulile de consimțământ și asupra conținutului generat AI. <strong>2 august 2026</strong> — intră în vigoare articolul 50 din AI Act. <strong>31 august 2026</strong> — Instagram limitează reach-ul profilurilor AI needeclarate. Ghidurile scrise anul trecut descriu o piață care nu mai există.</li>
+      <li><strong>Ai un singur furnizor și niciun plan B.</strong> Fansly a interzis complet conținutul AI, OnlyFans nu îl acceptă<span class="grade g-a">A</span>. Fanvue e practic singura platformă majoră rămasă. Dacă își schimbă politica, businessul dispare într-o zi, nu într-un trimestru.</li>
+      <li><strong>ANAF are deja datele.</strong> Peste 100 de români prinși cu ~65 de milioane de lei nedeclarați din platforme pentru adulți în doi ani, un singur caz de 700.000 €<span class="grade g-a">A</span>. Neconformarea nu e o strategie tăcută, e o amânare.</li>
+      <li><strong>Cel mai fiabil mod de a face bani în nișa asta e să vinzi cursuri despre nișă.</strong> Majoritatea covârșitoare a cifrelor care circulă („30–60k $/lună”) sunt publicate de site-uri care vând exact unelte, cursuri sau servicii de agenție. Vezi secțiunea următoare înainte de orice altceva.</li>
+    </ul>
+    <div class="callout warn">
+      <h4>Ce nu spune raportul</h4>
+      <p>Nu spune că e imposibil — oameni chiar fac bani, iar secțiunea 04 îi arată cu cifre. Spune că raportul dintre efort, risc și câștig e mult mai prost decât îl prezintă piața, că fereastra se închide, și că decizia trebuie luată pe cifra de lei pe oră, nu pe capturile de ecran ale altcuiva.</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <div class="sechead"><div class="secnum">01</div><h2>Cum citești cifrele din nișa asta</h2>
+      <p>Prima problemă de rezolvat nu e „câți bani se fac”, ci „cine îmi spune asta și ce vinde”.</p>
+    </div>
+    <p>Caută „how much do AI creators make on Fanvue” și primele zece rezultate vor fi: fanvuemodels.com, ofgenerator.com, aiofm.info, aitwin.ninja, fanwake.app, make-influencer.ai, sozee.ai, playbella.org. Toate publică cifre spectaculoase. Toate vând cursuri, unelte de generare sau servicii de agenție. Cifra e produsul de marketing, nu concluzia unui studiu.</p>
+    <p>Fenomenul are un nume: <strong>survivorship bias</strong>. Dacă un vânzător are 50 de povești de succes și 500.000 de clienți, rata reală de succes e 0,01% — dar în pagina de vânzare apar doar cele 50<span class="grade g-b">B</span>. În acest raport, fiecare cifră poartă o etichetă:</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Etichetă</th><th>Ce înseamnă</th><th>Exemple de surse</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="grade g-a">A</span> verificabil</td>
+            <td>Presă financiară sau tech independentă, documente oficiale ale platformei, legislație, comunicate primare.</td>
+            <td>Fortune, TechCrunch, GeekWire, Euronews, Rest of World, 404 Media, help.fanvue.com, legal.fanvue.com, AI Act, ANAF</td>
+          </tr>
+          <tr>
+            <td><span class="grade g-b">B</span> plauzibil</td>
+            <td>Cifră raportată de presă dar neconfirmată independent, sau agregare de sondaje. Direcția e probabil corectă, valoarea exactă nu.</td>
+            <td>Venituri lunare declarate de un creator anume, statistici agregate despre OnlyFans</td>
+          </tr>
+          <tr>
+            <td><span class="grade g-c">C</span> marketing</td>
+            <td>Publicat de cineva care vinde ceva în nișă. Citat <em>doar</em> ca dovadă a ce se promite în piață, niciodată ca sursă de adevăr.</td>
+            <td>Blogurile de cursuri și unelte enumerate mai sus</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <h4>Testul de trei secunde</h4>
+      <p>Înainte să crezi orice cifră din nișa asta, caută pe pagină butonul „Get started”, „Join now” sau „Book a call”. Dacă există, cifra e reclamă. Această regulă elimină aproximativ 80% din ce vei găsi căutând.</p>
+    </div>
+
+    <p>O limitare onestă a acestui raport: <strong>Fanvue nu publică distribuția veniturilor pe creatori.</strong> Nimeni din afara companiei nu știe câți dintre cei ~250.000 de creatori câștigă cât. Unde nu există date Fanvue, folosesc OnlyFans ca aproximare și marchez asta explicit.</p>
+  </section>
+
+  <section id="s2">
+    <div class="sechead"><div class="secnum">02</div><h2>Terenul de joc: Fanvue</h2>
+      <p>Platforma e reală, crește repede și chiar vrea creatori AI. Asta e partea bună a poveștii.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>~100 mil $</b><span>run rate anual atins în ianuarie 2026</span></div>
+      <div class="stat"><b>22 mil $</b><span>rundă Series A, ianuarie 2026</span></div>
+      <div class="stat"><b>17 mil</b><span>utilizatori activi lunar</span></div>
+      <div class="stat"><b>~250 mii</b><span>creatori pe platformă</span></div>
+      <div class="stat up"><b>+450%</b><span>creștere an la an a veniturilor</span></div>
+      <div class="stat"><b>~15%</b><span>din veniturile platformei vin de la creatori AI</span></div>
+    </div>
+
+    <p>Fanvue a fost fondată în 2020 de William Monange, Joel Morris și Harry Fitzgerald, în Marea Britanie. A crescut de la 300.000 $ venit lunar la finalul lui 2023 la peste 10 milioane $ pe lună la finalul lui 2025<span class="grade g-a">A</span>. Poziționarea e explicită: platforma nu tolerează creatorii AI, ci îi caută. Monange a spus-o direct — pariul companiei a fost că „o persoană care poate folosi o persona fără să stea ea în fața camerei” deschide creator economy pentru oameni care altfel nu ar intra în ea<span class="grade g-a">A</span>.</p>
+
+    <p>Traducerea cifrei de 15%: din ~100 de milioane $ anual, creatorii AI generează în jur de <strong>15 milioane $ pe an, împărțiți la câteva mii de conturi</strong>. Nu e o piață uriașă și nu e o piață goală.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Termen comercial</th><th>Valoare</th><th>Observație</th></tr></thead>
+        <tbody>
+          <tr><td>Comision platformă</td><td class="num">15% primele 3 luni, apoi 20%</td><td>Se aplică pe tot: abonamente, bacșișuri, mesaje cu plată<span class="grade g-a">A</span></td></tr>
+          <tr><td>Prag minim de retragere</td><td class="num">~20 $</td><td>Variază regional<span class="grade g-b">B</span></td></tr>
+          <tr><td>Perioadă de reținere</td><td class="num">7 zile</td><td>Banii nu sunt disponibili imediat<span class="grade g-b">B</span></td></tr>
+          <tr><td>Metode de plată</td><td class="num">SEPA, MassPay, Cosmo, cripto</td><td>Transfer SEPA: 0–5 €, 1–4 zile lucrătoare<span class="grade g-b">B</span></td></tr>
+          <tr><td>Valuta</td><td class="num">deseori GBP</td><td>Platformă britanică — apare cost de conversie pentru un cont în lei<span class="grade g-b">B</span></td></tr>
+          <tr><td>Prag dispute</td><td class="num">1,5% pe 30 de zile</td><td>Peste el, 50 $ taxă administrativă per dispută<span class="grade g-a">A</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <h4>Clauza pe care o citesc puțini</h4>
+      <p>Fanvue își rezervă dreptul să suspende sau să șteargă un cont oricând și fără avertisment, să oprească plățile fanilor în timpul suspendării și <strong>să rețină orice parte din câștigurile creatorului</strong> dacă apreciază că termenii au fost încălcați grav sau repetat<span class="grade g-a">A</span>. Combinat cu faptul că Fanvue e singura platformă disponibilă pentru conținut AI, asta înseamnă că întregul business stă pe judecata unilaterală a unei singure companii.</p>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="sechead"><div class="secnum">03</div><h2>De unde vin banii de fapt</h2>
+      <p>Teza centrală a raportului. Dacă înțelegi doar asta, ai înțeles businessul.</p>
+    </div>
+
+    <p>Imaginea mentală pe care o vinde piața: generezi poze frumoase cu AI, le postezi, oamenii se abonează, banii intră. Imaginea reală: <strong>abonamentul e doar biletul de intrare; venitul se face în privat, mesaj cu mesaj.</strong></p>
+
+    <div class="stats">
+      <div class="stat"><b>60–70%</b><span>din veniturile Fanvue vin din mesaje cu plată și bacșișuri, nu din abonamente</span></div>
+      <div class="stat"><b>peste 50%</b><span>din venitul unui creator vine din conversație și upsell, ca regulă generală în industrie</span></div>
+      <div class="stat"><b>~95%</b><span>proporția pe conturile de top raportată în industrie</span></div>
+      <div class="stat"><b>3–6 h</b><span>de chat pe zi pentru un cont activ, făcut corect</span></div>
+    </div>
+
+    <p>Consecința e brutală și explică tot restul raportului. <strong>Competența care produce bani nu e prompting-ul, e vânzarea prin conversație:</strong> să ții zeci de fire de discuție simultan, să reții detalii despre fiecare abonat, să construiești o relație percepută ca reală și să vinzi în ea, zi de zi, fără pauze. E o meserie de call-center emoțional cu componentă de vânzări.</p>
+
+    <p>Industria a rezolvat asta prin externalizare. Agențiile angajează „chatteri” — muncitori din Filipine, Nigeria, India, Pakistan — care lucrează ture de până la 12 ore, șase zile pe săptămână, pentru aproximativ 3 $ pe oră<span class="grade g-a">A</span>. Modelul standard e 3,50–7,00 $ pe oră plus comision de 2–5% pe fiecare vânzare<span class="grade g-c">C</span>.</p>
+
+    <div class="callout">
+      <h4>Ce înseamnă asta pentru scenariul tău</h4>
+      <p>Ai ales să faci chatul personal. Economic, asta e echivalentul de a-ți angaja singur un chatter la 3 $ pe oră — doar că plătit din propriul timp. Avantajul: marja rămâne integral la tine și calitatea conversației e mai bună decât a unui chatter obosit. Dezavantajul: venitul tău e plafonat rigid de numărul de ore pe care le poți sta în chat, iar businessul nu se poate scala fără să reintroduci exact costul pe care l-ai evitat.</p>
+    </div>
+
+    <p>Există și o presiune din cealaltă direcție: chatbot-ii antrenați pe logurile chatterilor umani se apropie de performanța lor, iar unele companii plănuiesc deja înlocuirea celor mai slabi operatori cu AI<span class="grade g-a">A</span>. Pe termen de doi-trei ani, avantajul „om real în chat” — singurul pe care se sprijină un operator solo — se comprimă.</p>
+  </section>
+
+  <section id="s4">
+    <div class="sechead"><div class="secnum">04</div><h2>Oameni care chiar fac asta</h2>
+      <p>Cazuri documentate în presă, cu ce se știe și ce nu se știe despre fiecare.</p>
+    </div>
+
+    <div class="cards">
+
+      <div class="card">
+        <span class="tag">Spania · agenție · SFW-suggestive + Fanvue</span>
+        <h3>Aitana López / The Clueless</h3>
+        <dl>
+          <dt class="mono">Cifre</dt>
+          <dd>Până la 10.000 € pe lună, dar <strong>media reală e în jur de 3.000 €</strong>, după declarațiile creatorilor<span class="grade g-a">A</span>. Peste 1.000 € per postare sponsorizată. ~350.000 de urmăritori pe Instagram, ~25.000 pe Fanvue, abonament în jur de 15 $<span class="grade g-b">B</span>.</dd>
+          <dt class="mono">Ce se omite când e citată</dt>
+          <dd>E produsul unei <strong>agenții de design din Barcelona</strong>, cu echipă, nu al unui om singur. Venitul principal vine din brand deals, nu din Fanvue. Și cifra care circulă pe internet e vârful de 10.000 €, nu media de 3.000 €.</dd>
+          <dt class="mono">Ce înveți</dt>
+          <dd class="steal">Cel mai citat caz de succes din nișă câștigă, în medie, cât o echipă mică de agenție. Împărțit la oamenii implicați, nu e o poveste de îmbogățire — e un contract de servicii decent.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Fanvue · NSFW · creator anonim</span>
+        <h3>Emily Pellegrini</h3>
+        <dl>
+          <dt class="mono">Cifre</dt>
+          <dd>9.600 $ în primele șase săptămâni pe Fanvue. 6.000 $ în octombrie, <strong>23.000 $ în ianuarie</strong><span class="grade g-b">B</span>. Peste 200.000 de urmăritori pe Instagram la momentul relatărilor.</dd>
+          <dt class="mono">Ce se omite</dt>
+          <dd>Creșterea a venit dintr-un val de presă internațională — povestea că sportivi și celebrități i-au scris în privat crezând-o reală. Acel val a fost <strong>evenimentul de achiziție</strong>, și nu e reproductibil: a funcționat pentru că era printre primele, iar acum publicul e obișnuit cu ideea.</dd>
+          <dt class="mono">Ce înveți</dt>
+          <dd class="steal">Cazurile de top din 2024 au fost construite pe avantajul de noutate. În 2026 nu mai există noutate, dar cifrele lor sunt încă folosite ca promisiune de vânzare pentru cursuri.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Cel mai apropiat de scenariul tău</span>
+        <h3>„Hailey Lopez” — student anonim</h3>
+        <dl>
+          <dt class="mono">Cifre</dt>
+          <dd><strong>150 de abonați plătitori, 2.500–4.000 $ pe lună</strong>, câteva ore pe zi de creat conținut și de chat<span class="grade g-b">B</span>. Un singur om, fără agenție.</dd>
+          <dt class="mono">De ce contează</dt>
+          <dd>E singurul caz documentat public care seamănă cu ce vrei să faci: operator solo, NSFW, chat făcut personal. Arată că <strong>2.500–4.000 $ pe lună e atins de un om singur</strong> — cu 150 de abonați, adică ~20 $ venit mediu per abonat pe lună, mult peste prețul abonamentului. Diferența vine din mesaje cu plată.</dd>
+          <dt class="mono">Ce înveți</dt>
+          <dd class="steal">Ținta realistă de succes nu e „mii de abonați”, ci <strong>o sută-două de abonați care cheltuie mult</strong>. Asta schimbă complet strategia: contează adâncimea relației cu fiecare, nu volumul de trafic.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Contra-exemplul obligatoriu</span>
+        <h3>Sarah Chrisp</h3>
+        <dl>
+          <dt class="mono">Cifre</dt>
+          <dd><strong>0 $.</strong> Creatoare de conținut care a încercat public experimentul „AI influencer ca side hustle” și nu a câștigat nimic<span class="grade g-b">B</span>.</dd>
+          <dt class="mono">Motivul</dt>
+          <dd>Nu a fost dispusă să vândă nuduri ale personei — iar asta s-a dovedit a fi, practic, singura cale de monetizare care funcționează la scara aceea.</dd>
+          <dt class="mono">Ce înveți</dt>
+          <dd class="steal">Nu există versiune „soft” profitabilă a acestui model pentru un om singur. Ruta SFW cu brand deals cere audiență de sute de mii și o echipă comercială — e businessul lui Lil Miquela și Lu do Magalu, nu al unui operator individual.</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <span class="tag">Caz agregat · 12 luni</span>
+        <h3>Contul documentat la 36,4k $/lună</h3>
+        <dl>
+          <dt class="mono">Cifre</dt>
+          <dd>36.400 $ pe lună după 12 luni, <strong>4.380 de abonați, rată de reînnoire 38%</strong><span class="grade g-b">B</span>.</dd>
+          <dt class="mono">Cifra care contează cu adevărat</dt>
+          <dd>Rata de reînnoire de 38% înseamnă că <strong>aproape doi din trei abonați pleacă</strong>. Ca să stai pe loc la 4.380 de abonați, trebuie să aduci peste 2.700 de oameni noi în fiecare lună. La nesfârșit.</dd>
+          <dt class="mono">Ce înveți</dt>
+          <dd class="steal">Businessul nu are efect de compunere. E o găleată cu gaură mare: fiecare lună începe aproape de la zero pe partea de achiziție. Asta e motivul real pentru care oamenii abandonează, nu lipsa de bani în lunile 1–3.</dd>
+        </dl>
+      </div>
+
+    </div>
+
+    <div class="callout warn">
+      <h4>Un tipar în toate cazurile de succes</h4>
+      <p>Aitana e o agenție. Emily a prins un val de presă irepetabil. Contul de 36k $ are o mașină de achiziție care aduce mii de oameni pe lună. Singurul caz cu adevărat solo — „Hailey Lopez” — se oprește la 2.500–4.000 $ pe lună. <strong>Nu există niciun caz documentat de om singur care să depășească constant ~5.000 $ pe lună fără să angajeze pe cineva.</strong> Ăsta e plafonul real al scenariului tău.</p>
+    </div>
+  </section>
+
+  <section id="s5">
+    <div class="sechead"><div class="secnum">05</div><h2>Distribuția reală a câștigurilor</h2>
+      <p>Media e o minciună statistică. Ce contează e mediana și forma curbei.</p>
+    </div>
+
+    <p>Fanvue nu publică distribuția pe creatori. OnlyFans, platforma cea mai apropiată ca model economic, e documentată — și forma curbei e una dintre cele mai inegale din tot internetul de consum. Folosesc aceste cifre ca <strong>aproximare</strong>, nu ca date despre Fanvue<span class="grade g-b">B</span>.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Segment</th><th>Câștig</th><th>Ce înseamnă practic</th></tr></thead>
+        <tbody>
+          <tr><td>Creatorul median</td><td class="num" style="color:var(--danger)">~180 $ / an</td><td>Sub 200 $ pe lună pentru ~70% dintre creatori. Majoritatea nu ajunge niciodată la un venit relevant.</td></tr>
+          <tr><td>Peste 1.000 $/lună</td><td class="num">~10% dintre creatori</td><td>Pragul de la care se poate discuta despre „venit”.</td></tr>
+          <tr><td>Top 1%</td><td class="num">~49.000 $ / an</td><td>Adică ~4.300 $ pe lună. Un venit bun, nu o avere.</td></tr>
+          <tr><td>Top 0,1%</td><td class="num">~735.000 $ / an</td><td>Aici sunt capturile de ecran folosite în reclame.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Concentrarea: <strong>top 1% ia 33% din toți banii, top 10% ia 73%</strong>. Restul de 90% dintre creatori împart mai puțin de un sfert din piață.</p>
+
+    <div class="callout">
+      <h4>Reperul care recalibrează așteptările</h4>
+      <p>Top 1% dintre creatorii OnlyFans câștigă ~4.300 $ pe lună. Adică <strong>dacă intri în primul procent al unei platforme cu milioane de creatori, ajungi la un salariu bun de IT din România</strong> — muncind 60 de ore pe săptămână, fără concediu și fără zile libere. Asta e forma reală a oportunității, nu povestea cu 50.000 $ pe lună.</p>
+    </div>
+
+    <p>Există un motiv structural pentru care curba e atât de abruptă și pentru care se înrăutățește: piața de conținut AI se saturează rapid. Mii de avataruri aproape identice concurează pentru aceiași ochi, iar diferențierea vizuală a devenit foarte grea — toate uneltele produc aceeași estetică<span class="grade g-c">C</span>. Sursele care semnalează saturarea sunt chiar site-urile care vând unelte în nișă, ceea ce face semnalul mai credibil, nu mai puțin: e împotriva interesului lor comercial să o spună.</p>
+  </section>
+
+  <section id="s6">
+    <div class="sechead"><div class="secnum">06</div><h2>Trei scenarii pe 12 luni</h2>
+      <p>Operator solo, NSFW, chatul făcut personal, pornire de la zero.</p>
+    </div>
+
+    <p>Ancorele folosite pentru rampă sunt cele raportate consistent în industrie pentru creatorii solo: 0–500 $ pe lună în lunile 1–3, 500–1.500 $ în lunile 4–6, 2.000–5.000 $ în lunile 7–12<span class="grade g-c">C</span>. Le tratez ca pe <strong>limita optimistă</strong>, fiindcă provin din surse care vând servicii în nișă.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Scenariu</th><th>Brut luna 12</th><th>Abonați activi</th><th>Brut total an 1</th><th>Probabilitate</th></tr></thead>
+        <tbody>
+          <tr><td>Pesimist</td><td class="num">200 $/lună</td><td class="num">~15</td><td class="num">~1.000 $</td><td>Cel mai probabil rezultat individual</td></tr>
+          <tr><td>Median</td><td class="num">1.500 $/lună</td><td class="num">~60</td><td class="num">~8.700 $</td><td>Dacă reziști 12 luni fără să abandonezi</td></tr>
+          <tr><td>Optimist</td><td class="num">4.000 $/lună</td><td class="num">~150</td><td class="num">~21.000 $</td><td>Aproximativ top 10–15%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Rampa folosită pentru scenariul median, lună cu lună: ~100 $ în lunile 1–3, ~500 $ în lunile 4–6, ~900 $ în lunile 7–9, ~1.400 $ în lunile 10–12. Total ~8.700 $ brut generat pe platformă în primul an.</p>
+
+    <div class="callout warn">
+      <h4>Filtrul care nu apare în niciun scenariu</h4>
+      <p>Aproximativ <strong>70% dintre creatorii solo abandonează în primele 6–12 luni</strong>, din epuizare, înainte să atingă profitabilitatea<span class="grade g-b">B</span>. Asta înseamnă că scenariul median de mai sus descrie deja o minoritate: pe cei care au rezistat. Probabilitatea reală de a ajunge la 1.500 $ pe lună la luna 12, calculată de la momentul „mă apuc”, e undeva sub 30%.</p>
+    </div>
+  </section>
+
+  <section id="s7">
+    <div class="sechead"><div class="secnum">07</div><h2>Costul real: timpul</h2>
+      <p>Uneltele sunt ieftine. Timpul e tot costul.</p>
+    </div>
+
+    <h3>Partea ieftină</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Componentă</th><th>Cost lunar</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Generare imagine</td><td class="num">10–30 $</td><td>Midjourney sau echivalent<span class="grade g-c">C</span></td></tr>
+          <tr><td>Consistența personajului (LoRA)</td><td class="num">0,30–1 $/oră GPU</td><td>Antrenat pe 15–25 de imagini de referință; cost unic, apoi reantrenări ocazionale<span class="grade g-c">C</span></td></tr>
+          <tr><td>Generare video</td><td class="num">0–50 $</td><td>Nivelul gratuit are watermark<span class="grade g-c">C</span></td></tr>
+          <tr><td>Voce</td><td class="num">~22 $</td><td>ElevenLabs Creator<span class="grade g-c">C</span></td></tr>
+          <tr><td>Automatizare postare</td><td class="num">15–25 $</td><td><span class="grade g-c">C</span></td></tr>
+          <tr class="total"><td>Total realist</td><td class="num">80–200 $/lună</td><td>Iau 100 $/lună ca ipoteză în calculele următoare</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Partea scumpă</h3>
+    <div class="stats">
+      <div class="stat"><b>3–6 h</b><span>chat și vânzare în privat, zilnic</span></div>
+      <div class="stat"><b>1–2 h</b><span>producție de conținut</span></div>
+      <div class="stat"><b>1–2 h</b><span>promovare și postat pe canale</span></div>
+      <div class="stat down"><b>6–10 h</b><span>total pe zi, 7 zile pe săptămână</span></div>
+    </div>
+
+    <p>Un creator care rulează totul singur muncește efectiv normă întreagă înainte să încaseze un leu peste abonamentele de bază<span class="grade g-b">B</span>. Un caz relatat public vorbește despre 16–18 ore pe zi<span class="grade g-b">B</span>. Iau <strong>7 ore pe zi, 350 de zile pe an — 2.450 de ore</strong> — ca ipoteză conservatoare pentru calculul din secțiunea următoare.</p>
+
+    <div class="callout">
+      <h4>De ce nu poți sări peste chat</h4>
+      <p>Ai putea folosi chatul AI nativ al Fanvue. Dar atunci renunți exact la avantajul care justifică munca ta: un operator uman convertește mai bine decât un bot, iar botul e disponibil oricărui concurent contra câțiva dolari. Dacă automatizezi chatul, produsul tău devine identic cu al celorlalte mii de conturi, iar singura variabilă rămasă e volumul de trafic — unde pierzi în fața agențiilor.</p>
+    </div>
+  </section>
+
+  <section id="s8">
+    <div class="sechead"><div class="secnum">08</div><h2>Banii în mână: aritmetica ANAF</h2>
+      <p>Drumul complet de la venitul brut de pe platformă la lei în cont, pe scenariul median.</p>
+    </div>
+
+    <p>Regimul fiscal: ANAF încadrează veniturile de pe astfel de platforme drept <strong>venituri din activități independente</strong>, tratate similar unui PFA. Din venitul brut se scad cheltuieli forfetare de 40%, iar pe venitul net rezultat se aplică impozit de 10%. Declarația se face prin <strong>Declarația unică (formular 212)</strong>, unde contribuabilul își calculează singur impozitul și contribuțiile<span class="grade g-a">A</span>.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Prag 2026</th><th>Valoare</th><th>Efect</th></tr></thead>
+        <tbody>
+          <tr><td>Salariu minim de referință</td><td class="num">4.050 lei</td><td>Baza tuturor plafoanelor<span class="grade g-a">A</span></td></tr>
+          <tr><td>Prag CASS (6 salarii)</td><td class="num">24.300 lei</td><td>Sub el, CASS nu se datorează pentru acest venit</td></tr>
+          <tr><td>Bază maximă CASS (72 salarii)</td><td class="num">291.600 lei</td><td>CASS maxim datorat: 29.160 lei<span class="grade g-a">A</span></td></tr>
+          <tr><td>Prag CAS (12 salarii)</td><td class="num">48.600 lei</td><td>Peste el, CAS 25% pe baza aleasă</td></tr>
+          <tr><td>Palier CAS superior (24 salarii)</td><td class="num">97.200 lei</td><td>Prag cu salt brusc de contribuție</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Scenariul median, an 1</h3>
+    <p class="mono" style="font-size:13px; color:var(--muted)">Ipoteză de curs: 1 $ ≈ 4,3 lei. Recalculează la cursul zilei — cifra finală e sensibilă la asta.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Etapă</th><th>Sumă</th><th>Explicație</th></tr></thead>
+        <tbody>
+          <tr><td>Brut generat pe platformă</td><td class="num">8.700 $</td><td>Rampa din secțiunea 06</td></tr>
+          <tr><td>− Comision Fanvue</td><td class="num" style="color:var(--danger)">−1.725 $</td><td>15% în lunile 1–3, 20% după</td></tr>
+          <tr><td>= Încasat efectiv</td><td class="num">6.975 $ ≈ 30.000 lei</td><td>Suma care ajunge în cont</td></tr>
+          <tr><td>− Unelte</td><td class="num" style="color:var(--danger)">−5.200 lei</td><td>100 $/lună × 12</td></tr>
+          <tr><td>− Conversie valutară și transfer</td><td class="num" style="color:var(--danger)">−500 lei</td><td>SEPA + conversie GBP/USD → RON</td></tr>
+          <tr><td>Venit brut declarat</td><td class="num">30.000 lei</td><td>Baza pentru Declarația unică</td></tr>
+          <tr><td>− Cheltuieli forfetare 40%</td><td class="num">−12.000 lei</td><td>Venit net impozabil: 18.000 lei</td></tr>
+          <tr><td>− Impozit 10%</td><td class="num" style="color:var(--danger)">−1.800 lei</td><td>Pe venitul net</td></tr>
+          <tr><td>− CASS</td><td class="num">0 lei</td><td>18.000 &lt; 24.300 — sub pragul de 6 salarii</td></tr>
+          <tr><td>− CAS</td><td class="num">0 lei</td><td>18.000 &lt; 48.600 — sub pragul de 12 salarii</td></tr>
+          <tr class="total"><td>Net în mână, an 1</td><td class="num">≈ 22.500 lei</td><td>≈ 4.400 € pe tot anul</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <h4>Cifra care decide</h4>
+      <p>22.500 lei împărțiți la 2.450 de ore lucrate înseamnă <strong>aproximativ 9 lei pe oră</strong>.</p>
+      <p>Salariul minim brut în 2026 e 4.050 lei, adică în jur de 15 lei pe oră net la normă întreagă. Scenariul median al acestui business, în primul an, plătește <strong>circa 60% din salariul minim pe economie</strong> — pentru muncă de 7 ore pe zi, fără weekenduri și fără concediu.</p>
+    </div>
+
+    <h3>Ce se schimbă dacă reușești: scenariul optimist, an 2</h3>
+    <p>La 4.000 $ pe lună constant, adică 48.000 $ brut pe an:</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Etapă</th><th>Sumă</th><th>Explicație</th></tr></thead>
+        <tbody>
+          <tr><td>Încasat după comision 20%</td><td class="num">38.400 $ ≈ 165.000 lei</td><td></td></tr>
+          <tr><td>Venit net după forfetar 40%</td><td class="num">99.000 lei</td><td>Baza pentru impozit și contribuții</td></tr>
+          <tr><td>− Impozit 10%</td><td class="num" style="color:var(--danger)">−9.900 lei</td><td></td></tr>
+          <tr><td>− CASS 10%</td><td class="num" style="color:var(--danger)">−9.900 lei</td><td>Peste pragul de 6 salarii</td></tr>
+          <tr><td>− CAS 25%</td><td class="num" style="color:var(--danger)">−24.300 lei</td><td>Depășește pragul de 24 de salarii (97.200 lei) — salt brusc</td></tr>
+          <tr><td>− Unelte</td><td class="num" style="color:var(--danger)">−5.200 lei</td><td></td></tr>
+          <tr class="total"><td>Net în mână</td><td class="num">≈ 115.700 lei/an</td><td>≈ 9.600 lei/lună, ≈ 47 lei pe oră</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Aici businessul devine în sfârșit rațional: ~47 lei pe oră, de trei ori salariul minim. <strong>Dar e rezultatul de an 2 al celor ~10–15% care au supraviețuit primului an</strong>, iar 70% abandonează înainte. Înmulțind probabilitățile, șansa de a ajunge aici de la momentul zero e de ordinul câtorva procente.</p>
+
+    <div class="callout">
+      <h4>Atenție la pragul CAS</h4>
+      <p>Între un venit net de 97.000 lei și unul de 98.000 lei, contribuția CAS sare de la 12.150 lei la 24.300 lei. Merită planificat: în anumite intervale, un venit mai mare îți lasă mai puțini bani în mână. Un contabil rezolvă asta în 20 de minute — încadrarea exactă și regimul optim (forfetar vs. sistem real, PFA vs. persoană fizică) chiar necesită consultanță, fiindcă regulile s-au schimbat de mai multe ori în ultimii doi ani.</p>
+    </div>
+  </section>
+
+  <section id="s9">
+    <div class="sechead"><div class="secnum">09</div><h2>Cele 7 amenințări</h2>
+      <p>Răspunsul la „cât de sustenabil e pentru viitor”. Fiecare cu dată și impact.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Amenințare</th><th>Când</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td>Concentrare pe un singur furnizor</td><td class="num">activ</td><td class="num" style="color:var(--danger)">fatal</td></tr>
+          <tr><td>Restricții de distribuție (Instagram)</td><td class="num">31 aug. 2026</td><td class="num" style="color:var(--danger)">mare</td></tr>
+          <tr><td>Presiunea procesatorilor de plăți</td><td class="num">27 feb. 2026</td><td class="num" style="color:var(--danger)">mare</td></tr>
+          <tr><td>Obligații legale de transparență (UE)</td><td class="num">2 aug. 2026</td><td class="num">mediu</td></tr>
+          <tr><td>Saturarea pieței</td><td class="num">în curs</td><td class="num" style="color:var(--danger)">mare</td></tr>
+          <tr><td>Automatizarea chatului</td><td class="num">2–3 ani</td><td class="num">mediu-mare</td></tr>
+          <tr><td>Expunere fiscală personală</td><td class="num">activ</td><td class="num">mediu</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ol class="numlist">
+      <li><span class="n">01</span>
+        <div><h4>Un singur furnizor, zero plan B</h4>
+        <p>Fansly a interzis complet conținutul AI în iunie 2025, iar în 2025 a confirmat că politica e „AI content is no longer acceptable under any circumstances”. OnlyFans nu îl acceptă. <strong>Fanvue e practic singura platformă majoră care primește creatori sintetici de la zero</strong><span class="grade g-a">A</span>. Adaugă clauza prin care Fanvue poate suspenda fără avertisment și reține câștiguri, și ai un business a cărui existență depinde de o decizie internă a unei companii, luată fără preaviz.</p></div>
+      </li>
+      <li><span class="n">02</span>
+        <div><h4>Instagram, 31 august 2026</h4>
+        <p>Meta a redenumit eticheta „AI creator” în „AI-generated profile” și a început să <strong>limiteze reach-ul conturilor care prezintă o persoană generată AI fără să declare asta</strong>: postările nu mai sunt recomandate în Reels și Explore<span class="grade g-a">A</span>. Nu e interdicție — profilurile virtuale rămân permise, și există procedură de contestație. Dar canalul principal de achiziție gratuită s-a scumpit peste noapte, iar alternativa conformă (declari eticheta) reduce exact iluzia pe care se sprijină conversia.</p></div>
+      </li>
+      <li><span class="n">03</span>
+        <div><h4>Mastercard și Visa, ianuarie–februarie 2026</h4>
+        <p>Regulile MMP s-au înăsprit de la 1 ianuarie 2026, iar din <strong>27 februarie 2026</strong> notificarea AN 5196 extinde regulile de consimțământ și verificare a vârstei explicit asupra conținutului generat AI, a reprezentărilor sintetice de persoane și a conținutului hibrid<span class="grade g-b">B</span>. Platformele trebuie să verifice toți creatorii, să revizuiască conținutul înainte de publicare și să raporteze lunar. Efectul se transmite în jos: mai multă verificare, costuri mai mari, mai puțină toleranță la ambiguitate.</p></div>
+      </li>
+      <li><span class="n">04</span>
+        <div><h4>AI Act, articolul 50 — în vigoare din 2 august 2026</h4>
+        <p>Ești în UE, deci te privește direct. Conținutul generat sau manipulat cu AI trebuie <strong>marcat într-un format citibil de mașină</strong>, iar utilizatorii trebuie informați clar, cel târziu la prima expunere<span class="grade g-a">A</span>. Comisia a publicat un Cod de Practică pentru etichetare. Obligația nu îți interzice activitatea — dar elimină definitiv varianta „las lumea să creadă că e o persoană reală”, care e chiar mecanismul de conversie al majorității conturilor de succes din 2024.</p></div>
+      </li>
+      <li><span class="n">05</span>
+        <div><h4>Saturarea</h4>
+        <p>Piața „pure AI OFM” se saturează rapid: mii de avataruri similare concurează pentru aceiași fani, iar profitabilitatea a scăzut vizibil față de 2024<span class="grade g-c">C</span>. Numărul de creatori AI e așteptat să crească de la câteva sute la zeci de mii. Costul de achiziție per abonat crește pentru toată lumea, simultan.</p></div>
+      </li>
+      <li><span class="n">06</span>
+        <div><h4>Automatizarea chatului</h4>
+        <p>Chatbot-ii se antrenează pe logurile chatterilor umani, iar companiile din industrie plănuiesc înlocuirea operatorilor slabi cu AI<span class="grade g-a">A</span>. Avantajul tău competitiv — om real, care vinde bine în conversație — e exact competența care se automatizează prima. Pe orizont de 2–3 ani, agențiile vor putea rula sute de conturi la costul la care tu rulezi unul.</p></div>
+      </li>
+      <li><span class="n">07</span>
+        <div><h4>Expunerea fiscală</h4>
+        <p>ANAF a identificat peste 100 de români cu ~65 de milioane de lei nedeclarați din OnlyFans și platforme similare în 2023–2024, cu sute de persoane în verificare, și un caz individual de 700.000 €<span class="grade g-a">A</span>. Platformele raportează, băncile raportează, schimbul de informații e automat. Riscul nu e „poate mă prind”, ci „mă prind cu întârziere și cu penalități”.</p></div>
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <h4>Direcția generală</h4>
+      <p>Toate cele șapte amenințări împing în aceeași direcție: <strong>mai multă verificare, mai puțină ambiguitate, costuri de achiziție mai mari, marje mai mici pentru operatorii mici.</strong> Niciuna nu împinge în sens invers. Un business care în 2024 mergea pe noutate și pe ambiguitatea „e reală sau nu?” intră în 2027 într-un mediu în care ambele avantaje sunt reglementate.</p>
+    </div>
+  </section>
+
+  <section id="s10">
+    <div class="sechead"><div class="secnum">10</div><h2>Conformitate: ce te scoate din joc</h2>
+      <p>Lista scurtă de obligații. Încălcarea oricăreia poate însemna cont închis și bani reținuți.</p>
+    </div>
+
+    <div class="hooks">
+      <div class="hook"><b>KYC cu actul tău</b>Verificarea se face cu un act de identitate real, al tău ca operator — nu al personei. Document, selfie, apoi construiești profilul personei separat. Fanvue permite mai multe conturi pe o singură identitate verificată.</div>
+      <div class="hook"><b>Bifa „AI Creator”</b>Există la înregistrare. Se bifează. Nu e opțională dacă persona e generată.</div>
+      <div class="hook"><b>Disclosure vizibil</b>Trebuie să fie clar și proeminent: în bio, în descrierea conținutului sau ca watermark. Ascunderea naturii AI încalcă termenii și poate duce la închiderea contului.</div>
+      <div class="hook"><b>Zero asemănare cu persoane reale</b>Fanvue cere acte și permisiune pentru orice persoană care apare în conținut. O față AI pusă pe corpul unei persoane reale <strong>nu</strong> constituie consimțământ. Fără celebrități, fără sportivi, fără persoane private.</div>
+      <div class="hook"><b>Fără minori sau aparență ambiguă</b>Persoanele cu aspect ambiguu ca vârstă sunt semnalate automat. E linia roșie absolută a industriei și a procesatorilor de plăți.</div>
+      <div class="hook"><b>Marcaj conform AI Act</b>Din 2 august 2026: marcare citibilă de mașină plus informare la prima expunere. Se suprapune peste cerința Fanvue, dar e obligație legală separată.</div>
+      <div class="hook"><b>Rata de dispute sub 1,5%</b>Peste acest prag pe 30 de zile, plătești 50 $ per dispută. Un val de chargeback-uri îți poate anula marja pe o lună întreagă.</div>
+      <div class="hook"><b>Declarația unică</b>Termen anual, calcul propriu al impozitului și contribuțiilor. Vezi secțiunea 08 și discută încadrarea cu un contabil.</div>
+    </div>
+
+    <div class="callout">
+      <h4>Tensiunea reală a modelului</h4>
+      <p>Cerințele de disclosure și mecanismul de conversie trag în direcții opuse. Cu cât declari mai clar că persona e artificială, cu atât scade iluzia de relație pe care se bazează vânzarea în chat. Nu există portiță: singurul mod sustenabil e să construiești un produs care funcționează <strong>cu</strong> declarația la vedere — adică fani care știu că e AI și plătesc oricum. Acesta e, de fapt, testul de viabilitate al întregii idei, și e mai greu decât pare.</p>
+    </div>
+  </section>
+
+  <section id="s11">
+    <div class="sechead"><div class="secnum">11</div><h2>Traficul după 31 august 2026</h2>
+      <p>Fără trafic nu există abonați. Iată ce a mai rămas.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Canal</th><th>Stare în sept. 2026</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td>Instagram</td><td>Profilurile AI needeclarate pierd recomandările în Reels și Explore; eticheta „AI-generated profile” e obligatorie pentru conturile care prezintă o persoană sintetică<span class="grade g-a">A</span></td><td>Încă util, dar nu mai e motorul gratuit de creștere din 2024</td></tr>
+          <tr><td>X</td><td>Permite conținut explicit marcat ca sensibil și linkuri directe către platforme de abonament; exclude însă conținutul adult din programele proprii de monetizare<span class="grade g-b">B</span></td><td>Cel mai permisiv canal rămas pentru promovare directă</td></tr>
+          <tr><td>Reddit</td><td>Cel mai bun convertor. CPC raportat ~0,38 $ față de ~1,72 $ pe Facebook<span class="grade g-c">C</span>. Regulile pe deepfake-uri non-consensuale sunt stricte, fiecare subreddit are reguli proprii</td><td>Principalul motor realist de achiziție</td></tr>
+          <tr><td>TikTok</td><td>Interzice conținutul AI needeclarat, cere disclosure clar<span class="grade g-b">B</span></td><td>Doar pentru funnel curat, cu declarație</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Segmentarea Reddit merită reținută, fiindcă e contraintuitivă: subreddit-urile pur promoționale au volum mare și conversie mică; cele de nișă au volum mediu și conversie mare; cele adiacente unui stil de viață au volum mic, conversie foarte mare și <strong>reguli foarte stricte</strong><span class="grade g-c">C</span>. Efortul se duce în a treia categorie, unde și riscul de a fi eliminat e cel mai mare.</p>
+
+    <div class="callout warn">
+      <h4>Matematica găleții cu gaură</h4>
+      <p>Cu o rată de reînnoire de 38%, ca în cazul documentat din secțiunea 04, ai nevoie să înlocuiești <strong>aproape două treimi din abonați în fiecare lună doar ca să stai pe loc</strong>. Pe scenariul median, cu 60 de abonați, înseamnă ~37 de oameni noi lunar, la nesfârșit. Achiziția nu e o fază de început, e o taxă permanentă — și e prima care se scumpește când platformele se strâng.</p>
+    </div>
+  </section>
+
+  <section id="s12">
+    <div class="sechead"><div class="secnum">12</div><h2>Praguri de decizie</h2>
+      <p>Cifre concrete la care continui sau te oprești, stabilite acum, nu în mijlocul lunii 8.</p>
+    </div>
+
+    <p>Cel mai scump mod de a pierde în businessul ăsta nu e să eșuezi repede, ci să pierzi 2.000 de ore ca să afli la luna 14 că nu funcționează. Pragurile de mai jos se scriu înainte de a începe, tocmai fiindcă în interiorul lor judecata e distorsionată de efortul deja investit.</p>
+
+    <ol class="numlist">
+      <li><span class="n">L3</span>
+        <div><h4>Ai primii 10 abonați plătitori?</h4>
+        <p>Nu 10.000 de urmăritori — 10 oameni care au dat bani. Dacă la finalul lunii 3 nu ai reușit să convertești pe nimeni, problema nu e volumul de conținut, ci că produsul nu convinge. Continuarea fără schimbare de abordare e doar cost.</p></div>
+      </li>
+      <li><span class="n">L6</span>
+        <div><h4>Depășești 500 $ pe lună?</h4>
+        <p>Sub acest prag la luna 6, ești pe traiectoria scenariului pesimist, unde uneltele costă mai mult decât încasezi. Ai muncit ~1.200 de ore pentru un rezultat negativ. Aici e punctul rațional de oprire.</p></div>
+      </li>
+      <li><span class="n">L9</span>
+        <div><h4>Venitul mediu pe abonat trece de 15 $ pe lună?</h4>
+        <p>Abonamentul singur aduce ~10 $. Dacă media pe abonat nu urcă peste el, înseamnă că nu vinzi în chat — adică nu faci businessul, doar postezi. Cazul solo documentat funcționa la ~20 $ per abonat. Sub 15 $, modelul nu are cum să ajungă la un venit relevant.</p></div>
+      </li>
+      <li><span class="n">L12</span>
+        <div><h4>Depășești 9 lei pe oră?</h4>
+        <p>Împarte tot ce ai încasat net la orele lucrate. Dacă rezultatul e sub salariul minim pe oră după un an întreg, ai răspunsul — indiferent cât de mult ai investit până acolo.</p></div>
+      </li>
+      <li><span class="n">∞</span>
+        <div><h4>Pragurile care nu se negociază</h4>
+        <p>Cont închis pe Fanvue fără posibilitate de recuperare, sau schimbare de politică a platformei privind conținutul AI. Amândouă sunt evenimente de tip „businessul nu mai există mâine”, iar singura pregătire posibilă e să nu ai cheltuieli fixe angajate pe baza acestui venit.</p></div>
+      </li>
+    </ol>
+
+    <div class="callout calm">
+      <h4>Răspunsul scurt la întrebarea inițială</h4>
+      <p><strong>Cât de sustenabil e pentru viitor:</strong> în scădere clară. Cele trei schimbări majore din 2026 — plăți, transparență legală, distribuție — merg toate împotriva operatorului mic, iar dependența de o singură platformă face businessul fragil prin construcție. E o fereastră care se închide, nu una care se deschide.</p>
+      <p><strong>Câți bani se pot face:</strong> realist, ca om singur, între o pierdere în primul an și ~2.500–4.000 $ pe lună brut la vârf, ceea ce înseamnă în jur de 9.600 lei net pe lună în cel mai bun caz documentat — muncind 7–10 ore pe zi, fără zile libere. Plafonul solo nu a fost depășit de nimeni public fără să angajeze oameni.</p>
+      <p><strong>Ce ar schimba calculul:</strong> singura variabilă cu efect mare nu e calitatea imaginilor, ci <strong>capacitatea de a vinde în conversație</strong>. Dacă asta ți se pare o abilitate pe care o ai și îți face plăcere să o exersezi zilnic, scenariul optimist e accesibil. Dacă nu, niciun model AI oricât de bine făcut nu compensează.</p>
+    </div>
+  </section>
+
+  <section id="surse">
+    <div class="sechead"><div class="secnum">—</div><h2>Surse</h2>
+      <p>Consultate în septembrie 2026, grupate după nivelul de încredere din secțiunea 01.</p>
+    </div>
+    <div class="sources">
+
+      <h4>A — Platformă, documente oficiale</h4>
+      <a href="https://help.fanvue.com/en/articles/9538738-is-ai-content-allowed-on-fanvue">Fanvue Help — Is AI content allowed on Fanvue?</a>
+      <a href="https://help.fanvue.com/en/articles/9539091-passing-kyc-and-creating-multiple-accounts-as-an-ai-creator">Fanvue Help — KYC și conturi multiple pentru creatori AI</a>
+      <a href="https://help.fanvue.com/en/articles/14290142-how-do-i-know-if-a-creator-is-ai">Fanvue Help — Cum recunoști un creator AI</a>
+      <a href="https://help.fanvue.com/en/articles/14181018-understanding-chargebacks-on-fanvue">Fanvue Help — Chargeback-uri și pragul de dispute</a>
+      <a href="https://help.fanvue.com/en/articles/8046997-why-is-my-account-banned-suspended">Fanvue Help — Motive de suspendare a contului</a>
+      <a href="https://help.fanvue.com/en/articles/9508784-masspay-ewallet-everything-you-need-to-know">Fanvue Help — MassPay eWallet</a>
+      <a href="https://legal.fanvue.com/acceptable-use-policy">Fanvue Legal — Acceptable Use Policy</a>
+      <a href="https://legal.fanvue.com/creator-terms">Fanvue Legal — Creator Terms &amp; Conditions</a>
+      <a href="https://legal.fanvue.com/changelog">Fanvue Legal — Changelog</a>
+
+      <h4>A — Presă și analiză independentă</h4>
+      <a href="https://www.geekwire.com/contributor-content/fanvue-raises-22m-to-power-ai-tools-for-creators-surpasses-100m-run-rate/">GeekWire — Fanvue: rundă de 22 mil. $ și 100 mil. $ run rate</a>
+      <a href="https://www.businesswire.com/news/home/20260112458975/en/AI-Powered-Creator-Monetisation-Platform-Fanvue-Hits-%24100m-Run-Rate-and-Raises-%2422m-Series-A-Investment---as-Leading-Global-Creators-Rush-to-Join-the-Platform">Businesswire — Comunicatul primar al rundei Series A</a>
+      <a href="https://www.movetheneedle.news/start-ups/fanvue-raises--22m-series-a-to-scale-ai-powered-direct-to-fan-monetisation/">Move the Needle — Detalii despre runda Fanvue</a>
+      <a href="https://sacra.com/research/fanvue-at-65m-arr/">Sacra — Analiza financiară Fanvue la 65 mil. $ ARR</a>
+      <a href="https://sacra.com/c/fanvue/">Sacra — Venituri, finanțare și rată de creștere Fanvue</a>
+      <a href="https://fortune.com/europe/2024/02/21/ai-influencers-secretive-creators-thousands-dollars/">Fortune — Creatorii discreți din spatele influencerilor AI</a>
+      <a href="https://finance.yahoo.com/news/ai-influencers-making-secretive-creators-121608358.html">Yahoo Finance — Reluarea materialului Fortune</a>
+      <a href="https://www.euronews.com/next/2024/12/27/meet-the-first-spanish-ai-model-earning-up-to-10000-per-month">Euronews — Primul model AI spaniol și veniturile lui</a>
+      <a href="https://www.entrepreneur.com/business-news/this-ai-fitness-model-makes-11000-a-month/465975">Entrepreneur — Modelul AI care face 11.000 $ pe lună</a>
+      <a href="https://restofworld.org/2025/onlyfans-ai-dm-bots/">Rest of World — AI amenință joburile chatterilor filipinezi</a>
+      <a href="https://finance.yahoo.com/news/ai-coming-onlyfans-chat-industry-163403868.html">Yahoo Finance — AI intră în industria de chat OnlyFans</a>
+      <a href="https://www.404media.co/fansly-ban-furries-new-rules/">404 Media — Fansly și noile reguli de conținut</a>
+      <a href="https://techcrunch.com/2026/08/31/instagram-puts-new-limits-on-undisclosed-ai-profiles/">TechCrunch — Instagram limitează profilurile AI needeclarate</a>
+      <a href="https://9to5google.com/2026/08/31/instagram-ai-generated-influencers-label-update/">9to5Google — Eticheta „AI-generated profile”</a>
+      <a href="https://www.digitaltrends.com/social-media/instagram-will-limit-reach-for-ai-influencers-who-skip-ai-generated-label-on-their-profile/">Digital Trends — Limitarea reach-ului pentru influencerii AI</a>
+      <a href="https://www.businesstoday.in/technology/artificial-intelligence/story/no-ai-label-no-reach-instagram-cracks-down-on-ai-generated-influencers-552520-2026-09-01">Business Today — „No AI label, no reach”</a>
+      <a href="https://www.domusweb.it/en/news/2025/01/20/what-is-fanvue-onlyfans-artificial-intelligence.html">Domus — Ce este Fanvue</a>
+      <a href="https://omr.com/en/daily/ai-models-fanvue">OMR — Modelele AI și economia creatorilor</a>
+
+      <h4>A — Legislație și reglementare</h4>
+      <a href="https://artificialintelligenceact.eu/transparency-rules-article-50/">AI Act — Ghid practic pentru articolul 50</a>
+      <a href="https://digital-strategy.ec.europa.eu/en/faqs/transparency-obligations-under-article-50-ai-act">Comisia Europeană — Întrebări frecvente despre articolul 50</a>
+      <a href="https://digital-strategy.ec.europa.eu/en/factpages/quick-facts-transparency-rules-ai-systems">Comisia Europeană — Reguli de transparență pentru sisteme AI</a>
+      <a href="https://www.gtlaw.com/en/insights/2026/6/deepfakes-chatbots-ai-generated-text-european-commission-details-transparency-obligations-under-the-ai-act">Greenberg Traurig — Obligațiile de transparență detaliate</a>
+      <a href="https://www.hsfkramer.com/notes/ip/2026-03/transparency-obligations-for-ai-generated-content-under-the-eu-ai-act-from-principle-to-practice">HSF Kramer — De la principiu la practică</a>
+      <a href="https://www.jonesday.com/en/insights/2026/01/european-commission-publishes-draft-code-of-practice-on-ai-labelling-and-transparency">Jones Day — Codul de practică pentru etichetare AI</a>
+      <a href="https://www.techpolicy.press/what-the-eus-new-ai-code-of-practice-means-for-labeling-deepfakes/">Tech Policy Press — Ce înseamnă codul pentru deepfake-uri</a>
+      <a href="https://mobiuspay.com/blog/mastercard-adult-content-rules">MobiusPay — Regulile Mastercard pentru conținut adult în 2026</a>
+      <a href="https://www.payconsults.com/post/visa-mastercard-compliance-changes-every-adult-merchant-should-know-in-2026">PayConsults — Modificările de conformitate Visa și Mastercard</a>
+      <a href="https://thepaymentsedge.com/guides/adult-content-moderation-policy-payment-processing/">The Payments Edge — Moderare și procesare de plăți</a>
+
+      <h4>A — Fiscalitate România</h4>
+      <a href="https://static.anaf.ro/static/10/Iasi/material_informativ_27-01-2026.pdf">ANAF — Material informativ, ianuarie 2026</a>
+      <a href="https://static.anaf.ro/static/10/Ploiesti/decl_activ_independente.pdf">ANAF — Declarația unică pentru activități independente</a>
+      <a href="https://www.avocatnet.ro/articol_70992/Venituri-independente-2026-Baza-anual%C4%83-maxim%C4%83-de-calcul-la-CASS-egal%C4%83-cu-72-de-salarii-minime-nu-60.html">Avocatnet — Baza maximă de calcul CASS în 2026</a>
+      <a href="https://contapp.ro/blog/taxe-pfa-2026/">Contapp — Taxe PFA 2026: CAS, CASS și impozit</a>
+      <a href="https://noutatifiscale.ro/wp-content/uploads/2026/01/Regim-impozitare-PFA-2026.pdf">Noutăți Fiscale — Regimul de impozitare a activităților independente 2026</a>
+      <a href="https://hotnews.ro/fiscul-a-descoperit-venituri-nedeclarate-de-milioane-de-euro-din-continut-video-pe-platforme-pentru-adulti-cate-persoane-sunt-verificate-ce-varste-au-si-cat-castigau-2116592">HotNews — Venituri nedeclarate din platforme pentru adulți</a>
+      <a href="https://www.mediafax.ro/economic/anaf-a-descoperit-peste-100-de-romani-cu-venituri-nedeclarate-de-pe-onlyfans-si-alte-platforme-pentru-adulti-sumele-ajung-la-65-de-milioane-de-lei-in-doi-ani-alte-sute-de-persoane-sunt-in-verificari-23648179">Mediafax — Peste 100 de români cu venituri nedeclarate</a>
+      <a href="https://startupcafe.ro/cum-aflat-anaf-barbat-romania-obtinut-euro-onlyfans-90735">StartupCafe — Cazul de 700.000 € descoperit de ANAF</a>
+      <a href="https://termene.ro/articole/creatorii-de-continut-de-pe-onlyfans-si-livejasmine-intra-in-vizorul-anaf-pentru-venituri-nedeclarate-de-64-mil-lei">Termene.ro — Creatorii de conținut în vizorul ANAF</a>
+      <a href="https://www.maglas.ro/en/blog-avocat/income-from-copyrights-trademarks-and-digital-content-how-to-declare-it-correctly-and-protect-yourself-in-anaf-audits/">Maglaș — Venituri din conținut digital și controale ANAF</a>
+
+      <h4>B — Cifre raportate, neconfirmate independent</h4>
+      <a href="https://en.wikipedia.org/wiki/Aitana_L%C3%B3pez">Wikipedia — Aitana López</a>
+      <a href="https://en.wikipedia.org/wiki/Fanvue">Wikipedia — Fanvue</a>
+      <a href="https://www.aol.com/influencers-using-ai-women-lead-093001152.html">AOL — Funnel-uri cu persone AI către OnlyFans și Fanvue</a>
+      <a href="https://www.boredpanda.com/ai-model-emily-pellegrini-asked-out-celebrities-instagram-dms/">Bored Panda — Cazul Emily Pellegrini</a>
+      <a href="https://dailyai.com/2024/02/the-most-popular-ai-models-earn-almost-10-times-more-than-the-average-american/">DailyAI — Veniturile celor mai populare modele AI</a>
+      <a href="https://www.netinfluencer.com/ai-influencers/">Net Influencer — Creatorii din spatele influencerilor AI</a>
+      <a href="https://onlyfansstatistics.com/earnings">OnlyFans Statistics — Distribuția veniturilor pe creatori</a>
+      <a href="https://onlyfansstatistics.com/creators">OnlyFans Statistics — Economia creatorilor</a>
+      <a href="https://www.desirely.co/en/blog/average-income-on-onlyfans">Desirely — Venitul mediu pe tiere</a>
+      <a href="https://arunatalent.com/blog/onlyfans-side-hustle/">Aruna Talent — Cifrele oneste pentru un side hustle</a>
+      <a href="https://www.sirency.com/blog/onlyfans-agency-vs-solo-creator-2026">Sirency — Solo vs. agenție, timp și burnout</a>
+      <a href="https://www.knowyourmobile.com/tips-for-creators/onlyfans-creator-explains-how-better-time-management-leads-to-more-growth/">Know Your Mobile — Un creator despre timp și epuizare</a>
+      <a href="https://arunatalent.com/blog/x-adult-content-creator-program-2026/">Aruna Talent — Politica X pentru conținut adult</a>
+      <a href="https://www.outseeker.net/blog/fanvue-payment-method">Outseeker — Metode de plată Fanvue</a>
+      <a href="https://www.enforcity.com/guides/fanvue-commission-how-much-does-fanvue-take-from-creators">Enforcity — Comisionul Fanvue</a>
+      <a href="https://arxiv.org/pdf/2511.15726">arXiv — Studiu despre distribuția conținutului NSFW pe Reddit</a>
+
+      <h4>C — Marketing, citat doar ca dovadă a promisiunii din piață</h4>
+      <a href="https://fanvuemodels.com/blog/is-ai-ofm-profitable">FanvueModels — „Este AI OFM profitabil în 2026?”</a>
+      <a href="https://fanvuemodels.com/blog/top-earners-on-fanvue">FanvueModels — Topul câștigurilor pe Fanvue</a>
+      <a href="https://www.ofgenerator.com/blog/how-much-do-ai-creators-make-fanvue-2026">OFGenerator — Cât câștigă creatorii AI pe Fanvue</a>
+      <a href="https://aiofm.info/en/guides/fanvue-ai-creators-handbook">AIOFM — Manualul creatorilor AI pe Fanvue</a>
+      <a href="https://aitwin.ninja/ai-onlyfans-models/">AITwin — Topul modelelor AI și câștigurile lor</a>
+      <a href="https://playbella.org/blog/2026-ai-creator-economics-report">Playbella — Calculator de venituri pentru creatori AI</a>
+      <a href="https://sozee.ai/resources/ai-generated-onlyfans-platform-guidelines/">Sozee — Ghid de reguli pe platforme</a>
+      <a href="https://iimagined.ai/blog/lora-training-guide-consistent-ai-influencer-faces">iimagined — Ghid de antrenare LoRA pentru consistență</a>
+      <a href="https://higgsfield.ai/blog/how-to-create-ai-influencer">Higgsfield — Cum creezi un influencer AI consistent</a>
+      <a href="https://www.desirely.co/en/blog/onlyfans-reddit-marketing">Desirely — Ghid de achiziție pe Reddit</a>
+      <a href="https://tripleminds.co/blogs/strategies/best-traffic-sources-for-adult-ai-startups/">TripleMinds — Surse de trafic pentru produse AI pentru adulți</a>
+      <a href="https://ofm-tools.com/how-to-hire-onlyfans-chatters/">OFM Tools — Tarife și modele de plată pentru chatteri</a>
+      <a href="https://www.moneymagpie.com/make-money/ai-influencers-make-money-truth">MoneyMagpie — Ce nu se spune despre influencerii AI</a>
+
+      <h4>Despre survivorship bias</h4>
+      <a href="https://www.sjo.com/gurus-are-scamming-you/">SJO — Cum folosesc gurii survivorship bias</a>
+      <a href="https://medium.com/@solorwell/dont-let-gurus-sell-you-on-survivorship-bias-dd85e3c94b68">Medium — Trucul statistic din spatele poveștilor de succes</a>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>Raport de research realizat în septembrie 2026. Cifrele reflectă cele mai recente date publice disponibile la acel moment. Calculele fiscale sunt estimative și folosesc un curs de ~4,3 lei/$ — încadrarea exactă a veniturilor, regimul optim și pragurile de contribuții trebuie confirmate cu un contabil înainte de orice decizie. Sursele de nivel C sunt incluse din transparență, ca dovadă a ce se promite în piață, nu ca fundament al concluziilor.</p>
+  </footer>
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var bar = document.getElementById('progress');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    var idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking){
+      window.requestAnimationFrame(function(){ onScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, {passive:true});
+  onScroll();
+})();
+</script>
